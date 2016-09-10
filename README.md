@@ -185,7 +185,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
     ```sh
 	    val = 60
-	    browser.zoomWindow(val)
+	    browser.zoom(val)
 	```
 -   Zoom Out
 

@@ -427,10 +427,7 @@ python test.py
 - 	[phantomjs-2.1.1-macosx.zip][r5]
 -	[Selenium 3.0.0.b2][tm3]
 
-![alt tag][TSTPDF]
-
-[file.pdf][TSTPDF]
-
+[Results][TSTPDF]
 
 **Windows**
 

@@ -2,6 +2,16 @@ from ast import literal_eval
 import os
 import sys
 
+try:
+    from selenium.common.exceptions import WebDriverException
+    from selenium.common.exceptions import NoSuchElementException
+    from selenium.common.exceptions import ElementNotVisibleException
+    from selenium.common.exceptions import TimeoutException
+    from selenium.webdriver.remote.webelement import WebElement
+except ImportError:
+    print "Selenium module is not installed...Exiting program."
+    exit(1)
+
 par_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 if(not os.path.exists(par_dir)):
     print("Path {} does not exist".format(par_dir))
@@ -111,8 +121,10 @@ def main(argv):
                     else: char = 'q'
                 elif char == 'q':
                     break
+
         elif char == 'f':
             browser.forward()
+
         elif char == 'c':
             while not char is 'q':
                 print "\nPress \n" \
@@ -140,6 +152,7 @@ def main(argv):
                     browser.elementDump(0,save_name)
                 elif char == 'q':
                     break
+
         elif char == 'fb':
             username = raw_input('Enter Username\n>> ')
             username.lower()
@@ -152,30 +165,31 @@ def main(argv):
                 print "Password is empty ({})".format(password)
                 continue
             browser.loginFacebook(username,password)
+
         elif char == 's':
-            size = ()
             size = raw_input('Enter Window Size (w, h)\n>> ')
             if not '(' in size or not ')' in size or not ',' in size:
                 print "Invalid Size Format {}".format(size)
                 continue
             try:
                 size = literal_eval(size)
-                if browser.sizeWindow(size):
+                if browser.size(size):
                     print "Failed to Resize Window with {}".format(size)
             except ValueError:
                 print "Value Error: malformed string {}".format(size)
+
         elif char == 'p':
-            position = ()
             position = raw_input('Enter Window Position (x, y)\n>> ')
             if not '(' in position or not ')' in position or not ',' in position:
                 print "Invalid Position Format {}".format(position)
                 continue
             try:
                 position = literal_eval(position)
-                if browser.positionWindow(position):
+                if browser.position(position):
                     print "Failed to Position Window with {}".format(position)
             except ValueError:
                 print "Value Error: malformed string {}".format(position)
+
         elif char == 'i':
             while not char is 'q':
                 print "\nPress \n" \
@@ -202,12 +216,12 @@ def main(argv):
                         print "Failed to send '{}'".format(text)
                 elif char == 'q':
                     break
+
         elif char == 'z':
-            zoom = ""
             zoom = raw_input('Enter Zoom (1-100)\n>> ')
             try:
                 zoom = int(zoom)
-                browser.zoomWindow(zoom)
+                browser.zoom(zoom)
             except ValueError:
                 print "Value Error: {} Invalid entry for integer. \nInput numerical value from 1 to 100".format(zoom)
 
@@ -242,7 +256,7 @@ def main(argv):
                     except ValueError:
                         print "Value Error: {} Invalid entry for integer. \nInput numerical value".format(y)
                         continue
-                    browser.scrollWindow((x,y))
+                    browser.scrol((x,y))
                 if char == 'e':
                     if browser.selectedElement == 0 or not isinstance(browser.selectedElement,WebElement):
                         print "No Element selected to scroll"

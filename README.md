@@ -427,6 +427,11 @@ python test.py
 - 	[phantomjs-2.1.1-macosx.zip][r5]
 -	[Selenium 3.0.0.b2][tm3]
 
+![alt tag][TSTPDF]
+
+[file.pdf][TSTPDF]
+
+
 **Windows**
 
 -	Not Tested
@@ -469,3 +474,4 @@ For getting started with PhantomJS, see [PhantomJS][df7]
 [df7]: <http://phantomjs.org/quick-start.html>
 
 [DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>
+[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf>

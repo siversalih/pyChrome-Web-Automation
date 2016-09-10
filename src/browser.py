@@ -97,7 +97,6 @@ class Browser:
                     self.driver.get(url)
                     self.tab.link = self.driver.current_url
                     self.tab.title = self.driver.title
-                    self.scroll = (0,0)
                 except TimeoutException:
                     print "TimeoutException: Didn't load the page fully"
                     return 0

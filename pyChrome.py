@@ -150,10 +150,10 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
                 chrome_options.add_argument("--disable-extensions")
                 self.driver = webdriver.Chrome(file_directory,0,chrome_options,None,None,None)
                 self.window = Window(self.driver, config=self.config_filename)
-                self.zoom = self.window.zoom
-                self.size = self.window.size
-                self.scroll = self.window.scroll
-                self.position = self.window.position
+                self.zoomWin = self.window.zoomWin
+                self.sizeWin = self.window.sizeWin
+                self.scrollWin = self.window.scrollWin
+                self.positionWin = self.window.positionWin
                 self.driver.set_page_load_timeout(self.pageload_timeout)
             else:
                 print "Starting Ghost Browser"
@@ -211,10 +211,10 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
         if self.window:
             self.window.dealloc()
             del self.window
-            del self.size
-            del self.zoom
-            del self.scroll
-            del self.position
+            del self.sizeWin
+            del self.zoomWin
+            del self.scrollWin
+            del self.positionWin
         if self.combo:
             self.combo.dealloc()
             del self.combo

@@ -20,6 +20,8 @@ More documentation on PhantomJS Webdriver can be found at [PhantomJS][df6]
 
 
 ## pyChrome
+![alt tag][DSNIMG]
+
 pyChrome is a scripted Web Automation Platform engine. It uses Selenium Webdriver APIs from ChromeDriver, and PhantomJS. pyChrome also includes other Python modules, such as json, urllib2, numpy, scipy to control, analyze and interact with the browser where Selenium Webdriver APIs may not meet the demand or optimal solution. Also pyChrome is a console type application. Which it can be imported to any type of Python project as a module for creating bigger application and use case scenarios, such as for botting, web automation, data mining, and it has headless browsing capabilities.
 
 ## Milestones
@@ -465,3 +467,5 @@ For getting started with PhantomJS, see [PhantomJS][df7]
 [df5]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started>
 [df6]: <http://phantomjs.org/documentation/>
 [df7]: <http://phantomjs.org/quick-start.html>
+
+[DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>

@@ -1040,7 +1040,7 @@ class positionTest(unittest.TestCase):
     def runTest(self):
         print "\nTest Begin: Position Window"
         time.sleep(1)
-        err = self.browser.positionWindow(self.position)
+        err = self.browser.position(self.position)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -1073,7 +1073,7 @@ class sizeTest(unittest.TestCase):
     def runTest(self):
         print "\nTest Begin: Size Window"
         time.sleep(1)
-        err = self.browser.sizeWindow(self.size)
+        err = self.browser.size(self.size)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -1110,7 +1110,7 @@ class zoomTest(unittest.TestCase):
         print "\nTest Begin: Zoom"
         time.sleep(1)
         err = self.browser.open(self.url)
-        err = err or self.browser.zoomWindow(self.val)
+        err = err or self.browser.zoom(self.val)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -1218,7 +1218,7 @@ class scrollTest(unittest.TestCase):
         time.sleep(1)
         err = self.browser.open(self.url)
         time.sleep(1)
-        err = err or self.browser.scrollWindow(self.position)
+        err = err or self.browser.scrol(self.position)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -1374,7 +1374,7 @@ class scrollRightTest(unittest.TestCase):
         time.sleep(1)
         err = self.browser.open(self.url)
         time.sleep(1)
-        err = self.browser.sizeWindow(self.size)
+        err = self.browser.size(self.size)
         time.sleep(1)
         err = err or self.browser.scrollRight()
         time.sleep(1)
@@ -1414,7 +1414,7 @@ class scrollLeftTest(unittest.TestCase):
         time.sleep(1)
         err = self.browser.open(self.url)
         time.sleep(1)
-        err = self.browser.sizeWindow(self.size)
+        err = self.browser.size(self.size)
         time.sleep(1)
         err = err or self.browser.scrollRight()
         time.sleep(1)

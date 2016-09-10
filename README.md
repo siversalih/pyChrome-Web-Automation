@@ -80,43 +80,43 @@ $ git clone https://github.com/siversalih/pyChrome.git
 -	**pyChrome.py**
 	-	It is the main class object. pyChrome.py extends and simplify the APIs beyond just Selenium Webdriver APIs. It inherits some functionality from Selenium Webdriver APIs, but it also uses other modules such as urllib2, scipy, numpy, json, and javascript for creating a true Automation Platform engine. 
 
--	**browser.py** 
+-	**src/browser.py** 
 	-	It is a subclass of pyChrome.py. It manages the client (Chrome or Ghostdriver) such as for opening and closing web page, navigating through pages, controlling tabs, finding Web element within the page, and interacting with the page.
 
--	**window.py**
+-	**src/window.py**
 	-	It is a subclass of pyChrome.py. It handles position, size, zooming and scrolling functionality of the window. It is required component when browsing using Chrome Driver. However, it does not have any effect when using PhantomJS driver (Ghostdriver).
 
--	**capture.py**
+-	**src/capture.py**
 	-	It is a subclass of pyChrome.py. It handles capturing screen in PNG format, dumping Web page or Web element source code in HTML format.
 
--	**combo.py**
+-	**src/combo.py**
 	-	It is a subclass of pyChrome.py. It contains set of functons for performing task that is used often, such as Login to Facebook, Opening Google Search Engine, Checking Email etc...
 
--	**navigation.py**
+-	**src/navigation.py**
 	-	It is a subclass of browser.py. It manages navigating through pages using back() and forward() command.
 
--	**tab.py**
+-	**src/tab.py**
 	-	It is a subclass of browser.py. It manages controlling multiple tabs such as creating a new tab, closing existing tab, or switching to adjacent tab. It can also index to any open tab.
 
--	**interaction.py**
+-	**src/interaction.py**
 	-	It is a sublcass of browser.py. It manages interacting with the page Web Element. These are such as clicking on element, sending text to element, or sending action keys to element.
 
--	**element.py**
+-	**src/element.py**
 	-	It is a subclass of browser.py. It contains and manages searching and locating Web Element via its id, name, classname, tag, partial text, link text and xpath. It also has other functions that uses special algorithms to better locate element or list of elements. 
 
--	**chromedriver**
+-	**bin/chromedriver**
 	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout is already bundled with ChromeDriver 2.23 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [Google Chrome Driver][df3] and overwrite it with the one included in this checkecout.
 
--	**phantomjs**
+-	**bin/phantomjs**
 	-	It's a Webdriver that Selenium Webdriver requires specifically for headless browsing. pyChrome.py uses PhantomJS as a Ghostdriver to browse, automate, and mine unnoticeably. This checkout is already bundled with PhantomJS 2.1.1 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [PhantomJS][r5] and overwrite it with the one included in this checkecout.
 
 -	**config.json** (Recommended)
 	- Contains all the configuration settings for how the server and the client should start. When pyChrome.py object gets created, it reads the configuration settings from config.json. If the file is not present, it creates a default settings. Users can also modify these settings via calling pyChrome.py APIs.
 
-- 	demo.py (Optional)
+- 	demo/demo.py (Optional)
 	- Demo to run all the implemented functions in pyChrome.py
 
--	test.py (Optional)
+-	test/test.py (Optional)
 	- Test Suite to run all the implemented functions in pyChrome.py
 
 

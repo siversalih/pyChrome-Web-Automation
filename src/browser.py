@@ -164,9 +164,7 @@ class Browser:
                     return 1
                 time.sleep(1)
             print "Closing Tab: Tab {}".format(self.tab.index)
-            location = 0
             if len(self.tabs) == 1:
-                location = 1
                 self.tabs.remove(self.tab)
                 self.tabs = None
                 self.tab.dealloc()

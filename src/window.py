@@ -121,8 +121,8 @@ class Window:
             print "Zoom {} not in range (10-100)".format(percent)
             return 1
         self.zoomWin = percent
-        self.driver.execute_script("document.body.style.zoom='{}%'".format(self.zoom))
-        print "Window Zoom: \t\t {}".format(self.zoom)
+        self.driver.execute_script("document.body.style.zoom='{}%'".format(self.zoomWin))
+        print "Window Zoom: \t\t {}".format(self.zoomWin)
         return 0
 
     def zoomIn(self):

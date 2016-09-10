@@ -172,14 +172,14 @@ $ git clone https://github.com/siversalih/pyChrome.git
 -   Position
 
     ```sh
-	    position = (300,200)
-	    browser.positionWindow(position)
+	    point = (300,200)
+	    browser.position(point)
 	```
 -   Size
 
     ```sh
-	    size = (1080,720)
-	    browser.sizeWindow(size)
+	    siz = (1080,720)
+	    browser.size(siz)
 	```
 -   Zoom
 
@@ -201,7 +201,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
     ```sh
     	point = (50,400)
-    	browser.scrollWindow(point)
+    	browser.scrol(point)
 	```
 -   Scroll to Element
 
@@ -355,7 +355,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Tab Control
--	Open a New Tab
+-	Open New Tab
 
     ```sh
 	    browser.newTab()

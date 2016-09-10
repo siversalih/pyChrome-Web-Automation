@@ -103,7 +103,10 @@ class Browser:
                 except WebDriverException:
                     print "Couldn't Open {}\nPlease check the URL or Internet Connection".format(url)
                     return 1
-            print "Page Title: {}".format(self.driver.title)
+            try:
+                print "Page Title: {}".format(self.driver.title)
+            except UnicodeEncodeError:
+                print "Page Title: {}".format(url)
             return 0
         return 0
 
@@ -246,6 +249,8 @@ class Browser:
         except WebDriverException:
             print "WebDriverException: Can't Switch to Right Tab"
             return 1
+        except UnicodeEncodeError:
+            print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
         time.sleep(1)
         try:
             print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
@@ -273,6 +278,8 @@ class Browser:
             print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+        except UnicodeEncodeError:
+            print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
         return 0
 
     def switchTab(self, index):

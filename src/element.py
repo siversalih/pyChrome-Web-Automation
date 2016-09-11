@@ -30,198 +30,419 @@ class Element:
         if self.selectedElement:
             del self.selectedElement
 
+    ##### Locating Element #####
+
     def findElementByID(self,id_str):
-        element = 0
-        if id_str == 0 and len(id_str) == 0:
-            print "ID String is Empty '{}'".format(id_str)
+        if not self.validateLocator(id_str):
+            print "Invalid ID: {}".format(id_str)
             return 0
-        print "Searching for element with ID: '{}'".format(id_str)
+        print "Searching for element by ID: '{}'".format(id_str)
         try:
             element = self.driver.find_element_by_id(id_str)
         except NoSuchElementException:
-            print "Couldn't find Element by id '{}'".format(id_str)
+            print "NoSuchElementException: Couldn't find element by ID '{}'".format(id_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
         if isinstance(element, WebElement):
             self.selectedElement = element
-            print "Found element with id: '{}'".format(id_str)
-            return element
+            print "Found element with ID: '{}'".format(id_str)
         else:
-            print "Couldn't find Element by id '{}'".format(id_str)
+            print "Couldn't find element by id '{}'".format(id_str)
             return 0
+        return element
 
     def findElementByName(self,name_str):
-        element = 0
-        if name_str == 0 and len(name_str) == 0:
-            print "Name String is Empty '{}'".format(name_str)
+        if not self.validateLocator(name_str):
+            print "Invalid Name: {}".format(name_str)
             return 0
-        print "Searching for element with name: '{}'".format(name_str)
+        print "Searching for element by Name: '{}'".format(name_str)
         try:
             element = self.driver.find_element_by_name(name_str)
         except NoSuchElementException:
-            print "Couldn't find Element by name '{}'".format(name_str)
+            print "NoSuchElementException: Couldn't find element by Name '{}'".format(name_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
-        if isinstance(element,WebElement):
+        if isinstance(element, WebElement):
             self.selectedElement = element
-            print "Found element with name: '{}'".format(name_str)
-            return element
+            print "Found element with Name: '{}'".format(name_str)
         else:
-            print "Couldn't find Element by name '{}'".format(name_str)
+            print "Couldn't find element by Name '{}'".format(name_str)
             return 0
+        return element
 
     def findElementByTag(self,tag_str):
-        element = 0
-        if tag_str == 0 and len(tag_str) == 0:
-            print "Tag String is Empty '{}'".format(tag_str)
+        if not self.validateLocator(tag_str):
+            print "Invalid Tag: {}".format(tag_str)
             return 0
-        print "Searching for element with tag: '{}'".format(tag_str)
+        print "Searching for element by Tag: '{}'".format(tag_str)
         try:
             element = self.driver.find_element_by_tag_name(tag_str)
         except NoSuchElementException:
-            print "Couldn't find Element by tag '{}'".format(tag_str)
+            print "NoSuchElementException: Couldn't find element by Tag '{}'".format(tag_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
-        if isinstance(element,WebElement):
+        if isinstance(element, WebElement):
             self.selectedElement = element
-            print "Found element with tag: '{}'".format(self.selectedElement.tag_name)
-            return element
+            print "Found element with Tag: '{}'".format(tag_str)
         else:
-            print "Couldn't find Element by tag '{}'".format(tag_str)
+            print "Couldn't find element by Tag '{}'".format(tag_str)
             return 0
+        return element
 
     def findElementByPartialText(self,text_str):
-        element = 0
-        if text_str == 0 and len(text_str) == 0:
-            print "Text String is Empty '{}'".format(text_str)
+        if not self.validateLocator(text_str):
+            print "Invalid Partial Text: {}".format(text_str)
             return 0
-        print "Searching for element with partial Text: '{}'".format(text_str)
+        print "Searching for element by Partial Text: '{}'".format(text_str)
         try:
             element = self.driver.find_element_by_partial_link_text(text_str)
         except NoSuchElementException:
-            print "Couldn't find Element by text '{}'".format(text_str)
+            print "NoSuchElementException: Couldn't find element by Partial Text '{}'".format(text_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
-        if isinstance(element,WebElement):
+        if isinstance(element, WebElement):
             self.selectedElement = element
-            print "Found element with text: '{}'".format(text_str)
-            return element
+            print "Found element with Partial Text: '{}'".format(text_str)
         else:
-            print "Couldn't find Element by text '{}'".format(text_str)
+            print "Couldn't find element by Partial Text '{}'".format(text_str)
             return 0
+        return element
 
-    def findElementsByID(self,id_str):
-        elements = []
-        if id_str == 0 and len(id_str) == 0:
-            print "ID string is empty '{}'".format(id_str)
+    def findElementByLinkText(self,link_str):
+        if not self.validateLocator(link_str):
+            print "Invalid Link Text: {}".format(link_str)
             return 0
-        print "Searching for elements with id: '{}'".format(id_str)
+        print "Searching for element by Link Text: '{}'".format(link_str)
         try:
-            elements = self.driver.find_elements_by_id(id_str)
+            element = self.driver.find_element_by_link_text(link_str)
         except NoSuchElementException:
-            print "Couldn't find any element by id '{}'".format(id_str)
+            print "NoSuchElementException: Couldn't find element by Link Text '{}'".format(link_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
-        if elements and len(elements) == 0:
-            print "Couldn't find any element by id '{}'".format(id_str)
-            return 0
-        elif len(elements) > 0:
-            self.elements = elements
-            print "Found {} elements with id: '{}'".format(len(elements),id_str)
-            self.selectedElement = self.elements[0]
-            return self.elements
+        if isinstance(element, WebElement):
+            self.selectedElement = element
+            print "Found element with Link Text: '{}'".format(link_str)
         else:
+            print "Couldn't find element by Link Text '{}'".format(link_str)
             return 0
+        return element
+
+    def findElementByClass(self,class_str):
+        if not self.validateLocator(class_str):
+            print "Invalid Classname: {}".format(class_str)
+            return 0
+        print "Searching for element by Classname: '{}'".format(class_str)
+        try:
+            element = self.driver.find_element_by_class_name(class_str)
+        except NoSuchElementException:
+            print "NoSuchElementException: Couldn't find element by Classname '{}'".format(class_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if isinstance(element, WebElement):
+            self.selectedElement = element
+            print "Found element with Classname: '{}'".format(class_str)
+        else:
+            print "Couldn't find element by Classname '{}'".format(class_str)
+            return 0
+        return element
+
+    def findElementByXPath(self,xpath_str):
+        if not self.validateLocator(xpath_str):
+            print "Invalid Xpath: {}".format(xpath_str)
+            return 0
+        print "Searching for element by Xpath: '{}'".format(xpath_str)
+        try:
+            element = self.driver.find_element_by_xpath(xpath_str)
+        except NoSuchElementException:
+            print "NoSuchElementException: Couldn't find element by Xpath '{}'".format(xpath_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if isinstance(element, WebElement):
+            self.selectedElement = element
+            print "Found element with Xpath: '{}'".format(xpath_str)
+        else:
+            print "Couldn't find element by Xpath '{}'".format(xpath_str)
+            return 0
+        return element
+
+    def findElementByCSS(self,css_str):
+        if not self.validateLocator(css_str):
+            print "Invalid CSS Selector: {}".format(css_str)
+            return 0
+        print "Searching for element by CSS Selector: '{}'".format(css_str)
+        try:
+            element = self.driver.find_element_by_css_selector(css_str)
+        except NoSuchElementException:
+            print "NoSuchElementException: Couldn't find element by CSS Selector '{}'".format(css_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if isinstance(element, WebElement):
+            self.selectedElement = element
+            print "Found element with CSS Selector: '{}'".format(css_str)
+        else:
+            print "Couldn't find element by CSS Selector '{}'".format(css_str)
+            return 0
+        return element
+
+    ##### Locating Multiple Elements #####
 
     def findElementsByName(self,name_str):
-        elements = []
-        if name_str == 0 and len(name_str) == 0:
-            print "Name String is Empty '{}'".format(name_str)
+        if not self.validateLocator(name_str):
+            print "Invalid Name: {}".format(name_str)
             return 0
-        print "Searching for elements with name: '{}'".format(name_str)
+        print "Searching for elements by Name: '{}'".format(name_str)
         try:
             elements = self.driver.find_elements_by_name(name_str)
         except NoSuchElementException:
-            print "Couldn't find any element by name '{}'".format(name_str)
+            print "Couldn't find any element by Name '{}'".format(name_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
         if elements and len(elements) == 0:
-            print "Couldn't find any element by name '{}'".format(name_str)
+            print "Couldn't find any element by Name '{}'".format(name_str)
             return 0
         elif len(elements) > 0:
             self.elements = elements
-            print "Found {} elements with name: '{}'".format(len(elements),name_str)
+            print "Found {} elements by Name: '{}'".format(len(elements),name_str)
             self.selectedElement = self.elements[0]
-            return self.elements
         else:
+            print "Couldn't find any element by Name '{}'".format(name_str)
             return 0
+        return elements
+
+    def findElementsByID(self,id_str):
+        if not self.validateLocator(id_str):
+            print "Invalid ID: {}".format(id_str)
+            return 0
+        print "Searching for elements by ID: '{}'".format(id_str)
+        try:
+            elements = self.driver.find_elements_by_id(id_str)
+        except NoSuchElementException:
+            print "Couldn't find any element by ID '{}'".format(id_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if elements and len(elements) == 0:
+            print "Couldn't find any element by ID '{}'".format(id_str)
+            return 0
+        elif len(elements) > 0:
+            self.elements = elements
+            print "Found {} elements by ID: '{}'".format(len(elements),id_str)
+            self.selectedElement = self.elements[0]
+        else:
+            print "Couldn't find any element by ID '{}'".format(id_str)
+            return 0
+        return elements
 
     def findElementsByTag(self,tag_str):
-        elements = []
-        if tag_str == 0 and len(tag_str) == 0:
-            print "Tag string is empty '{}'".format(tag_str)
+        if not self.validateLocator(tag_str):
+            print "Invalid Tag: {}".format(tag_str)
             return 0
-        print "Searching for elements with tag: '{}'".format(tag_str)
+        print "Searching for elements by Tag: '{}'".format(tag_str)
         try:
             elements = self.driver.find_elements_by_tag_name(tag_str)
         except NoSuchElementException:
-            print "Couldn't find any element by tag '{}'".format(tag_str)
+            print "Couldn't find any element by Tag '{}'".format(tag_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
         if elements and len(elements) == 0:
-            print "Couldn't find any element by tag '{}'".format(tag_str)
+            print "Couldn't find any element by Tag '{}'".format(tag_str)
             return 0
         elif len(elements) > 0:
             self.elements = elements
-            print "Found {} elements with tag: '{}'".format(len(elements),tag_str)
+            print "Found {} elements by Tag: '{}'".format(len(elements),tag_str)
             self.selectedElement = self.elements[0]
-            return self.elements
         else:
+            print "Couldn't find any element by Tag '{}'".format(tag_str)
             return 0
+        return elements
+
+    def findElementsByPartialText(self,text_str):
+        if not self.validateLocator(text_str):
+            print "Invalid Partial Text: {}".format(text_str)
+            return 0
+        print "Searching for elements by Partial Text: '{}'".format(text_str)
+        try:
+            elements = self.driver.find_elements_by_partial_link_text(text_str)
+        except NoSuchElementException:
+            print "Couldn't find any element by Partial Text '{}'".format(text_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if elements and len(elements) == 0:
+            print "Couldn't find any element by Partial Text '{}'".format(text_str)
+            return 0
+        elif len(elements) > 0:
+            self.elements = elements
+            print "Found {} elements by Partial Text: '{}'".format(len(elements),text_str)
+            self.selectedElement = self.elements[0]
+        else:
+            print "Couldn't find any element by Partial Text '{}'".format(text_str)
+            return 0
+        return elements
+
+    def findElementsByLinkText(self,link_str):
+        if not self.validateLocator(link_str):
+            print "Invalid Link Text: {}".format(link_str)
+            return 0
+        print "Searching for elements by Link Text: '{}'".format(link_str)
+        try:
+            elements = self.driver.find_elements_by_link_text(link_str)
+        except NoSuchElementException:
+            print "Couldn't find any element by Link Text '{}'".format(link_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if elements and len(elements) == 0:
+            print "Couldn't find any element by Link Text '{}'".format(link_str)
+            return 0
+        elif len(elements) > 0:
+            self.elements = elements
+            print "Found {} elements by Link Text: '{}'".format(len(elements),link_str)
+            self.selectedElement = self.elements[0]
+        else:
+            print "Couldn't find any element by Link Text '{}'".format(link_str)
+            return 0
+        return elements
 
     def findElementsByClass(self,class_str):
-        elements = []
-        if class_str == 0 and len(class_str) == 0:
-            print "Classname string is empty '{}'".format(class_str)
+        if not self.validateLocator(class_str):
+            print "Invalid Classname: {}".format(class_str)
             return 0
-        print "Searching for elements with classname: '{}'".format(class_str)
+        print "Searching for elements by Classname: '{}'".format(class_str)
         try:
             elements = self.driver.find_elements_by_class_name(class_str)
         except NoSuchElementException:
-            print "Couldn't find any element by classname '{}'".format(class_str)
+            print "Couldn't find any element by Classname '{}'".format(class_str)
             return 0
         except TimeoutException:
-            print "TimeoutException: timeout: cannot determine loading status. Taking too long. " \
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
                   "Check your internet connection and try again"
             return 0
         if elements and len(elements) == 0:
-            print "Couldn't find any element by classname '{}'".format(class_str)
+            print "Couldn't find any element by Classname '{}'".format(class_str)
             return 0
         elif len(elements) > 0:
             self.elements = elements
-            print "Found {} elements with classname: '{}'".format(len(elements),class_str)
+            print "Found {} elements by Classname: '{}'".format(len(elements),class_str)
             self.selectedElement = self.elements[0]
-            return self.elements
         else:
+            print "Couldn't find any element by Classname '{}'".format(class_str)
             return 0
+        return elements
+
+    def findElementsByXPath(self,xpath_str):
+        if not self.validateLocator(xpath_str):
+            print "Invalid XPath: {}".format(xpath_str)
+            return 0
+        print "Searching for elements by XPath: '{}'".format(xpath_str)
+        try:
+            elements = self.driver.find_elements_by_xpath(xpath_str)
+        except NoSuchElementException:
+            print "Couldn't find any element by XPath '{}'".format(xpath_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if elements and len(elements) == 0:
+            print "Couldn't find any element by XPath '{}'".format(xpath_str)
+            return 0
+        elif len(elements) > 0:
+            self.elements = elements
+            print "Found {} elements by XPath: '{}'".format(len(elements),xpath_str)
+            self.selectedElement = self.elements[0]
+        else:
+            print "Couldn't find any element by XPath '{}'".format(xpath_str)
+            return 0
+        return elements
+
+    def findElementsByCSS(self,css_str):
+        if not self.validateLocator(css_str):
+            print "Invalid CSS Selector: {}".format(css_str)
+            return 0
+        print "Searching for elements by CSS Selector: '{}'".format(css_str)
+        try:
+            elements = self.driver.find_elements_by_css_selector(css_str)
+        except NoSuchElementException:
+            print "Couldn't find any element by CSS Selector '{}'".format(css_str)
+            return 0
+        except TimeoutException:
+            print "TimeoutException: Can't determine loading status. Taking too long. " \
+                  "Check your internet connection and try again"
+            return 0
+        if elements and len(elements) == 0:
+            print "Couldn't find any element by CSS Selector '{}'".format(css_str)
+            return 0
+        elif len(elements) > 0:
+            self.elements = elements
+            print "Found {} elements by CSS Selector: '{}'".format(len(elements),css_str)
+            self.selectedElement = self.elements[0]
+        else:
+            print "Couldn't find any element by CSS Selector '{}'".format(css_str)
+            return 0
+        return elements
+
+
+    ##### Wrapper Functions #####
+
+    def validateLocator(self, locator):
+        if not locator:
+            print "Locator is NULL"
+            return 0
+        if not isinstance(locator,str):
+            print "Locator is not type str"
+            return 0
+        if locator == "" or locator == "\n" or locator == " " or locator.__contains__("\n") or len(locator) < 1:
+            print "Locator is Invalid"
+            return 0
+        return 1
+
+    def selectElement(self,element):
+        if self.elements == None or len(self.elements) == 0:
+            print "Elements is empty"
+            return 1
+        if isinstance(element,int):
+            index = element
+            if index > len(self.elements)-1 or index < 0:
+                print "Invalid index to select element"
+            self.selectedElement = self.elements[index]
+            print "Selected Element {} at Index {}".format(self.selectedElement,index)
+        elif isinstance(element,WebElement):
+            self.selectedElement = element
+            print "Selected Element {}".format(self.selectedElement)

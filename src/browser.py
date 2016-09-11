@@ -97,6 +97,9 @@ class Browser:
                     self.driver.get(url)
                     self.tab.link = self.driver.current_url
                     self.tab.title = self.driver.title
+                    element=self.element.findElementByTag("body")
+                    if element:
+                        self.element.selectedElement = element
                 except TimeoutException:
                     print "TimeoutException: Didn't load the page fully"
                     return 0
@@ -233,6 +236,9 @@ class Browser:
             print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+        element=self.element.findElementByTag("body")
+        if element:
+            self.element.selectedElement = element
         return 0
 
     def rightTab(self):
@@ -256,6 +262,9 @@ class Browser:
             print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+        element=self.element.findElementByTag("body")
+        if element:
+            self.element.selectedElement = element
         return 0
 
     def leftTab(self):
@@ -280,6 +289,9 @@ class Browser:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         except UnicodeEncodeError:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
+        element=self.element.findElementByTag("body")
+        if element:
+            self.element.selectedElement = element
         return 0
 
     def switchTab(self, index):
@@ -301,15 +313,18 @@ class Browser:
             print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+        element=self.element.findElementByTag("body")
+        if element:
+            self.element.selectedElement = element
         return 0
 
     def validateURL(self, link):
-        if link is "http://www.google.com":
-            return link
-        if not "www." in link:
+        if not "www." in link and not "http" in link:
             link = "www.{}".format(link)
         if not "http" in link:
             link = "http://{}".format(link)
+        if link is "http://www.google.com" or "www.google.com":
+            return link
         try:
             urllib2.urlopen(link)
         except urllib2.HTTPError, e:

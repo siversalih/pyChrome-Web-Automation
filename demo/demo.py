@@ -44,8 +44,9 @@ def main(argv):
                 "O to Open a Page\n" \
                 "G to Search\n" \
                 "B to Back to Previous Page\n" \
-                "E to Open Element Menu\n" \
                 "F to Forward to Next Page\n" \
+                "E to Open Element Menu\n" \
+                "L to Open Elements Menu\n" \
                 "C to Open Capture Menu\n" \
                 "FB to Login into Facebook\n" \
                 "S to Change Size\n" \
@@ -79,49 +80,154 @@ def main(argv):
                     "I to Find element by ID\n" \
                     "N to Find element by Name\n" \
                     "T to Find element by Tag\n" \
-                    "X to Find element by Partial Text\n" \
+                    "P to Find element by Partial Text\n" \
+                    "L to Find element by Link Text\n" \
+                    "C to Find element by Classname\n" \
+                    "S to Find element by CSS Selector\n" \
+                    "X to Find element by XPath\n" \
                     "Q to Return to Previous Menu"
                 char = raw_input('>> ')
                 char.lower()
                 if char == 'i':
-                    char = raw_input('Enter the element''s ID\n>> ')
-                    if char == "" or len(char) == 0:
+                    char = raw_input('Enter the element with ID\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
                         continue
                     element = browser.findElementByID(char)
-                    if element == 0:
+                    if element == 0 or element == None or not isinstance(element,WebElement):
                         print "Couldn't find any element with ID '{}'".format(char)
                         continue
-                    else: char = 'r'
-                elif char == 'n':
-                    char = raw_input('Enter the element''s Name\n>> ')
-                    if char == "" or len(char) == 0:
+                    else: break
+                if char == 'n':
+                    char = raw_input('Enter the element with Name\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
                         continue
                     element = browser.findElementByName(char)
-                    if element == 0:
+                    if element == 0 or element == None or not isinstance(element,WebElement):
                         print "Couldn't find any element with Name '{}'".format(char)
                         continue
-                    else: char = 'r'
-                elif char == 't':
-                    char = raw_input('Enter the element''s Tag\n>> ')
-                    if char == "" or len(char) == 0:
+                    else: break
+                if char == 't':
+                    char = raw_input('Enter the element with Tag\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
                         continue
                     element = browser.findElementByTag(char)
-                    if element == 0:
+                    if element == 0 or element == None or not isinstance(element,WebElement):
                         print "Couldn't find any element with Tag '{}'".format(char)
                         continue
-                    else: char = 'r'
-                elif char == 'x':
-                    char = raw_input('Enter the element''s Partial Text\n>> ')
-                    if char == "" or len(char) == 0:
+                    else: break
+                if char == 'p':
+                    char = raw_input('Enter the element with Partial Text\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
                         continue
                     element = browser.findElementByPartialText(char)
-                    if element == 0:
+                    if element == 0 or element == None or not isinstance(element,WebElement):
                         print "Couldn't find any element with Partial Text '{}'".format(char)
                         continue
-                    else: char = 'q'
+                    else: break
+                if char == 'l':
+                    char = raw_input('Enter the element with Link Text\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
+                        continue
+                    element = browser.findElementByLinkText(char)
+                    if element == 0 or element == None or not isinstance(element,WebElement):
+                        print "Couldn't find any element with Link Text '{}'".format(char)
+                        continue
+                    else: break
+                if char == 'c':
+                    char = raw_input('Enter the element with Classname\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
+                        continue
+                    element = browser.findElementByClass(char)
+                    if element == 0 or element == None or not isinstance(element,WebElement):
+                        print "Couldn't find any element with Classname '{}'".format(char)
+                        continue
+                    else: break
+                if char == 's':
+                    char = raw_input('Enter the element with CSS Selector\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
+                        continue
+                    element = browser.findElementByCSS(char)
+                    if element == 0 or element == None or not isinstance(element,WebElement):
+                        print "Couldn't find any element with CSS Selector '{}'".format(char)
+                        continue
+                    else: break
+                if char == 'x':
+                    char = raw_input('Enter the element with Xpath\n>> ')
+                    if char == "" or len(char) == 0 and browser.element.validateLocator(char) == 0:
+                        continue
+                    element = browser.findElementByXPath(char)
+                    if element == 0 or element == None or not isinstance(element,WebElement):
+                        print "Couldn't find any element with Xpath '{}'".format(char)
+                        continue
+                    else: break
                 elif char == 'q':
                     break
-
+        elif char == 'l':
+            elements = []
+            while not char is 'q':
+                if elements:
+                    del elements [:]
+                    del elements
+                print "\nPress \n" \
+                    "I to Find elements by ID\n" \
+                    "N to Find elements by Name\n" \
+                    "T to Find elements by Tag\n" \
+                    "P to Find elements by Partial Text\n" \
+                    "L to Find elements by Link Text\n" \
+                    "C to Find elements by Classname\n" \
+                    "S to Find elements by CSS Selector\n" \
+                    "X to Find elements by XPath\n" \
+                    "Q to Return to Previous Menu"
+                selection = raw_input('>> ')
+                selection.lower()
+                if selection != 'q':
+                    locator = raw_input('Enter the locator of the element you seek\n>> ')
+                    if locator == "" or len(locator) == 0 and browser.element.validateLocator(locator) == 0:
+                            print "Invalid locator entry"
+                            continue
+                if selection == 'i':
+                    elements = browser.findElementsByID(locator)
+                if selection == 'n':
+                    elements = browser.findElementsByName(locator)
+                if selection == 't':
+                    elements = browser.findElementsByTag(locator)
+                if selection == 'p':
+                    elements = browser.findElementsByPartialText(locator)
+                if selection == 'l':
+                    elements = browser.findElementsByLinkText(locator)
+                if selection == 'c':
+                    elements = browser.findElementsByClass(locator)
+                if selection == 's':
+                    elements = browser.findElementsByCSS(locator)
+                if selection == 'x':
+                    elements = browser.findElementsByXPath(locator)
+                elif selection == 'q':
+                    break
+                if elements == 0 or elements == None or not len(elements):
+                    print "Couldn't find any element with locator '{}'".format(locator)
+                    continue
+                else:
+                    for index, element in enumerate(elements):
+                        print "{}. {}".format(index+1,element)
+                    index = ' '
+                    while not index is '0':
+                        index = raw_input('Enter the element index you seek (1-{}) or (0)\n>> '.format(len(elements)))
+                        index.lower()
+                        try:
+                            index = int(index)
+                        except ValueError:
+                            print "Invalid entry for index"
+                            continue
+                        if index < 0 or index > len(elements):
+                            print "Invalid range for index. Valid Range: 0-{}  Entered: {}".format(len(elements),index)
+                            continue
+                        if index > 0 and index <= len(elements):
+                            element = elements[index-1]
+                            browser.selectElement(element)
+                            print "Selected Element {} at Index {}".format(element,index)
+                            break
+                        if index == 0:
+                            break
         elif char == 'f':
             browser.forward()
 

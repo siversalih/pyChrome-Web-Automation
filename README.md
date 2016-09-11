@@ -37,7 +37,7 @@ API functions and structure that so far has been integrated;
 - Scroll functionality
 - Zoom functionality
 - Take Screenshot
-- Locate Web Element(s) (id,tag,name,class,text)
+- Locate Web Element(s) (id,tag,name,class,text,link,css,xpath)
 - Click on element
 - Send keys to element
 - Dump Web Page or Web Element HTML code
@@ -47,7 +47,6 @@ API functions and structure that so far has been integrated;
 API functions and structure need to be implemented but not limited to;
 
 - Actions (macros, control keys)
-- More Element search type (xpath)
 - Image Processing functionality
 - Logging Level
 
@@ -55,9 +54,10 @@ So pyChrome is still in development phase and is open for anyone to fork and pit
 
 ## Objectives
 1. Create a fully functional WebDriver browser using Selenium Webdriver APIs.
-2. Leverage Selenium Webdriver APIs (ChromeDriver and PhantomJS), and other Python libraries (i.e urllib2, scipy) to create an Automation Platform engine.
-3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques in Python to design smarter higher layer APIs.
+2. Leverage Webdriver from ChromeDriver and PhantomJS, and other Python libraries (i.e urllib2, scipy) to create an Automation Platform engine.
+3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques in Python to design smarter higher layer functions.
 4. Headless Engine - Use PhantomJS to browse, automate, and mine unnoticeably.
+5. Console Application - which run only via command-line so it can be imported to any Python project
 
 ## Requirements
 
@@ -102,7 +102,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	-	It is a sublcass of browser.py. It manages interacting with the page Web Element. These are such as clicking on element, sending text to element, or sending action keys to element.
 
 -	**src/element.py**
-	-	It is a subclass of browser.py. It contains and manages searching and locating Web Element via its id, name, classname, tag, partial text, link text and xpath. It also has other functions that uses special algorithms to better locate element or list of elements. 
+	-	It is a subclass of browser.py. It contains and manages searching and locating Web Element via its id, name, classname, tag, partial text, link text, css selector, and xpath. It also has other functions that uses special algorithms to better locate an element or a list of elements. 
 
 -	**bin/chromedriver**
 	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout is already bundled with ChromeDriver 2.23 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [Google Chrome Driver][df3] and overwrite it with the one included in this checkecout.
@@ -127,7 +127,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
     ```sh
     from pyChrome import PyChrome
     ```
-2.	Create pyChrome
+2.	Start pyChrome
 	- **Chrome Browser Driver**
 
 		```sh
@@ -153,17 +153,17 @@ $ git clone https://github.com/siversalih/pyChrome.git
 -   Open a page
 
     ```sh
-	    browser.open("http://www.google.com")
+	browser.open("http://www.google.com")
 	```
 -   Close the page
 
     ```sh
-	    browser.close()
+	browser.close()
 	```
 -   Quit the session
 
     ```sh
-	    browser.quit()
+	browser.quit()
 	```
 
 #####Window Control
@@ -172,247 +172,302 @@ $ git clone https://github.com/siversalih/pyChrome.git
 -   Position
 
     ```sh
-	    point = (300,200)
-	    browser.position(point)
+	point = (300,200)
+	browser.position(point)
 	```
 -   Size
 
     ```sh
-	    siz = (1080,720)
-	    browser.size(siz)
+	siz = (1080,720)
+	browser.size(siz)
 	```
 -   Zoom
 
     ```sh
-	    val = 60
-	    browser.zoom(val)
+	val = 60
+	browser.zoom(val)
 	```
 -   Zoom Out
 
     ```sh
-	    browser.zoomOut()
+	browser.zoomOut()
 	```
 -   Zoom In
 
     ```sh
-	    browser.zoomIn()
+	browser.zoomIn()
 	```
 -   Scroll to Point
 
     ```sh
-    	point = (50,400)
-    	browser.scrol(point)
+	point = (50,400)
+	browser.scrol(point)
 	```
 -   Scroll to Element
 
     ```sh
-    	url = "http://www.ign.com"
-    	locator = "Send Us News"
-    	element = browser.findElementByPartialText(locator)
-    	browser.scrollToElement(element)
+	url = "http://www.ign.com"
+	locator = "Send Us News"
+	element = browser.findElementByPartialText(locator)
+	browser.scrollToElement(element)
 	```
 -   Scroll Down
 
     ```sh
-	    browser.scrollDown()
+	browser.scrollDown()
 	```
 -   Scroll Up
 
     ```sh
-	    browser.scrollUp()
+	browser.scrollUp()
 	```
 -   Scroll Left
 
     ```sh
-	    browser.scrollLeft()
+	browser.scrollLeft()
 	```
 -   Scroll Right
 
     ```sh
-	    browser.scrollRight()
+	browser.scrollRight()
 	```
 
 #####Navigation Control
 -   Back
 
     ```sh
-	    browser.back()
+	browser.back()
 	```
 -   Forward
 
     ```sh
-	    browser.forward()
+	browser.forward()
 	```
 
 #####Capture
 -   Screenshot
 
     ```sh
-        name = "screenshot_capture"
-        browser.screenshot(save_name=name)
+	name = "screenshot_capture"
+	browser.screenshot(save_name=name)
 	```
 -   Dump Web Page HTML
 
     ```sh
-        browser.open("http://www.google.com")
-        filename = "pagesource"
-        browser.sourceDump(filename=filename)
+	browser.open("http://www.google.com")
+	filename = "pagesource"
+	browser.sourceDump(filename=filename)
 	```
 -   Dump Web Element HTML
 
     ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-    	browser.open(url)
-    	locator = "Documentation"
-    	element = browser.findElementByPartialText(locator)
-    	filename = "elementsource"
-    	browser.elementDump(element,filename)
+    url = "http://www.seleniumhq.org/projects/webdriver/"
+    browser.open(url)
+    locator = "Documentation"
+    element = browser.findElementByPartialText(locator)
+    filename = "elementsource"
+    browser.elementDump(element,filename)
 	```
 
 #####Locate Web Element
--   Find Element by Partial Text
+-	**Locating Single Web Element**
+	
+	-	Find Element by ID
 
-    ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-	    browser.open(url)
-	    locator = "Documentation"
-	    element = browser.findElementByPartialText(locator)
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "menu_support"
+	element = browser.findElementByID(locator)
 	```
--   Find Element by ID
+	-   Find Element by Name
 
     ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-	    browser.open(url)
-	    locator = "menu_support"
-	    element = browser.findElementByID(locator)
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "submit"
+	element = browser.findElementByName(locator)
 	```
--   Find Element by Name
+	-   Find Element by Tag
 
     ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-	    browser.open(url)
-	    locator = "submit"
-	    element = browser.findElementByName(locator)
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "a"
+	element = browser.findElementByTag(locator)
 	```
--   Find Element by Tag
+	-   Find Element by Partial Text
 
     ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-	    browser.open(url)
-	    locator = "a"
-	    element = browser.findElementByTag(locator)
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "Documentation"
+	element = browser.findElementByPartialText(locator)
 	```
--   Find Elements by ID
+	-   Find Element by Link Text
 
     ```sh
-	    url = "http://www.gamespot.com"
-	    browser.open(url)
-	    locator = "view-guid-meta"
-	    elements = browser.findElementsByID(locator)
+	url = "http://www.yahoo.com"
+	browser.open(url)
+	locator = "Flickr"
+	element = browser.findElementByLinkText(locator)
 	```
--   Find Elements by Name
+	-   Find Element by Classname
 
     ```sh
-	    url = "http://www.gamespot.com"
-	    browser.open(url)
-	    locator = "application-name"
-	    element = browser.findElementsByName(locator)
+    url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+    browser.open(url)
+    locator = "input"
+    element = browser.findElementByClass(locator)
 	```
--   Find Elements by Tag
+	-   Find Element by XPath
 
     ```sh
-	    url = "http://www.gamespot.com"
-	    browser.open(url)
-	    locator = "link"
-	    element = browser.findElementsByTag(locator)
+	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "//*[@id=\"wp-submit\"]"
+	element = browser.findElementByXPath(locator)
 	```
--   Find Elements by Class
+
+-	**Locating Multiple Web Elements**
+	
+	-   Find Elements by ID
 
     ```sh
-	    url = "http://www.gamespot.com"
-	    browser.open(url)
-	    locator = "img"
-	    element = browser.findElementsByClass(locator)
+    url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+    browser.open(url)
+	locator = "wp-submit"
+    elements = browser.findElementsByID(locator)
+	```
+	
+	-   Find Elements by Name
+
+    ```sh
+    url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+    browser.open(url)
+	locator = "loginform"
+    elements = browser.findElementsByName(locator)
+	```
+	
+	-   Find Elements by Tag
+
+    ```sh
+	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "p"
+	element = browser.findElementsByTag(locator)
+	```
+	-   Find Elements by Partial Text
+
+    ```sh
+	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "WordPress"
+	element = browser.findElementsByPartialText(locator)
+	```
+	-   Find Elements by Link Text
+
+    ```sh
+	url = "http://www.yahoo.com"
+	browser.open(url)
+	locator = "Mail"
+	element = browser.findElementsByLinkText(locator)
+	```
+	-   Find Elements by Class
+
+    ```sh
+    url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "input"
+	element = browser.findElementsByClass(locator)
+	```
+-   Find Elements by Xpath
+
+    ```sh
+    url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "//input[@class=\"input\"]"
+	element = browser.findElementsByXPath(locator)
 	```
 
 #####Interaction
 -   Send Text to Element
 
     ```sh
-	    url = "https://www.google.com"
-	    locator = "q"
-	    text = "Selenium Webdriver"
-	    element = browser.findElementByName(locator)
-	    browser.sendTextToElement(text,element)
+	url = "https://www.google.com"
+	locator = "q"
+	text = "Selenium Webdriver"
+	element = browser.findElementByName(locator)
+	browser.sendTextToElement(text,element)
 	```
 -   Click on Element
 
     ```sh
-	    url = "http://www.seleniumhq.org/projects/webdriver/"
-	    locator = "menu_download"
-	    element = browser.findElementByID(locator)
-	    browser.clickonElement(element)
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	locator = "menu_download"
+	element = browser.findElementByID(locator)
+	browser.clickonElement(element)
 	```
 
 #####Tab Control
 -	Open New Tab
 
     ```sh
-	    browser.newTab()
+	browser.newTab()
 	```
 -	Close Current Tab
 
     ```sh
-	    browser.closeTab()
+	browser.closeTab()
 	```
 -	Switch to Left Tab
 
     ```sh
-	    browser.leftTab()
+	browser.leftTab()
 	```
 -	Switch to Right Tab
 
     ```sh
-	    browser.rightTab()
+	browser.rightTab()
 	```
 -	Switch to Index Tab
 
     ```sh
-    	index = 3
-	    browser.switchTab(index)
+	index = 3
+	browser.switchTab(index)
 	```
 -	Close Tab at Index
 
     ```sh
-    	index = 3
-	    browser.closeTab(index)
+	index = 3
+	browser.closeTab(index)
 	```
 
 #####Headless Browsing
 -   Init with Ghostdriver
 
     ```sh
-	    browser = PyChrome(ghostmode=True)
+	browser = PyChrome(ghostmode=True)
 	```
 -   Switch to Ghostdriver at Runtime
 
     ```sh
-	    browser.switchDriverMode(ghostmode=True)
+	browser.switchDriverMode(ghostmode=True)
 	```
 
 #####Combo
 -   Search
 
     ```sh
-	    text = "What is Selenium Chrome WebDriver"
-	    browser.search(text)
+	text = "What is Selenium Chrome WebDriver"
+	browser.search(text)
 	```
 -   Facebook Login
 
     ```sh
-	    username = "valid_username"
-	    password = "valid_password"
-	    browser.loginFacebook(username,password)
+	username = "valid_username"
+	password = "valid_password"
+	browser.loginFacebook(username,password)
 	```
 
 ## Test

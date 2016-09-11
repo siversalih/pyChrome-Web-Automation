@@ -32,13 +32,16 @@ class Element:
 
     ##### Locating Element #####
 
-    def findElementByID(self,id_str):
+    def findElementByID(self,id_str, element = 0):
         if not self.validateLocator(id_str):
             print "Invalid ID: {}".format(id_str)
             return 0
         print "Searching for element by ID: '{}'".format(id_str)
         try:
-            element = self.driver.find_element_by_id(id_str)
+            if element:
+                element = element.find_element_by_id(id_str)
+            else:
+                element = self.driver.find_element_by_id(id_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by ID '{}'".format(id_str)
             return 0
@@ -54,13 +57,16 @@ class Element:
             return 0
         return element
 
-    def findElementByName(self,name_str):
+    def findElementByName(self,name_str,element=0):
         if not self.validateLocator(name_str):
             print "Invalid Name: {}".format(name_str)
             return 0
         print "Searching for element by Name: '{}'".format(name_str)
         try:
-            element = self.driver.find_element_by_name(name_str)
+            if element:
+                element = element.find_element_by_name(name_str)
+            else:
+                element = self.driver.find_element_by_name(name_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Name '{}'".format(name_str)
             return 0
@@ -76,13 +82,16 @@ class Element:
             return 0
         return element
 
-    def findElementByTag(self,tag_str):
+    def findElementByTag(self,tag_str,element=0):
         if not self.validateLocator(tag_str):
             print "Invalid Tag: {}".format(tag_str)
             return 0
         print "Searching for element by Tag: '{}'".format(tag_str)
         try:
-            element = self.driver.find_element_by_tag_name(tag_str)
+            if element:
+                element = element.find_element_by_tag_name(tag_str)
+            else:
+                element = self.driver.find_element_by_tag_name(tag_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Tag '{}'".format(tag_str)
             return 0
@@ -98,13 +107,16 @@ class Element:
             return 0
         return element
 
-    def findElementByPartialText(self,text_str):
+    def findElementByPartialText(self,text_str,element=0):
         if not self.validateLocator(text_str):
             print "Invalid Partial Text: {}".format(text_str)
             return 0
         print "Searching for element by Partial Text: '{}'".format(text_str)
         try:
-            element = self.driver.find_element_by_partial_link_text(text_str)
+            if element:
+                element = element.find_element_by_partial_link_text(text_str)
+            else:
+                element = self.driver.find_element_by_partial_link_text(text_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Partial Text '{}'".format(text_str)
             return 0
@@ -120,13 +132,16 @@ class Element:
             return 0
         return element
 
-    def findElementByLinkText(self,link_str):
+    def findElementByLinkText(self,link_str,element=0):
         if not self.validateLocator(link_str):
             print "Invalid Link Text: {}".format(link_str)
             return 0
         print "Searching for element by Link Text: '{}'".format(link_str)
         try:
-            element = self.driver.find_element_by_link_text(link_str)
+            if element:
+                element = element.find_element_by_link_text(link_str)
+            else:
+                element = self.driver.find_element_by_link_text(link_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Link Text '{}'".format(link_str)
             return 0
@@ -142,13 +157,16 @@ class Element:
             return 0
         return element
 
-    def findElementByClass(self,class_str):
+    def findElementByClass(self,class_str,element=0):
         if not self.validateLocator(class_str):
             print "Invalid Classname: {}".format(class_str)
             return 0
         print "Searching for element by Classname: '{}'".format(class_str)
         try:
-            element = self.driver.find_element_by_class_name(class_str)
+            if element:
+                element = element.find_element_by_class_name(class_str)
+            else:
+                element = self.driver.find_element_by_class_name(class_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Classname '{}'".format(class_str)
             return 0
@@ -164,13 +182,16 @@ class Element:
             return 0
         return element
 
-    def findElementByXPath(self,xpath_str):
+    def findElementByXPath(self,xpath_str,element=0):
         if not self.validateLocator(xpath_str):
             print "Invalid Xpath: {}".format(xpath_str)
             return 0
         print "Searching for element by Xpath: '{}'".format(xpath_str)
         try:
-            element = self.driver.find_element_by_xpath(xpath_str)
+            if element:
+                element = element.find_element_by_xpath(xpath_str)
+            else:
+                element = self.driver.find_element_by_xpath(xpath_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by Xpath '{}'".format(xpath_str)
             return 0
@@ -186,13 +207,16 @@ class Element:
             return 0
         return element
 
-    def findElementByCSS(self,css_str):
+    def findElementByCSS(self,css_str,element=0):
         if not self.validateLocator(css_str):
             print "Invalid CSS Selector: {}".format(css_str)
             return 0
         print "Searching for element by CSS Selector: '{}'".format(css_str)
         try:
-            element = self.driver.find_element_by_css_selector(css_str)
+            if element:
+                element = element.find_element_by_css_selector(css_str)
+            else:
+                element = self.driver.find_element_by_css_selector(css_str)
         except NoSuchElementException:
             print "NoSuchElementException: Couldn't find element by CSS Selector '{}'".format(css_str)
             return 0
@@ -210,13 +234,16 @@ class Element:
 
     ##### Locating Multiple Elements #####
 
-    def findElementsByName(self,name_str):
+    def findElementsByName(self,name_str,element=0):
         if not self.validateLocator(name_str):
             print "Invalid Name: {}".format(name_str)
             return 0
         print "Searching for elements by Name: '{}'".format(name_str)
         try:
-            elements = self.driver.find_elements_by_name(name_str)
+            if element:
+                elements = element.find_elements_by_name(name_str)
+            else:
+                elements = self.driver.find_elements_by_name(name_str)
         except NoSuchElementException:
             print "Couldn't find any element by Name '{}'".format(name_str)
             return 0
@@ -236,13 +263,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByID(self,id_str):
+    def findElementsByID(self,id_str,element=0):
         if not self.validateLocator(id_str):
             print "Invalid ID: {}".format(id_str)
             return 0
         print "Searching for elements by ID: '{}'".format(id_str)
         try:
-            elements = self.driver.find_elements_by_id(id_str)
+            if element:
+                elements = element.find_elements_by_id(id_str)
+            else:
+                elements = self.driver.find_elements_by_id(id_str)
         except NoSuchElementException:
             print "Couldn't find any element by ID '{}'".format(id_str)
             return 0
@@ -262,13 +292,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByTag(self,tag_str):
+    def findElementsByTag(self,tag_str,element=0):
         if not self.validateLocator(tag_str):
             print "Invalid Tag: {}".format(tag_str)
             return 0
         print "Searching for elements by Tag: '{}'".format(tag_str)
         try:
-            elements = self.driver.find_elements_by_tag_name(tag_str)
+            if element:
+                elements = element.find_elements_by_tag_name(tag_str)
+            else:
+                elements = self.driver.find_elements_by_tag_name(tag_str)
         except NoSuchElementException:
             print "Couldn't find any element by Tag '{}'".format(tag_str)
             return 0
@@ -288,13 +321,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByPartialText(self,text_str):
+    def findElementsByPartialText(self,text_str,element=0):
         if not self.validateLocator(text_str):
             print "Invalid Partial Text: {}".format(text_str)
             return 0
         print "Searching for elements by Partial Text: '{}'".format(text_str)
         try:
-            elements = self.driver.find_elements_by_partial_link_text(text_str)
+            if element:
+                elements = element.find_elements_by_partial_link_text(text_str)
+            else:
+                elements = self.driver.find_elements_by_partial_link_text(text_str)
         except NoSuchElementException:
             print "Couldn't find any element by Partial Text '{}'".format(text_str)
             return 0
@@ -314,13 +350,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByLinkText(self,link_str):
+    def findElementsByLinkText(self,link_str,element=0):
         if not self.validateLocator(link_str):
             print "Invalid Link Text: {}".format(link_str)
             return 0
         print "Searching for elements by Link Text: '{}'".format(link_str)
         try:
-            elements = self.driver.find_elements_by_link_text(link_str)
+            if element:
+                elements = element.find_elements_by_link_text(link_str)
+            else:
+                elements = self.driver.find_elements_by_link_text(link_str)
         except NoSuchElementException:
             print "Couldn't find any element by Link Text '{}'".format(link_str)
             return 0
@@ -340,13 +379,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByClass(self,class_str):
+    def findElementsByClass(self,class_str,element=0):
         if not self.validateLocator(class_str):
             print "Invalid Classname: {}".format(class_str)
             return 0
         print "Searching for elements by Classname: '{}'".format(class_str)
         try:
-            elements = self.driver.find_elements_by_class_name(class_str)
+            if element:
+                elements = element.find_elements_by_class_name(class_str)
+            else:
+                elements = self.driver.find_elements_by_class_name(class_str)
         except NoSuchElementException:
             print "Couldn't find any element by Classname '{}'".format(class_str)
             return 0
@@ -366,13 +408,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByXPath(self,xpath_str):
+    def findElementsByXPath(self,xpath_str,element=0):
         if not self.validateLocator(xpath_str):
             print "Invalid XPath: {}".format(xpath_str)
             return 0
         print "Searching for elements by XPath: '{}'".format(xpath_str)
         try:
-            elements = self.driver.find_elements_by_xpath(xpath_str)
+            if element:
+                elements = element.find_elements_by_xpath(xpath_str)
+            else:
+                elements = self.driver.find_elements_by_xpath(xpath_str)
         except NoSuchElementException:
             print "Couldn't find any element by XPath '{}'".format(xpath_str)
             return 0
@@ -392,13 +437,16 @@ class Element:
             return 0
         return elements
 
-    def findElementsByCSS(self,css_str):
+    def findElementsByCSS(self,css_str,element=0):
         if not self.validateLocator(css_str):
             print "Invalid CSS Selector: {}".format(css_str)
             return 0
         print "Searching for elements by CSS Selector: '{}'".format(css_str)
         try:
-            elements = self.driver.find_elements_by_css_selector(css_str)
+            if element:
+                elements = element.find_elements_by_css_selector(css_str)
+            else:
+                elements = self.driver.find_elements_by_css_selector(css_str)
         except NoSuchElementException:
             print "Couldn't find any element by CSS Selector '{}'".format(css_str)
             return 0

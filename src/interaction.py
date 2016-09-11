@@ -48,7 +48,7 @@ class Interaction(Element):
         if text == 0 or len(text) == 0:
             return 1
         try:
-            print "Sending '{}' to Element ID '{}'".format(text,element.id)
+            print "Sending '{}' to Element ID '{}'".format(text,self.selectedElement.id)
             self.selectedElement.send_keys(text)
             time.sleep(0.2)
         except ElementNotVisibleException:

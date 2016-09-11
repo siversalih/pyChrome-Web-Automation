@@ -22,42 +22,38 @@ More documentation on PhantomJS Webdriver can be found at [PhantomJS][df6]
 ## pyChrome
 ![alt tag][DSNIMG]
 
-pyChrome is a scripted Web Automation Platform engine. It uses Selenium Webdriver APIs from ChromeDriver, and PhantomJS. pyChrome also includes other Python modules, such as json, urllib2, numpy, scipy to control, analyze and interact with the browser where Selenium Webdriver APIs may not meet the demand or optimal solution. Also pyChrome is a console type application. Which it can be imported to any type of Python project as a module for creating bigger application and use case scenarios, such as for botting, web automation, data mining, and it has headless browsing capabilities.
+pyChrome is a scripted Web Automation Platform engine. It uses Selenium Webdriver APIs with ChromeDriver and PhantomJS binary. pyChrome also includes other Python modules, such as json, urllib2, numpy, scipy to control, analyze and interact with the browser where Selenium Webdriver APIs may not meet the demand or optimal solution. Also pyChrome is a console type application. Which it can be imported to any type of Python project as a module for creating bigger application and use case scenarios, such as for botting, web automation, data mining, and headless browsing.
 
 ## Milestones
-However, there are still much more APIs need to be implemented for pyChrome to be a full Web Automation Platform.
 
-API functions and structure that so far has been integrated;
+API functions and structure that so far has been integrated,
 
 - Opening and Closing a page (basics)
 - Controlling the window (size, position)
 - Browser Navigation Control (back, forward)
-- Login to Facebook
 - Search using Google Search Engine
 - Scroll functionality
 - Zoom functionality
 - Take Screenshot
-- Locate Web Element(s) (id,tag,name,class,text,link,css,xpath)
-- Click on element
-- Send keys to element
-- Dump Web Page or Web Element HTML code
+- Locate Element(s) (id,tag,name,class,text,link,css,xpath)
+- Element Interaction (click and send text)
+- Dump Web page or Web element HTML code
 - Ghost Mode - Headless Browser capabilities
 - Tab Control (open, close, switch)
 
-API functions and structure need to be implemented but not limited to;
 
-- Actions (macros, control keys)
+Yet to be done,
+
+- Actions (macros, keys)
 - Image Processing functionality
 - Logging Level
 
-So pyChrome is still in development phase and is open for anyone to fork and pitch in with this project.
-
 ## Objectives
-1. Create a fully functional WebDriver browser using Selenium Webdriver APIs.
+1. Create a WebDriver browser using Selenium Webdriver APIs.
 2. Leverage Webdriver from ChromeDriver and PhantomJS, and other Python libraries (i.e urllib2, scipy) to create an Automation Platform engine.
 3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques in Python to design smarter higher layer functions.
 4. Headless Engine - Use PhantomJS to browse, automate, and mine unnoticeably.
-5. Console Application - which run only via command-line so it can be imported to any Python project
+5. Console Application - which should run only via command-line so it can be imported to other Python project
 
 ## Requirements
 
@@ -381,7 +377,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	locator = "input"
 	element = browser.findElementsByClass(locator)
 	```
--   Find Elements by Xpath
+	-   Find Elements by Xpath
 
     ```sh
     url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
@@ -475,14 +471,15 @@ $ git clone https://github.com/siversalih/pyChrome.git
 ```sh
 python test.py
 ```
+
+####[Test Results][TSTPDF]
+
 **Mac**
 
 -	[Python 2.7 or Python 3.5][tm1]
 -	[chromedriver_mac64.zip][tm2]
 - 	[phantomjs-2.1.1-macosx.zip][r5]
 -	[Selenium 3.0.0.b2][tm3]
-
-[Results][TSTPDF]
 
 **Windows**
 

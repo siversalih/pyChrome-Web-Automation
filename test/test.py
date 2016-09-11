@@ -512,54 +512,14 @@ class closeTabAtIndexTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
-##### Locating Element ######
-
-class findElementByTextTest(unittest.TestCase):
-    browser = None
-    filename = ""
-    directory = ""
-    url = ""
-    text = ""
-
-    @classmethod
-    def setUpClass(self):
-        self.filename = 'config.json'
-        self.directory = os.getcwd()
-        file_directory = "{}/{}".format(self.directory,self.filename)
-        if(not os.path.exists(file_directory)):
-            print("{} is not in {}".format(self.filename,self.directory))
-            exit(1)
-        self.browser = PyChrome(self.filename)
-        self.url = "http://www.seleniumhq.org/projects/webdriver/"
-        self.text = "Documentation"
-
-    @classmethod
-    def tearDownClass(self):
-        self.browser.quit()
-        self.browser = None
-        self.filename = None
-        self.directory = None
-        self.url = None
-        self.text = None
-
-    def runTest(self):
-        print "\nTest Begin: Find Element By Partial Text"
-        err = self.browser.open(self.url)
-        time.sleep(1)
-        element = self.browser.findElementByPartialText(self.text)
-        if element == 0:
-            err = 1
-        else: err = 0 or err
-        time.sleep(1)
-        self.assertFalse(err,0)
-        print "Test Ended"
+##### Locating Element(s) ######
 
 class findElementByIDTest(unittest.TestCase):
     browser = None
     filename = ""
     directory = ""
     url = ""
-    id_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -570,8 +530,8 @@ class findElementByIDTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.seleniumhq.org/projects/webdriver/"
-        self.id_str = "menu_support"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "user_login"
 
     @classmethod
     def tearDownClass(self):
@@ -580,13 +540,13 @@ class findElementByIDTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.id_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Element By ID"
         err = self.browser.open(self.url)
         time.sleep(1)
-        element = self.browser.findElementByID(self.id_str)
+        element = self.browser.findElementByID(self.locator)
         if element == 0:
             err = 1
         else: err = 0 or err
@@ -599,7 +559,7 @@ class findElementByNameTest(unittest.TestCase):
     filename = ""
     directory = ""
     url = ""
-    name_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -610,8 +570,8 @@ class findElementByNameTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.seleniumhq.org/projects/webdriver/"
-        self.name_str = "submit"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "log"
 
     @classmethod
     def tearDownClass(self):
@@ -620,13 +580,13 @@ class findElementByNameTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.name_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Element By Name"
         err = self.browser.open(self.url)
         time.sleep(1)
-        element = self.browser.findElementByName(self.name_str)
+        element = self.browser.findElementByName(self.locator)
         if element == 0:
             err = 1
         else: err = 0 or err
@@ -639,7 +599,7 @@ class findElementByTagTest(unittest.TestCase):
     filename = ""
     directory = ""
     url = ""
-    tag_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -650,8 +610,8 @@ class findElementByTagTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.seleniumhq.org/projects/webdriver/"
-        self.tag_str = "a"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "form"
 
     @classmethod
     def tearDownClass(self):
@@ -660,13 +620,13 @@ class findElementByTagTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.tag_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Element By Tag"
         err = self.browser.open(self.url)
         time.sleep(1)
-        element = self.browser.findElementByTag(self.tag_str)
+        element = self.browser.findElementByTag(self.locator)
         if element == 0:
             err = 1
         else: err = 0 or err
@@ -674,12 +634,12 @@ class findElementByTagTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
-class findElementsByIDTest(unittest.TestCase):
+class findElementByPartialTextTest(unittest.TestCase):
     browser = None
     filename = ""
     directory = ""
     url = ""
-    id_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -690,8 +650,8 @@ class findElementsByIDTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.gamespot.com"
-        self.id_str = "view-guid-meta"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "WordPress"
 
     @classmethod
     def tearDownClass(self):
@@ -700,18 +660,180 @@ class findElementsByIDTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.id_str = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Element By Partial Text"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        element = self.browser.findElementByPartialText(self.locator)
+        if element == 0:
+            err = 1
+        else: err = 0 or err
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementByLinkTextTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.yahoo.com"
+        self.locator = "Flickr"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Element By Link Text"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        element = self.browser.findElementByLinkText(self.locator)
+        if element == 0:
+            err = 1
+        else: err = 0 or err
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementByClassTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "input"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Element By Classname"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        element = self.browser.findElementByClass(self.locator)
+        if element == 0:
+            err = 1
+        else: err = 0 or err
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementByXPathTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "//*[@id=\"wp-submit\"]"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Element By XPath"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        element = self.browser.findElementByXPath(self.locator)
+        if element == 0:
+            err = 1
+        else: err = 0 or err
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+
+class findElementsByIDTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "wp-submit"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Elements By ID"
         err = self.browser.open(self.url)
         time.sleep(1)
-        elements = self.browser.findElementsByID(self.id_str)
+        elements = self.browser.findElementsByID(self.locator)
         if elements == 0 or len(elements) == 0:
             err = 1
         else:
             err = 0 or err
-            print "Found {} elements of name {}".format(len(elements),self.id_str)
+            print "Found {} elements by ID {}".format(len(elements),self.locator)
+
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -721,7 +843,7 @@ class findElementsByNameTest(unittest.TestCase):
     filename = ""
     directory = ""
     url = ""
-    name_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -732,8 +854,8 @@ class findElementsByNameTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.gamespot.com"
-        self.name_str = "application-name"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "loginform"
 
     @classmethod
     def tearDownClass(self):
@@ -742,18 +864,18 @@ class findElementsByNameTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.name_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Elements By Name"
         err = self.browser.open(self.url)
         time.sleep(1)
-        elements = self.browser.findElementsByName(self.name_str)
+        elements = self.browser.findElementsByName(self.locator)
         if elements == 0 or len(elements) == 0:
             err = 1
         else:
             err = 0 or err
-            print "Found {} elements of name {}".format(len(elements),self.name_str)
+            print "Found {} elements by Name {}".format(len(elements),self.locator)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -763,7 +885,7 @@ class findElementsByTagTest(unittest.TestCase):
     filename = ""
     directory = ""
     url = ""
-    tag_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -774,8 +896,8 @@ class findElementsByTagTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.gamespot.com"
-        self.tag_str = "link"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "p"
 
     @classmethod
     def tearDownClass(self):
@@ -784,18 +906,112 @@ class findElementsByTagTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.tag_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Elements By Tag"
         err = self.browser.open(self.url)
         time.sleep(1)
-        elements = self.browser.findElementsByTag(self.tag_str)
+        elements = self.browser.findElementsByTag(self.locator)
         if elements == 0 or len(elements) == 0:
             err = 1
         else:
             err = 0 or err
-            print "Found {} elements of tag {}".format(len(elements),self.tag_str)
+            print "Found {} elements by Tag {}".format(len(elements),self.locator)
+        if not len(elements) == 6:
+            err = 1
+        else: err = err or 0
+
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementsByPartialTextTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "WordPress"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Elements By Partial Text"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        elements = self.browser.findElementsByPartialText(self.locator)
+        if elements == 0 or len(elements) == 0:
+            err = 1
+        else:
+            err = 0 or err
+            print "Found {} elements by Partial Text {}".format(len(elements),self.locator)
+        if not len(elements) == 2:
+            err = 1
+        else: err = err or 0
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementsByLinkTextTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.yahoo.com"
+        self.locator = "Mail"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Elements By Link Text"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        elements = self.browser.findElementsByLinkText(self.locator)
+        if elements == 0 or len(elements) == 0:
+            err = 1
+        else:
+            err = 0 or err
+            print "Found {} elements by Link Text {}".format(len(elements),self.locator)
+        if not len(elements) == 2:
+            err = 1
+        else: err = err or 0
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -805,7 +1021,7 @@ class findElementsByClassTest(unittest.TestCase):
     filename = ""
     directory = ""
     url = ""
-    class_str = ""
+    locator = ""
 
     @classmethod
     def setUpClass(self):
@@ -816,8 +1032,8 @@ class findElementsByClassTest(unittest.TestCase):
             print("{} is not in {}".format(self.filename,self.directory))
             exit(1)
         self.browser = PyChrome(self.filename)
-        self.url = "http://www.gamespot.com"
-        self.class_str = "img"
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "input"
 
     @classmethod
     def tearDownClass(self):
@@ -826,18 +1042,66 @@ class findElementsByClassTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.class_str = None
+        self.locator = None
 
     def runTest(self):
         print "\nTest Begin: Find Elements By Classname"
         err = self.browser.open(self.url)
         time.sleep(1)
-        elements = self.browser.findElementsByClass(self.class_str)
+        elements = self.browser.findElementsByClass(self.locator)
         if elements == 0 or len(elements) == 0:
             err = 1
         else:
             err = 0 or err
-            print "Found {} elements of classname {}".format(len(elements),self.class_str)
+            print "Found {} elements by Classname {}".format(len(elements),self.locator)
+        if not len(elements) == 2:
+            err = 1
+        else: err = err or 0
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementsByXPathTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "//input[@class=\"input\"]"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Elements By XPath"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        elements = self.browser.findElementsByXPath(self.locator)
+        if elements == 0 or len(elements) == 0:
+            err = 1
+        else:
+            err = 0 or err
+            print "Found {} elements by Classname {}".format(len(elements),self.locator)
+        if not len(elements) == 2:
+            err = 1
+        else: err = err or 0
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"

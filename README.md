@@ -114,10 +114,10 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	- Contains all the configuration settings for how the server and the client should start. When pyChrome.py object gets created, it reads the configuration settings from config.json. If the file is not present, it creates a default settings. Users can also modify these settings via calling pyChrome.py APIs.
 
 - 	demo/demo.py (Optional)
-	- Demo to run all the implemented functions in pyChrome.py
+	- Demo to run most of the implemented functions
 
 -	test/test.py (Optional)
-	- Test Suite to run all the implemented functions in pyChrome.py
+	- Test Suite to run all the implemented functions
 
 
 ## Usage

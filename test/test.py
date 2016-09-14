@@ -1106,6 +1106,280 @@ class findElementsByXPathTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
+
+class subElementSearchTest_1(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    locator = ""
+    element = None
+    elements = []
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "www.yahoo.com"
+        self.locator = "trending-list"
+        self.element = None
+        self.elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.locator = None
+        self.element = None
+        del self.elements[:]
+        del self.elements
+
+    def runTest(self):
+        print "\nTest Begin: Locate Sub-element Test 1"
+        err = self.browser.open(self.link)
+        time.sleep(1)
+        self.element = self.browser.findElementByClass(self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "li"
+        self.elements = self.browser.findElementsByTag(self.locator,self.element)
+        if self.elements == None or not len(self.elements) == 10:
+            err = 1
+        else: err = 0 or err
+        self.element = self.elements[0]
+        err = err or self.browser.clickElement(self.element)
+        time.sleep(1)
+        self.locator = "ov-a"
+        self.elements = self.browser.findElementsByClass(self.locator)
+        if self.elements == None or not len(self.elements) == 6:
+            err = 1
+        else: err = 0 or err
+        self.element = self.elements[1]
+        err = err or self.browser.clickElement(self.element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class subElementSearchTest_2(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    locator = ""
+    element = None
+    elements = []
+    text = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "www.google.com"
+        self.locator = "q"
+        self.text = "What is Selenium Webdriver"
+        self.element = None
+        self.elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.locator = None
+        self.text = None
+        self.element = None
+        del self.elements[:]
+        del self.elements
+
+    def runTest(self):
+        print "\nTest Begin: Locate Sub-element Test 2"
+        err = self.browser.open(self.link)
+        if err:
+            err = 1
+        else: err = 0 or err
+        self.element = self.browser.findElement(name=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        err = self.browser.sendText(self.text)
+        if err:
+            err = 1
+        else: err = 0 or err
+        self.locator = "btnG"
+        self.element = self.browser.findElement(name=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        err = self.browser.clickButton()
+        if err:
+            err = 1
+        else: err = 0 or err
+        self.locator = "srg"
+        self.element = self.browser.findElementByClass(self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "g"
+        self.elements = self.browser.findElementsByClass(self.locator,self.element)
+        if self.elements == 0 or self.elements == None or len(self.elements) == 0:
+            err = 1
+        else: err = 0 or err
+        err = self.browser.selectElement(2)
+        if err:
+            err = 1
+        else: err = 0 or err
+        err = self.browser.clickLink()
+        if err:
+            err = 1
+        else: err = 0 or err
+
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class subElementSearchTest_3(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    locator = ""
+    element = None
+    elements = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.seleniumhq.org/projects/webdriver/"
+        self.locator = "header"
+        self.element = None
+        self.elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.locator = None
+        self.element = None
+        del self.elements[:]
+        del self.elements
+
+    def runTest(self):
+        print "\nTest Begin: Locate Sub-element Test 3"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElement(id=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "ul"
+        self.element = self.browser.findElement(element=self.element,tag=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "li"
+        self.elements = self.browser.findElementsByTag(self.locator,self.element)
+        if self.elements == None or self.elements == 0 or len(self.elements) < 3:
+            err = 1
+        else: err = 0 or err
+        err = err or self.browser.selectElement(2)
+        err = err or self.browser.clickElement(self.element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class parentElementSearchTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    locator = ""
+    element = None
+    elements = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.seleniumhq.org/projects/webdriver/"
+        self.locator = "header"
+        self.element = None
+        self.elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.locator = None
+        self.element = None
+        del self.elements[:]
+        del self.elements
+
+    def runTest(self):
+        print "\nTest Begin: Locate Parent Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElement(id=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "ul"
+        self.element = self.browser.findElement(element=self.element,tag=self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.locator = "li"
+        self.elements = self.browser.findElementsByTag(self.locator,self.element)
+        if self.elements == None or self.elements == 0 or len(self.elements) < 3:
+            err = 1
+        else: err = 0 or err
+        err = err or self.browser.selectElement(2)
+        self.element = self.browser.findParentElement()
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.element = self.browser.findParentElement(self.element)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        id_name = self.element.get_attribute("id")
+        if id_name != "header":
+            err = 1
+        else: err = 0 or err
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
 ##### Interaction ######
 
 class sendTextToElementTest(unittest.TestCase):
@@ -1154,12 +1428,12 @@ class sendTextToElementTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
-class sendTextToElementNameTest(unittest.TestCase):
+class sendTextTest(unittest.TestCase):
     browser = None
     filename = ""
     directory = ""
     url = ""
-    name_str = ""
+    element = None
     text = ""
 
     @classmethod
@@ -1172,8 +1446,8 @@ class sendTextToElementNameTest(unittest.TestCase):
             exit(1)
         self.browser = PyChrome(self.filename)
         self.url = "https://www.google.com"
-        self.name_str = "q"
         self.text = "Selenium Webdriver"
+        self.element = None
 
     @classmethod
     def tearDownClass(self):
@@ -1182,15 +1456,14 @@ class sendTextToElementNameTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.name_str = None
         self.text = None
+        self.element = None
 
     def runTest(self):
-        print "\nTest Begin: Send Text to Name of Element"
-        time.sleep(1)
+        print "\nTest Begin: Send Text"
         err = self.browser.open(self.url)
-        time.sleep(1)
-        err = err or self.browser.sendTextToName(self.name_str,self.text)
+        err = err or self.browser.sendText(self.text)
+
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -1231,17 +1504,58 @@ class clickonElementTest(unittest.TestCase):
         self.element = self.browser.findElementByID(self.id_str)
         if self.element == 0:
             err = 1
-        err = err or self.browser.clickonElement(self.element)
+        err = err or self.browser.clickElement(self.element)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
 
-class clickonIDTest(unittest.TestCase):
+class clickButtonTest(unittest.TestCase):
     browser = None
     filename = ""
     directory = ""
     url = ""
-    id_str = ""
+    text = ""
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://www.google.com"
+        self.text = "Selenium Documentation"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Click on Button"
+        err = self.browser.open(self.url)
+        err = err or self.browser.sendText(self.text)
+        self.browser.findBodyElement()
+        err = err or self.browser.clickButton()
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class clickLinkTest(unittest.TestCase):
+    browser = None
+    filename = None
+    directory = None
+    url = None
+    locator = None
+    element = None
 
     @classmethod
     def setUpClass(self):
@@ -1253,7 +1567,8 @@ class clickonIDTest(unittest.TestCase):
             exit(1)
         self.browser = PyChrome(self.filename)
         self.url = "http://www.seleniumhq.org/projects/webdriver/"
-        self.id_str = "menu_download"
+        self.locator = "menu_documentation"
+        self.element = None
 
     @classmethod
     def tearDownClass(self):
@@ -1262,14 +1577,17 @@ class clickonIDTest(unittest.TestCase):
         self.filename = None
         self.directory = None
         self.url = None
-        self.id_str = None
+        self.element = None
 
     def runTest(self):
-        print "\nTest Begin: Click on ID"
-        time.sleep(1)
+        print "\nTest Begin: Click on Link"
         err = self.browser.open(self.url)
-        time.sleep(1)
-        err = err or self.browser.clickonID(self.id_str)
+        self.element =  self.browser.findElementByID(self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        err = err or self.browser.clickLink()
+
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"

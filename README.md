@@ -364,7 +364,7 @@ The big and probably the most challenging part of Web Automation is finding the 
 
 -	**Locating Sub-Element**
 
-	To locate the sub-element, the parent element (Web Element object) must have been obtained. Then using the same function, the parent element must pass in as input argument along with the locator as shown in below.
+	To locate the sub-element, the parent element (Web Element object) must have been obtained. Then using the same function, the parent element must pass into the function as input argument along with the locator as shown in below.
 
 	- Find Sub-Element
 

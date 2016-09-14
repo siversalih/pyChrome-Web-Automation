@@ -287,7 +287,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 #####Locate Web Element
 The big and probably the most challenging part of Web Automation is finding the required locator. And it's done manually by the Automator prior of locating it's Web Element. Once the Automator gathers the locator, its Web Element can be obtained by id, name, tag, class, partial text, link text, css selector or most powerfully by xpath. Depending of which locator (or attribute) is available and the Automator approach, finding the Web element is easy as follows:
 
--	**Locating A Web Element**
+-	**Locating Web Element**
 	
 	-	Find Element by ID
 

@@ -1,1 +1,1 @@
-{"driver":"chromedriver","directory":"","scroll":0,"position":[100,50],"size":[720,480],"zoom":70,"pageload_timeout":-1,"ghost":false}
+{"driver":"chromedriver","directory":"","position":[0,0],"size":[820,800],"zoom":70,"pageload_timeout":-1,"ghost":false,"scroll":[0,0]}

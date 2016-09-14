@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import unittest
 
@@ -7,6 +8,7 @@ if(not os.path.exists(par_dir)):
     print("Path {} does not exist".format(par_dir))
     exit(1)
 os.chdir(par_dir)
+sys.path.insert(0, par_dir)
 
 try:
     from pyChrome import PyChrome

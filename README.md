@@ -45,7 +45,7 @@ API functions and structure that so far have been integrated:
 - Web Element
 	-	Locate Single Element (id,tag,name,class,text,link,css,xpath)
 	- 	Locate Multiple Elements (id,tag,name,class,text,link,css,xpath)
-	-  Locate Sub-Element
+	-  Locate Sub-Element (id,tag,name,class,text,link)
 	-  Locate Parent-Element
 	-	Locate Body Element
 	- 	Register/Focus to Element

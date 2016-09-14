@@ -9,6 +9,7 @@ except ImportError:
 class Combo:
     driver = None
     browser = None
+
     def __init__(self,driver,browser):
         self.driver = driver
         self.browser = browser
@@ -43,7 +44,7 @@ class Combo:
             else: return 1
             element = self.browser.element.findElementByID(loginID)
             if element:
-                self.browser.interaction.clickonElement(element)
+                self.browser.interaction.clickElement(element)
             else: return 1
             self.browser.tab.link = self.driver.current_url
             self.browser.tab.title = self.driver.title

@@ -26,34 +26,53 @@ pyChrome is a scripted Web Automation Platform engine. It uses Selenium Webdrive
 
 ## Milestones
 
-API functions and structure that so far has been integrated,
+API functions and structure that so far have been integrated:
 
-- Opening and Closing a page (basics)
-- Controlling the window (size, position)
-- Browser Navigation Control (back, forward)
-- Search using Google Search Engine
-- Scroll functionality
-- Zoom functionality
-- Take Screenshot
-- Locate Element(s) (id,tag,name,class,text,link,css,xpath)
-- Element Interaction (click and send text)
-- Dump Web page or Web element HTML code
-- Ghost Mode - Headless Browser capabilities
-- Tab Control (open, close, switch)
-
-
-Yet to be done,
-
-- Actions (macros, keys)
-- Image Processing functionality
-- Logging Level
+- Basics
+	- Open a page
+	- Close a page
+	- Quit the Session
+- Window Control
+	- Size
+	- Position
+- Browser Navigation
+	- Back
+	- Forward
+- Zoom Functionality
+	- Zoom (In,Out,Value)
+- Scroll Functionality
+	- Scroll (Down,Right,Up,Left,Value)
+- Web Element
+	-	Locate Single Element (id,tag,name,class,text,link,css,xpath)
+	- 	Locate Multiple Elements (id,tag,name,class,text,link,css,xpath)
+	-  Locate Sub-Element
+	-  Locate Parent-Element
+	-	Locate Body Element
+	- 	Register/Focus to Element
+- Interaction
+	- Click On (Element,Button,Link)
+	- Send Text to (Element,Query,Input)
+- Capture
+	- Take Screenshot
+	- Dump Web Page HTML code
+	- Dump Web Element HTML code
+- Headless Browser capabilities
+	- Init/Start with GhostDriver Mode
+	- Switch to GhostDriver Mode at Runtime
+- Tab Control
+	- Open New Tab
+	- Close Tab	(current,index)
+	- Switch Tab (left,right,index)
+- Quick Access
+	- Search using Google Search Engine
+	- Facebook Login
 
 ## Objectives
 1. Create a WebDriver browser using Selenium Webdriver APIs.
 2. Leverage Webdriver from ChromeDriver and PhantomJS, and other Python libraries (i.e urllib2, scipy) to create an Automation Platform engine.
 3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques in Python to design smarter higher layer functions.
 4. Headless Engine - Use PhantomJS to browse, automate, and mine unnoticeably.
-5. Console Application - which should run only via command-line so it can be imported to other Python project
+5. Console Application - Run only via command-line so it can be imported to other Python projects
 
 ## Requirements
 
@@ -266,6 +285,8 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Locate Web Element
+The big and probably the most challenging part of Web Automation is finding the required locator. And it's done manually once by the Automator prior of locating it's Web Element. Once the Automator gathers the locator, its Web Element can be obtained by id, name, tag, class, partial text, link text, css selector and most powerfully by xpath. Depending of which locator (or attribute) is available and the Automator approach, finding Web element is easy as follows:
+
 -	**Locating Single Web Element**
 	
 	-	Find Element by ID
@@ -321,12 +342,74 @@ $ git clone https://github.com/siversalih/pyChrome.git
     ```sh
 	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
 	browser.open(url)
-	locator = "//*[@id=\"wp-submit\"]"
+	locator = "//*[@id='wp-submit']"
 	element = browser.findElementByXPath(locator)
 	```
 
+	-   Find Element - Generic Function
+
+    ```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "submit"
+	element = browser.findElement(name=locator)
+	```
+
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "submit"
+	element = browser.findElement(element=None,id=None,name=locator,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None)
+	```
+
+-	**Locating Sub-Element**
+
+	To locate the sub-element, the parent element (Web Element object) must have been obtained. Then using the same function, the parent element must pass in as input argument along with the locator as shown in below.
+
+	- Find Sub-Element
+
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "header"
+	element = browser.findElementByID(locator)
+	locator = "ul"
+	element = browser.findElementByTag(locator,element)
+	```	
+
+	-	Find Sub-Element using Generic Function
+
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "header"
+	element = browser.findElement(id=locator)
+	locator = "ul"
+	element = browser.findElement(element=element,tag=locator)
+	```
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "header"
+	element = browser.findElement(element=None,id=locator,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None)
+	locator = "ul"
+	element = browser.findElement(element=element,id=None,name=None,classname=None,xpath=None,tag=locator,css=None,linktext=None,partialtext=None)
+	```
+
+-	**Locating Parent Web Element**
+
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "header"
+	element = browser.findElementByID(locator)
+	locator = "ul"
+	element = browser.findElementByTag(locator,element)
+	element = browser.findParentElement()
+	```
+
 -	**Locating Multiple Web Elements**
-	
+
 	-   Find Elements by ID
 
     ```sh
@@ -351,7 +434,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
 	browser.open(url)
 	locator = "p"
-	element = browser.findElementsByTag(locator)
+	elements = browser.findElementsByTag(locator)
 	```
 	-   Find Elements by Partial Text
 
@@ -359,7 +442,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
 	browser.open(url)
 	locator = "WordPress"
-	element = browser.findElementsByPartialText(locator)
+	elements = browser.findElementsByPartialText(locator)
 	```
 	-   Find Elements by Link Text
 
@@ -367,7 +450,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	url = "http://www.yahoo.com"
 	browser.open(url)
 	locator = "Mail"
-	element = browser.findElementsByLinkText(locator)
+	elements = browser.findElementsByLinkText(locator)
 	```
 	-   Find Elements by Class
 
@@ -375,15 +458,15 @@ $ git clone https://github.com/siversalih/pyChrome.git
     url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
 	browser.open(url)
 	locator = "input"
-	element = browser.findElementsByClass(locator)
+	elements = browser.findElementsByClass(locator)
 	```
 	-   Find Elements by Xpath
 
     ```sh
     url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
 	browser.open(url)
-	locator = "//input[@class=\"input\"]"
-	element = browser.findElementsByXPath(locator)
+	locator = "//input[@class='input']"
+	elements = browser.findElementsByXPath(locator)
 	```
 
 #####Interaction
@@ -391,19 +474,53 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
     ```sh
 	url = "https://www.google.com"
+	browser.open(url)
 	locator = "q"
 	text = "Selenium Webdriver"
 	element = browser.findElementByName(locator)
 	browser.sendTextToElement(text,element)
 	```
+
+-   Send Text (Generic Function)
+
+    ```sh
+	url = "https://www.google.com"
+	browser.open(url)
+	text = "Selenium Webdriver"
+	browser.sendText(text)
+	```
+
 -   Click on Element
 
     ```sh
 	url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
 	locator = "menu_download"
 	element = browser.findElementByID(locator)
-	browser.clickonElement(element)
+	browser.clickElement(element)
 	```
+
+-   Click on Button (Generic Function)
+
+    ```sh
+   url = "https://www.google.com"
+	browser.open(url)
+	text = "Selenium Webdriver"
+	browser.sendText(text)
+	browser.findBodyElement()
+	browser.clickButton()
+	```
+
+-   Click on Link (Generic Function)
+
+    ```sh
+   url = "http://www.seleniumhq.org/projects/webdriver/"
+	browser.open(url)
+	locator = "menu_documentation"
+	browser.findElement(id=locator)
+	browser.clickLink()
+	```
+
 
 #####Tab Control
 -	Open New Tab
@@ -440,12 +557,12 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Headless Browsing
--   Init with Ghostdriver
+-   Init with GhostDriver
 
     ```sh
 	browser = PyChrome(ghostmode=True)
 	```
--   Switch to Ghostdriver at Runtime
+-   Switch to GhostDriver at Runtime
 
     ```sh
 	browser.switchDriverMode(ghostmode=True)

@@ -374,7 +374,7 @@ The big and probably the most challenging part of Web Automation is finding the 
 	locator = "header"
 	element = browser.findElementByID(locator)
 	locator = "ul"
-	element = browser.findElementByTag(locator,element)
+	sub_element = browser.findElementByTag(locator,element)
 	```	
 
 	-	Find Sub-Element using Generic Function
@@ -385,7 +385,7 @@ The big and probably the most challenging part of Web Automation is finding the 
 	locator = "header"
 	element = browser.findElement(id=locator)
 	locator = "ul"
-	element = browser.findElement(element=element,tag=locator)
+	sub_element = browser.findElement(element=element,tag=locator)
 	```
 	```sh
 	url = "http://www.seleniumhq.org/projects/webdriver/"
@@ -393,7 +393,7 @@ The big and probably the most challenging part of Web Automation is finding the 
 	locator = "header"
 	element = browser.findElement(element=None,id=locator,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None)
 	locator = "ul"
-	element = browser.findElement(element=element,id=None,name=None,classname=None,xpath=None,tag=locator,css=None,linktext=None,partialtext=None)
+	sub_element = browser.findElement(element=element,id=None,name=None,classname=None,xpath=None,tag=locator,css=None,linktext=None,partialtext=None)
 	```
 
 -	**Locating Parent Web Element**
@@ -404,8 +404,8 @@ The big and probably the most challenging part of Web Automation is finding the 
 	locator = "header"
 	element = browser.findElementByID(locator)
 	locator = "ul"
-	element = browser.findElementByTag(locator,element)
-	element = browser.findParentElement()
+	sub_element = browser.findElementByTag(locator,element)
+	parent_element = browser.findParentElement()
 	```
 
 -	**Locating Multiple Web Elements**

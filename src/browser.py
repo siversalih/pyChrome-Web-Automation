@@ -3,6 +3,7 @@ import time
 try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import TimeoutException
+    from selenium.webdriver.remote.webelement import WebElement
 except ImportError:
     print "Selenium module is not installed...Exiting program."
     exit(1)
@@ -98,8 +99,11 @@ class Browser:
                     self.tab.link = self.driver.current_url
                     self.tab.title = self.driver.title
                     element=self.element.findElementByTag("body")
-                    if element:
+                    if element and isinstance(element,WebElement):
                         self.element.selectedElement = element
+                        self.interaction.selectedElement = element
+                        self.selectedElement = element
+                        self.element.selectElement(element)
                 except TimeoutException:
                     print "TimeoutException: Didn't load the page fully"
                     return 0
@@ -111,6 +115,7 @@ class Browser:
             except UnicodeEncodeError:
                 print "Page Title: {}".format(url)
             return 0
+        time.sleep(2)
         return 0
 
     def close(self):
@@ -355,7 +360,7 @@ class Browser:
             print "Couldn't find any element by the ID {}".format(name_str)
             return 1
         print "Searching for {}".format(text)
-        if self.interaction.clickonElement(element):
+        if self.interaction.clickElement(element):
             return 1
         self.tab.link = self.driver.current_url
         self.tab.title = self.driver.title

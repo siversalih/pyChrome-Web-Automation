@@ -173,6 +173,7 @@ class Window:
             y = scrollWin[1]
             self.driver.execute_script("window.scrollTo({}, {})".format(x,y))
             print "Window Scroll: \t\t {}".format(self.scrollWin)
+        time.sleep(1)
         return 0
 
     def scrollDown(self):
@@ -186,7 +187,19 @@ class Window:
         print "Scrolling Down: {} -> {}".format(y,y+step)
         self.scrollWin = (x,y+step)
         self.scrol(self.scrollWin)
+        time.sleep(0.5)
+        return 0
 
+    def scrollBottom(self,animate = 0):
+        timeout = 5.0
+        initial = 0
+        pause = 0.2
+        while not self.scrollDown():
+            if animate:
+                time.sleep(pause)
+            initial = initial + pause
+            if initial > timeout:
+                break
         return 0
 
     def scrollUp(self):
@@ -200,6 +213,19 @@ class Window:
         print "Scrolling Up: {} -> {}".format(y,y-step)
         self.scrollWin = (x,y-step)
         self.scrol(self.scrollWin)
+        time.sleep(0.5)
+        return 0
+
+    def scrollTop(self,animate = 0):
+        timeout = 5.0
+        initial = 0
+        pause = 0.2
+        while not self.scrollUp():
+            if animate:
+                time.sleep(pause)
+            initial = initial + pause
+            if initial > timeout:
+                break
         return 0
 
     def scrollRight(self):
@@ -213,6 +239,7 @@ class Window:
         print "Scrolling Right: {} -> {}".format(x,x+step)
         self.scrollWin = (x+step,y)
         self.scrol(self.scrollWin)
+        time.sleep(0.3)
         return 0
 
     def scrollLeft(self):
@@ -226,6 +253,7 @@ class Window:
         print "Scrolling Left: {} -> {}".format(x,x-step)
         self.scrollWin = (x-step,y)
         self.scrol(self.scrollWin)
+        time.sleep(0.3)
         return 0
 
     def validateSize(self, sizeWin):

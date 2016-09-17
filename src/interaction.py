@@ -1,9 +1,10 @@
 import time
-
+import copy
 try:
     from selenium.webdriver.common.action_chains import ActionChains
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import ElementNotVisibleException
+    from selenium.common.exceptions import StaleElementReferenceException
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.common.keys import Keys
@@ -13,12 +14,18 @@ except ImportError:
 try:
     from element import Element
 except ImportError:
+    print "element.py is missing...Exiting program."
+    exit(1)
+
+try:
+    from window import Window
+except ImportError:
     print "window.py is missing...Exiting program."
     exit(1)
 
 ##### Interactions ######
 
-class Interaction(Element):
+class Interaction(Element,Window):
     driver = None
 
     def __init__(self,driver):
@@ -99,17 +106,28 @@ class Interaction(Element):
             return 1
         try:
             try:
-                print "Click On {}".format(self.selectedElement.text)
+                print "Click the page: {}".format(self.selectedElement.text)
             except UnicodeEncodeError:
-                print "Click On {}".format(self.selectedElement.id)
+                print "Click the page: {}".format(self.selectedElement.id)
+
             self.selectedElement.click()
+            try:
+                print "Page Title: {}".format(self.driver.title)
+            except UnicodeEncodeError:
+                print "Page Title: {}".format(self.driver.title.encode('ascii', 'ignore').decode('ascii'))
+            except StaleElementReferenceException:
+                print "Page Title"
         except ElementNotVisibleException:
             print "Element Not Visible"
             return 1
         except WebDriverException:
             print "Element is not clickable at point {}".format(self.selectedElement.location)
             return 1
+        except StaleElementReferenceException:
+            print "Element is destroyed which is not clickable at point {}".format(self.selectedElement.location)
+            return 1
         time.sleep(2)
+        self.scrol((0,0))
         return 0
 
     def clickLink(self):

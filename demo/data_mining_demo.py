@@ -46,6 +46,7 @@ browser.sendText(text)
 locator = "btnG"
 browser.findElement(name=locator)
 browser.clickElement()
+page_title = browser.tab.title
 
 pages = 3
 
@@ -86,7 +87,10 @@ while pages:
         browser.scrollBottom(animate=True)
         print ("\n>>>> Collected Data: {}\n".format(description))
         time.sleep(1)
-        browser.back()
+
+        while page_title != browser.tab.title:
+            browser.back()
+
         time.sleep(5)
 
     locator = "Next"

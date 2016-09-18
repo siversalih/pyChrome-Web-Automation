@@ -97,7 +97,7 @@ class Browser:
                 try:
                     self.driver.get(url)
                     self.tab.link = self.driver.current_url
-                    self.tab.title = self.driver.title
+                    self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
                     element=self.element.findElementByTag("body")
                     if element and isinstance(element,WebElement):
                         self.element.selectedElement = element
@@ -110,10 +110,7 @@ class Browser:
                 except WebDriverException:
                     print "Couldn't Open {}\nPlease check the URL or Internet Connection".format(url)
                     return 1
-            try:
-                print "Page Title: {}".format(self.driver.title)
-            except UnicodeEncodeError:
-                print "Page Title: {}".format(url)
+            print "Page Title: {}".format(self.tab.title)
             return 0
         time.sleep(2)
         return 0
@@ -201,13 +198,14 @@ class Browser:
                     print "WebDriverException: Can't Switch to Tab {}".format(self.tab.index)
                     return 1
                 time.sleep(1)
+                title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
                 try:
-                    print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
+                    print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
                 except TimeoutException:
                     print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         return 0
 
-    def newTab(self,url = 0):
+    def newTab(self,url=None):
         if len(self.tabs) == 9:
             print "Max Number of Tabs Reached {}".format(len(self.tabs))
             return 1
@@ -233,12 +231,13 @@ class Browser:
                 err = self.open(url)
                 if err:
                     return 1
-        newTab = Tab(location,self.driver.window_handles[len(self.tabs)],self.driver.current_url,self.driver.title)
+        title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+        newTab = Tab(location,self.driver.window_handles[len(self.tabs)],self.driver.current_url,title)
         self.tab = newTab
         self.tabs.append(self.tab)
         self.tab.printTab()
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
+            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         element=self.element.findElementByTag("body")
@@ -263,8 +262,9 @@ class Browser:
         except UnicodeEncodeError:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
         time.sleep(1)
+        title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
+            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         element=self.element.findElementByTag("body")
@@ -288,8 +288,9 @@ class Browser:
             print "WebDriverException: Can't Switch to Left Tab"
             return 1
         time.sleep(1)
+        title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
+            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         except UnicodeEncodeError:
@@ -314,8 +315,9 @@ class Browser:
             print "WebDriverException: Can't Switch to Tab {}".format(index)
             return 1
         time.sleep(1)
+        title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
+            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
         except TimeoutException:
             print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
         element=self.element.findElementByTag("body")
@@ -351,17 +353,62 @@ class Browser:
         name_str = "q"
         element = self.element.findElementByName(name_str)
         if element == 0:
-            print "Couldn't find any element by the ID {}".format(name_str)
+            print "Couldn't find any element by its name attribute {}".format(name_str)
             return 1
         self.interaction.sendTextToElement(text,element)
         name_str = "btnG"
         element = self.element.findElementByName(name_str)
         if element == 0:
-            print "Couldn't find any element by the ID {}".format(name_str)
+            print "Couldn't find any element by its name attribute {}".format(name_str)
             return 1
         print "Searching for {}".format(text)
         if self.interaction.clickElement(element):
             return 1
         self.tab.link = self.driver.current_url
-        self.tab.title = self.driver.title
+        self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         return 0
+
+    def clickLink(self,element=None):
+        self.element.selectedElement=self.selectedElement
+        self.interaction.selectedElement=self.selectedElement
+        err = self.interaction.clickLink(element)
+        if not err:
+            self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+            self.tab.link = self.driver.current_url
+        return err
+
+
+    def clickElement(self, element=None):
+        self.element.selectedElement=self.selectedElement
+        self.interaction.selectedElement=self.selectedElement
+        err = self.interaction.clickElement(element)
+        if not err:
+            self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+        return err
+
+    def clickButton(self,element=None):
+        self.element.selectedElement=self.selectedElement
+        self.interaction.selectedElement=self.selectedElement
+        err = self.interaction.clickButton(element)
+        if not err:
+            self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+            self.tab.link = self.driver.current_url
+        return err
+
+    def back(self):
+        self.element.selectedElement=self.selectedElement
+        self.interaction.selectedElement=self.selectedElement
+        err = self.navigation.back()
+        if not err:
+            self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+            self.tab.link = self.driver.current_url
+        return err
+
+    def forward(self):
+        self.element.selectedElement=self.selectedElement
+        self.interaction.selectedElement=self.selectedElement
+        err = self.navigation.forward()
+        if not err:
+            self.tab.title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
+            self.tab.link = self.driver.current_url
+        return err

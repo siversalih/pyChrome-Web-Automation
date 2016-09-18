@@ -13,7 +13,7 @@ For full documentation of using Selenium Webdriver APIs, see [Selenium with Pyth
 
 More documentation on Chrome Webdriver can be found at [ChromeDriver][df2]
 
-**PhantomJS** - Headless WebKit (GhostDriver), pyChrome uses PhantomJS to process any web application in background. Which means it does not require any browser or client (i.e Chrome) to display the Web Content. Therefore, it's a bit faster to process the information. PhantomJS is available for Mac, Linux, and Windows.
+**PhantomJS** - Headless WebKit, pyChrome uses PhantomJS to process any web application in background (GhostDriver). Which means it does not require any browser or client (i.e Chrome) to display the Web Content. Therefore, it's a bit faster to process the information. PhantomJS is available for Mac, Linux, and Windows.
 
 More documentation on PhantomJS Webdriver can be found at [PhantomJS][df6]
 

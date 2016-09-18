@@ -1,7 +1,7 @@
 # pyChrome
 
 
-## Selenium
+# Selenium
 Selenium is a browser automation library. Most often used for testing web-applications, Selenium may be used for any task that requires automating interaction with the browser. The primary new feature in Selenium 2.0 is the integration of the WebDriver API.
 
 ## WebDriver

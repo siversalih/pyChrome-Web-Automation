@@ -9,22 +9,21 @@ WebDriver is designed to provide a simpler, more concise programming interface i
 
 For full documentation of using Selenium Webdriver APIs, see [Selenium with Python][df0]. 
 
-**ChromeDriver** - A Webdriver for Chromium. pyChrome uses ChromeDriver 	as a standalone server that implements WebDriver's wire protocol for Chrome browser. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS). 
+**ChromeDriver** - Webdriver for Chromium. pyChrome uses ChromeDriver 	as a standalone server that implements WebDriver's wire protocol for Chrome browser. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS). 
 
 More documentation on Chrome Webdriver can be found at [ChromeDriver][df2]
 
-**PhantomJS** - A Headless Webdriver, pyChrome uses PhantomJS  for automating web page interaction in background (Ghost mode). Similar to ChromeDriver, PhantomJS provides a JavaScript API enabling automated navigation, screenshots, user behavior and assertions making it a common tool. But because PhantomJS is a headless browser, it does not require any browser client (i.e Chrome). And that what makes it unique. PhantomJS is available for Mac, Linux, and Windows.
+**PhantomJS** - Headless WebKit (GhostDriver), pyChrome uses PhantomJS to process any web application in background. Which means it does not require any browser or client (i.e Chrome) to display the Web Content. Therefore, it's a bit faster to process the information. PhantomJS is available for Mac, Linux, and Windows.
 
 More documentation on PhantomJS Webdriver can be found at [PhantomJS][df6]
-
 
 
 ## pyChrome
 ![alt tag][DSNIMG]
 
-pyChrome is a scripted Web Automation Platform. It runs on Selenium Webdriver APIs using ChromeDriver and PhantomJS WebDriver. pyChrome also includes other Python libraries, such as htmlparser, urllib2, numpy, scipy to control, analyze and interact with the browser and content. It is a console type application. Which it can be imported to any types of Python project as a module for creating bigger application and use case scenarios. The application are such as creating bot, web automation, data mining, headless browsing, and web testing. 
+pyChrome is a scripted Web Automation Platform. It runs on Selenium Webdriver APIs using ChromeDriver and PhantomJS WebDriver. It includes other standard Python libraries, such as htmlparser, urllib2, numpy, scipy to control, analyze and interact with the browser and its content. It is a console type framework application. Which it can be imported to Python project as a module for creating an application and use case scenarios such as bot, web automation, data mining, headless browsing, and web testing application. 
 
-Currently, the project is in development phase. So check back for more updates.
+Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
 
 ## Milestones
 
@@ -43,14 +42,14 @@ API functions and structure that have been integrated:
 - Zoom Functionality
 	- Zoom (In,Out,Value)
 - Scroll Functionality
-	- Scroll (Down,Right,Up,Left,Value)
+	- Scroll (Down,Right,Up,Left,Value,Element inView)
 - Web Element
 	-	Locate Single Element (id,tag,name,class,text,link,css,xpath)
 	- 	Locate Multiple Elements (id,tag,name,class,text,link,css,xpath)
 	-  Locate Sub-Element (id,tag,name,class,text,link)
 	-  Locate Parent-Element
 	-	Locate Body Element
-	- 	Register/Focus to Element
+	- 	Register/Focus on Element
 - Interaction
 	- Click On (Element,Button,Link)
 	- Send Text to (Element,Query,Input)
@@ -95,7 +94,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 ```
 ###The Files
 -	**pyChrome.py**
-	-	It is the main class object. pyChrome.py extends and simplify the APIs beyond just Selenium Webdriver APIs. It inherits some functionality from Selenium Webdriver APIs, but it also uses other modules such as urllib2, scipy, numpy, json, and javascript for creating a true Automation Platform engine. 
+	-	It is the main class object. pyChrome.py extends and simplify the APIs beyond just Selenium Webdriver APIs. It inherits most functionality from Selenium Webdriver APIs, but it also uses other modules such as urllib2, scipy, numpy, json, and javascript for creating a Web Automation Platform. 
 
 -	**src/browser.py** 
 	-	It is a subclass of pyChrome.py. It manages the client (Chrome or Ghostdriver) such as for opening and closing web page, navigating through pages, controlling tabs, finding Web element within the page, and interacting with the page.
@@ -107,13 +106,13 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	-	It is a subclass of pyChrome.py. It handles capturing screen in PNG format, dumping Web page or Web element source code in HTML format.
 
 -	**src/combo.py**
-	-	It is a subclass of pyChrome.py. It contains set of functons for performing task that is used often, such as Login to Facebook, Opening Google Search Engine, Checking Email etc...
+	-	It is a subclass of pyChrome.py. It contains set of functons for performing quick task (quick acess) that is used often, such as Login to Facebook, Opening Google Search Engine, Checking Email etc...
 
 -	**src/navigation.py**
 	-	It is a subclass of browser.py. It manages navigating through pages using back() and forward() command.
 
 -	**src/tab.py**
-	-	It is a subclass of browser.py. It manages controlling multiple tabs such as creating a new tab, closing existing tab, or switching to adjacent tab. It can also index to any open tab.
+	-	It is a subclass of browser.py. It manages controlling multiple tabs such as creating a new tab, closing existing tab, or switching to adjacent tab. It can also index to tab.
 
 -	**src/interaction.py**
 	-	It is a sublcass of browser.py. It manages interacting with the page Web Element. These are such as clicking on element, sending text to element, or sending action keys to element.
@@ -249,13 +248,13 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	browser.scrollRight()
 	```
 
--   Scroll All the Way To Top (with animation)
+-   Scroll To Top (with animation)
 
     ```sh
 	browser.scrollTop(animated=True)
 	```
 	
--   Scroll All the Way To Bottom (with animation)
+-   Scroll To Bottom (with animation)
 
     ```sh
 	browser.scrollBottom(animated=True)
@@ -299,7 +298,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Locate Web Element
-The big and probably the most challenging part of Web Automation is finding the required locator. And it's done manually by the Automator prior of locating it's Web Element. Once the Automator gathers the locator, its Web Element can be obtained by id, name, tag, class, partial text, link text, css selector and most powerfully by xpath. Depending of which locator (or attribute) is available and the Automator approach, finding the Web element is easy as follows:
+The most challenging part of Web Automation is finding the required locator. And it's done manually by the Automator prior of locating it's Web Element. Once the Web Element location is known, the Web Element can be obtained by id, name, tag, class, partial text, link text, css selector and xpath. Depending of which locator (or attribute) is available and the Automator approach, finding the Web element is easy as follows:
 
 -	**Locating Web Element**
 	
@@ -378,7 +377,7 @@ The big and probably the most challenging part of Web Automation is finding the 
 
 -	**Locating Sub-Element**
 
-	To locate the sub-element, the parent element (Web Element object) must have obtained. Then using the same function and passing the parent element into the function as input argument along with the locator, the sub-element can be found as shown in below.
+	To locate sub-element, the parent element (Web Element object) must be obtained first. Then using the same function and its parent element, the sub-element can be located from its locator as shown in below.
 
 	- Find Sub-Element
 

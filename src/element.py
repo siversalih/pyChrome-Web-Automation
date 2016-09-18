@@ -32,7 +32,7 @@ class Element:
 
     ##### Locating Element #####
 
-    def findElementByID(self,id_str, element = 0):
+    def findElementByID(self,id_str, element=None):
         if not self.validateLocator(id_str):
             print "Invalid ID: {}".format(id_str)
             return 0
@@ -57,7 +57,7 @@ class Element:
             return 0
         return element
 
-    def findElementByName(self,name_str,element=0):
+    def findElementByName(self,name_str,element=None):
         if not self.validateLocator(name_str):
             print "Invalid Name: {}".format(name_str)
             return 0
@@ -82,7 +82,7 @@ class Element:
             return 0
         return element
 
-    def findElementByTag(self,tag_str,element=0):
+    def findElementByTag(self,tag_str,element=None):
         if not self.validateLocator(tag_str):
             print "Invalid Tag: {}".format(tag_str)
             return 0
@@ -107,7 +107,7 @@ class Element:
             return 0
         return element
 
-    def findElementByPartialText(self,text_str,element=0):
+    def findElementByPartialText(self,text_str,element=None):
         if not self.validateLocator(text_str):
             print "Invalid Partial Text: {}".format(text_str)
             return 0
@@ -132,7 +132,7 @@ class Element:
             return 0
         return element
 
-    def findElementByLinkText(self,link_str,element=0):
+    def findElementByLinkText(self,link_str,element=None):
         if not self.validateLocator(link_str):
             print "Invalid Link Text: {}".format(link_str)
             return 0
@@ -157,7 +157,7 @@ class Element:
             return 0
         return element
 
-    def findElementByClass(self,class_str,element=0):
+    def findElementByClass(self,class_str,element=None):
         if not self.validateLocator(class_str):
             print "Invalid Classname: {}".format(class_str)
             return 0
@@ -182,7 +182,7 @@ class Element:
             return 0
         return element
 
-    def findElementByXPath(self,xpath_str,element=0):
+    def findElementByXPath(self,xpath_str,element=None):
         if not self.validateLocator(xpath_str):
             print "Invalid Xpath: {}".format(xpath_str)
             return 0
@@ -207,7 +207,7 @@ class Element:
             return 0
         return element
 
-    def findElementByCSS(self,css_str,element=0):
+    def findElementByCSS(self,css_str,element=None):
         if not self.validateLocator(css_str):
             print "Invalid CSS Selector: {}".format(css_str)
             return 0
@@ -234,7 +234,7 @@ class Element:
 
     ##### Locating Multiple Elements #####
 
-    def findElementsByName(self,name_str,element=0):
+    def findElementsByName(self,name_str,element=None):
         if not self.validateLocator(name_str):
             print "Invalid Name: {}".format(name_str)
             return 0
@@ -263,7 +263,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByID(self,id_str,element=0):
+    def findElementsByID(self,id_str,element=None):
         if not self.validateLocator(id_str):
             print "Invalid ID: {}".format(id_str)
             return 0
@@ -292,7 +292,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByTag(self,tag_str,element=0):
+    def findElementsByTag(self,tag_str,element=None):
         if not self.validateLocator(tag_str):
             print "Invalid Tag: {}".format(tag_str)
             return 0
@@ -321,7 +321,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByPartialText(self,text_str,element=0):
+    def findElementsByPartialText(self,text_str,element=None):
         if not self.validateLocator(text_str):
             print "Invalid Partial Text: {}".format(text_str)
             return 0
@@ -350,7 +350,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByLinkText(self,link_str,element=0):
+    def findElementsByLinkText(self,link_str,element=None):
         if not self.validateLocator(link_str):
             print "Invalid Link Text: {}".format(link_str)
             return 0
@@ -379,7 +379,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByClass(self,class_str,element=0):
+    def findElementsByClass(self,class_str,element=None):
         if not self.validateLocator(class_str):
             print "Invalid Classname: {}".format(class_str)
             return 0
@@ -408,7 +408,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByXPath(self,xpath_str,element=0):
+    def findElementsByXPath(self,xpath_str,element=None):
         if not self.validateLocator(xpath_str):
             print "Invalid XPath: {}".format(xpath_str)
             return 0
@@ -437,7 +437,7 @@ class Element:
             return 0
         return elements
 
-    def findElementsByCSS(self,css_str,element=0):
+    def findElementsByCSS(self,css_str,element=None):
         if not self.validateLocator(css_str):
             print "Invalid CSS Selector: {}".format(css_str)
             return 0
@@ -481,9 +481,16 @@ class Element:
             return 0
         return 1
 
+    # This function is required to register a particular Web Element (which is defines by the user), so that the browser
+    # internel variable (selectedElement) can be assigned to that user defined element.
     def selectElement(self,element):
+        # If the user pass in valid Web Element, it will discard the current focused element, and it assigns the
+        # new Web Element that passed-in by the user
         if isinstance(element,WebElement):
+            print "Switching Current Web Element focus from {} to {}".format(self.selectedElement,element)
             self.selectedElement = element
+        # If the user pass in element as an integer. It will then treat this as an index to grab particular element
+        # in elements variable. If the variable elements is empty, it will return 1 as in the variable is empty.
         elif isinstance(element,int):
             if self.elements == None or len(self.elements) == 0:
                 print "Elements is empty"
@@ -493,71 +500,109 @@ class Element:
                 if index > len(self.elements)-1 or index < 0:
                     print "Invalid index to select element"
                     return 1
+                print "Switching Current Web Element focus from {} to {}".format(self.selectedElement,self.elements[index])
                 self.selectedElement = self.elements[index]
+        # It didn't select any element
         else:
-            print "Error: Not element selected"
+            print "Error: No element selected"
             return 1
         return 0
 
-    def findElementLink(self,element):
-        if element == 0 or not isinstance(element,WebElement):
-            print "Element input argument is empty or is not Element type"
+    def findElementLink(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
+                    return 0
+            else:
+                print "Element is not Web Element type"
+                return 0
+        if self.selectedElement and isinstance(self.selectedElement, WebElement):
+            element = self.selectedElement
+            tag_attr = element.tag_name
+            if tag_attr != "a":
+                print "Attempting to search for Link Element by the Tag attribute 'a' inside {}".format(element)
+                element_link = self.findElementByTag("a",element)
+                if element_link == 0 or not isinstance(element_link,WebElement):
+                    print "The current element does not contain link address"
+                    return 0
+                elif isinstance(element_link, WebElement):
+                    self.selectElement(element_link)
+                    return element_link
+                else:
+                    return 0
+            elif tag_attr == "a":
+                print "Current selected Element is Link type Web Element"
+                return element
+            else:
+                return 0
+        else:
+            print "Current selected element is not Web Element type"
             return 0
-        element_link = self.findElementByTag("a",element)
-        if element_link == 0 or not isinstance(element_link,WebElement):
-            print "The input element does not contain link address"
-            return 0
-        self.selectedElement = element_link
-        return element_link
 
-    def findSubElement(self,element,id=None,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None):
-        err = self.selectElement(element)
-        if err:
+
+    def findSubElement(self,element=None,id=None,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
+                    return 0
+            else:
+                print "Passed in element is not Web Element type"
+                return 0
+
+        element = self.selectedElement
+        if element == 0 or not isinstance(element,WebElement):
+            print "Current selected element is not Web Element type"
             return 0
         subelement = None
+        if tag:
+            valid = self.validateLocator(tag)
+            if not valid:
+                return 0
+            subelement = self.findElementByTag(tag,element)
         if id:
             valid = self.validateLocator(id)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByID(id,element)
         if name:
             valid = self.validateLocator(name)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByName(name,element)
         if classname:
             valid = self.validateLocator(classname)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByClass(classname,element)
         if xpath:
             valid = self.validateLocator(xpath)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByXPath(xpath,element)
-        if tag:
-            valid = self.validateLocator(tag)
-            if not valid:
-                return
-            subelement = self.findElementByTag(tag,element)
         if css:
             valid = self.validateLocator(css)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByCSS(css,element)
         if linktext:
             valid = self.validateLocator(linktext)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByLinkText(linktext,element)
         if partialtext:
             valid = self.validateLocator(partialtext)
             if not valid:
-                return
+                return 0
             subelement = self.findElementByPartialText(partialtext,element)
+
+        if subelement == None:
+            print "Web Element locator not specified to find sub-element of {}".format(element)
+            return  0
         err = self.selectElement(subelement)
         if err:
-            print "No Locator input argument passed to find sub-element"
+            print "Couldn't locate sub-element of {}".format(element)
             return 0
         else: return subelement
 
@@ -567,42 +612,42 @@ class Element:
             if id:
                 valid = self.validateLocator(id)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByID(id)
             if name:
                 valid = self.validateLocator(name)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByName(name)
             if classname:
                 valid = self.validateLocator(classname)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByClass(classname)
             if xpath:
                 valid = self.validateLocator(xpath)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByXPath(xpath)
             if tag:
                 valid = self.validateLocator(tag)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByTag(tag)
             if css:
                 valid = self.validateLocator(css)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByCSS(css)
             if linktext:
                 valid = self.validateLocator(linktext)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByLinkText(linktext)
             if partialtext:
                 valid = self.validateLocator(partialtext)
                 if not valid:
-                    return
+                    return 0
                 element = self.findElementByPartialText(partialtext)
             err = self.selectElement(element)
             if err:
@@ -615,9 +660,10 @@ class Element:
                 subelement = self.findSubElement(element=element,id=id,name=name,classname=classname,xpath=xpath,tag=tag,css=css,linktext=linktext,partialtext=partialtext)
                 if subelement == None or subelement == 0 or not isinstance(subelement, WebElement):
                     print "Couldn't find Subelement of element {}".format(element)
+
                 found = self.selectElement(subelement)
                 if not found:
-                    return
+                    return 0
                 else: return subelement
             # Find Sub-Element from List of Element by its locator
             elif isinstance(element,list):
@@ -659,20 +705,25 @@ class Element:
                 return 0
             else: return 0
 
-    def findParentElement(self,element=0):
+    def findParentElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                err = self.selectElement(element)
+                if err:
+                    return 0
             else:
+                print "Passed in element is not Web Element type {}".format(element)
                 return 0
         if not isinstance(self.selectedElement,WebElement):
+            print "Current selected element is not Web Element type {}".format(self.selectedElement)
             return 0
         try:
             element = self.selectedElement.find_element_by_xpath('..')
         except NoSuchElementException:
-            print "Element does not have parent element"
+            print "Element {} does not have parent element".format(self.selectedElement,element)
             return 0
         if element == 0 or element == None or not isinstance(element,WebElement):
+            print "Element {} does not have parent element {}".format(self.selectedElement,element)
             return 0
         else:
             self.selectElement(element)
@@ -681,6 +732,8 @@ class Element:
     def findBodyElement(self):
         element = self.findElementByTag("body")
         if element == 0 or element == None:
+            print "Page does not contain 'body' tag. Can't find body element."
             return 0
         else:
             self.selectElement(element)
+            return self.selectedElement

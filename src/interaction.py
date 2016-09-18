@@ -23,6 +23,7 @@ except ImportError:
     print "window.py is missing...Exiting program."
     exit(1)
 
+
 ##### Interactions ######
 
 class Interaction(Element,Window):
@@ -39,36 +40,49 @@ class Interaction(Element,Window):
         if self.selectedElement:
             del self.selectedElement
 
-    def sendTextToElement(self, text, element = 0):
-        if element and isinstance(element, WebElement):
-            tag_name = element.tag_name
-            if tag_name != "input":
-                print "The argument element is not input type element. \n" \
-                    "Attempting to search for input tag inside element"
-                element = self.findElementByTag("input",element)
-                if element == 0:
-                    print "Couldn't find input tag inside element"
+    def sendTextToElement(self, text, element=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
                     return 1
-                else:
-                    self.selectElement(element)
-            else: self.selectElement(element)
-        if not self.selectedElement or not isinstance(self.selectedElement, WebElement):
+            else:
+                print "Passed in element is not Web Element type {}".format(element)
+                return 1
+        if not isinstance(self.selectedElement,WebElement):
+            print "Current selected element is not Web Element type {}".format(self.selectedElement)
             return 1
+        element = self.selectedElement
+        tag_name = element.tag_name
+        if tag_name != "input":
+            print "The selected element is not input type element. \n" \
+                    "Attempting to search for input tag inside element {}".format(element)
+            element = self.findElementByTag("input",element)
+            if element == 0 or not isinstance(element,WebElement):
+                print "Couldn't find input tag inside selected element {}".format(element)
+                return 1
+            else:
+                self.selectElement(element)
+        element = self.selectedElement
         if text == 0 or text == None or len(text) == 0:
             print "Text is empty or not defined"
             return 1
         try:
-            print "Sending '{}' to Element ID '{}'".format(text,self.selectedElement.id)
-            self.selectedElement.send_keys(text)
+            print "Sending '{}' to Element '{}'".format(text,element)
+            element.send_keys(text)
         except ElementNotVisibleException:
-            print "Element Not Visible"
+            print "Element is Not Visible"
             return 1
-        time.sleep(2)
+        except StaleElementReferenceException:
+            print "Trying to send Text to Stale Element {}".format(element)
+            return 1
+        time.sleep(1)
         return 0
+
 
     def sendText(self, text):
         if self.selectedElement == 0 or self.selectedElement == None or not isinstance(self.selectedElement,WebElement):
-            print "No Element has been selected"
+            print "Selected Element is NULL or not defined as Web Element: {}".format(self.selectedElement)
             return 1
         name_attr = self.selectedElement.get_attribute("name")
         if name_attr != "q":
@@ -79,37 +93,26 @@ class Interaction(Element,Window):
                 print "Couldn't find name='q' inside current element"
             else:
                 self.selectElement(input_element)
-        err = self.sendTextToElement(text,self.selectedElement)
-        if err:
-            tag_name = self.selectedElement.tag_name
-            if tag_name != "input":
-                print "Current selected element is not input type element. \n" \
-                      "Attempting to search for input tag inside current element"
-                input_element = self.findElementByTag("input",self.selectedElement)
-                if input_element == 0 or not isinstance(input_element,WebElement):
-                    print "Couldn't find input tag inside current element"
-                    return 1
-                else:
-                    self.selectElement(input_element)
-            err = self.sendTextToElement(text,self.selectedElement)
-            if err:
-                print "Couldn't Send Text to Current Selected Element"
-                return 1
-            else:
-                return 0
-        else: return 0
+        err = self.sendTextToElement(text)
+        return err
 
-    def clickElement(self, element = 0):
-        if element and isinstance(element,WebElement):
-            self.selectElement(element)
-        if self.selectedElement == None or not isinstance(self.selectedElement,WebElement):
+    def clickElement(self, element=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
+                    return 1
+            else:
+                print "Passed in element is not Web Element type {}".format(element)
+                return 1
+        if not isinstance(self.selectedElement,WebElement):
+            print "Current selected element is not Web Element type {}".format(self.selectedElement)
             return 1
         try:
             try:
                 print "Click the page: {}".format(self.selectedElement.text)
             except UnicodeEncodeError:
                 print "Click the page: {}".format(self.selectedElement.id)
-
             self.selectedElement.click()
             try:
                 print "Page Title: {}".format(self.driver.title)
@@ -118,24 +121,28 @@ class Interaction(Element,Window):
             except StaleElementReferenceException:
                 print "Page Title"
         except ElementNotVisibleException:
-            print "Element Not Visible"
+            print "Element is Not Visible to Click"
             return 1
         except WebDriverException:
-            print "Element is not clickable at point {}".format(self.selectedElement.location)
-            return 1
-        except StaleElementReferenceException:
-            print "Element is destroyed which is not clickable at point {}".format(self.selectedElement.location)
+            print "Element is not Clickable at point {}".format(self.selectedElement.location)
             return 1
         time.sleep(2)
         self.scrol((0,0))
         return 0
 
-    def clickLink(self):
+    def clickLink(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
+                    return 1
+            else:
+                print "Passed in element is not Web Element type {}".format(element)
+                return 1
         if self.selectedElement == 0 or self.selectedElement == None or not isinstance(self.selectedElement,WebElement):
             print "No Element has been selected"
             return 1
         tag_name = self.selectedElement.tag_name
-
         if tag_name != "a":
             print "Current selected element is not link type element. \n" \
                   "Attempting to search for 'a' tag inside current element"
@@ -152,12 +159,19 @@ class Interaction(Element,Window):
         else:
             return 0
 
-    def clickButton(self):
+    def clickButton(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                err = self.selectElement(element)
+                if err:
+                    return 1
+            else:
+                print "Passed in element is not Web Element type {}".format(element)
+                return 1
         if self.selectedElement == 0 or self.selectedElement == None or not isinstance(self.selectedElement,WebElement):
             print "No Element has been selected"
             return 1
         tag_name = self.selectedElement.tag_name
-
         if tag_name != "button":
             print "Current selected element is not button type element. \n" \
                   "Attempting to search for button tag inside current element"

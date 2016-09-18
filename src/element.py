@@ -660,10 +660,6 @@ class Element:
                 subelement = self.findSubElement(element=element,id=id,name=name,classname=classname,xpath=xpath,tag=tag,css=css,linktext=linktext,partialtext=partialtext)
                 if subelement == None or subelement == 0 or not isinstance(subelement, WebElement):
                     print "Couldn't find Subelement of element {}".format(element)
-
-                found = self.selectElement(subelement)
-                if not found:
-                    return 0
                 else: return subelement
             # Find Sub-Element from List of Element by its locator
             elif isinstance(element,list):

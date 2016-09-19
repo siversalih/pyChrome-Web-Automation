@@ -1,7 +1,9 @@
+import logging
+
 try:
     from browser import Browser
 except ImportError:
-    print "browser.py is missing...Exiting program."
+    logging.critical("browser.py is missing...Exiting program.")
     exit(1)
 
 ##### Combo #####
@@ -32,7 +34,8 @@ class Combo:
             if not current_url is loginURL:
                 err = self.browser.open(loginURL)
                 if err: return 1
-            print("\nLog into {}".format(loginURL))
+            logging.debug("Using ID {} and Password {} to Login".format(username,password))
+            logging.info("\nLog into {}".format(loginURL))
 
             element = self.browser.element.findElementByID(usernameID)
             if element:
@@ -50,4 +53,5 @@ class Combo:
             self.browser.tab.title = self.driver.title
             return 0
         else:
+            logging.error("WebDriver is not present")
             return 1

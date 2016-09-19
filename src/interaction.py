@@ -122,7 +122,7 @@ class Interaction(Element,Window):
             except StaleElementReferenceException:
                 logging.error("StaleElementReferenceException: Page Title")
         except ElementNotVisibleException:
-            logging.error("Element is Not Visible to Click")
+            logging.error("ElementNotVisibleException: Element is Not Visible to Click")
             return 1
         except WebDriverException:
             logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))

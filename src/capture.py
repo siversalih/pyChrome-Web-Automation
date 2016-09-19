@@ -1,22 +1,24 @@
+import logging
+
 try:
     import urllib2
 except ImportError:
-    print "urllib2 module is not installed...Exiting program."
+    logging.critical("urllib2 module is not installed...Exiting program.")
     exit(1)
 try:
     import urllib
 except ImportError:
-    print "urllib module is not installed...Exiting program."
+    logging.critical("urllib module is not installed...Exiting program.")
     exit(1)
 try:
     from selenium.webdriver.remote.webelement import WebElement
 except ImportError:
-    print "Selenium module is not installed...Exiting program."
+    logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
 try:
     from element import Element
 except ImportError:
-    print "element.py is missing...Exiting program."
+    logging.critical("element.py is missing...Exiting program.")
     exit(1)
 
 
@@ -55,9 +57,9 @@ class Capture:
             directory = save_directory
         try:
             self.driver.save_screenshot('{}/{}.{}'.format(directory,filename,extension))
-            print "Screen Captured: {}".format("{}/{}.{}".format(directory,filename,extension))
+            logging.info("Screen Captured: {}".format("{}/{}.{}".format(directory,filename,extension)))
         except Exception:
-            print "Failed to Screen Capture {}".format(self.driver.current_url)
+            logging.error("Failed to Screen Capture {}".format(self.driver.current_url))
             return 1
         return 0
 
@@ -68,12 +70,12 @@ class Capture:
             name = filename
 
         if not self.driver or not self.driver.current_url:
-            print "There is no driver or URL to get the source"
+            logging.error("There is no driver or URL to get the source")
             return 1
         try:
             urlopen = urllib.urlopen(self.driver.current_url) # Open the URL.
         except Exception:
-            print "Failed to get the source code for {}".format(self.driver.current_url)
+            logging.error("Failed to get the source code for {}".format(self.driver.current_url))
             return 1
         source = urlopen.readlines() # Read the source and save it to a variable.
         if not extension in name:
@@ -81,7 +83,7 @@ class Capture:
         file = open(name,"wb") #open file in binary mode
         file.writelines(source)
         file.close()
-        print "Source Code Dump: {}".format("{}/{}".format(self.directory,name))
+        logging.info("Source Code Dump: {}".format("{}/{}".format(self.directory,name)))
         return 0
 
     def elementDump(self, element = 0, filename = 0):
@@ -93,17 +95,17 @@ class Capture:
             self.element.selectedElement = element
 
         if not isinstance(self.element.selectedElement,WebElement) or self.element.selectedElement == None:
-            print "There is no element to get the source code"
+            logging.error("There is no element to get the source code")
             return 1
         try:
             source=self.element.selectedElement.get_attribute('innerHTML')
         except Exception:
-            print "Failed to get the source code for {}".format(self.element.selectedElement)
+            logging.error("Failed to get the source code for {}".format(self.element.selectedElement))
             return 1
         if not extension in name:
             name = "{}{}".format(name,extension)
         file = open(name,"wb") #open file in binary mode
         file.writelines(source)
         file.close()
-        print "Element Source Dump: {}".format("{}/{}".format(self.directory,name))
+        logging.info("Element Source Dump: {}".format("{}/{}".format(self.directory,name)))
         return 0

@@ -1,17 +1,22 @@
 import time
 import os
 import sys
+import logging
 
 curr_dir = os.getcwd()
+logging.info("Current Work directory: {}".format(curr_dir))
 src_dir = "{}/src".format(curr_dir)
+logging.info("Source directory: {}".format(src_dir))
+
 if not(os.path.exists(src_dir)):
-    print("Path {} does not exist".format(src_dir))
+    logging.critical("Path {} does not exist".format(src_dir))
     exit(1)
 sys.path.insert(0, src_dir)
 
 binary_dir = "{}/bin".format(curr_dir)
+logging.info("Binary directory: {}".format(binary_dir))
 if(not os.path.exists(binary_dir)):
-    print("Path {} does not exist".format(binary_dir))
+    logging.critical("Path {} does not exist".format(binary_dir))
     exit(1)
 
 try:
@@ -20,47 +25,47 @@ try:
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.chrome.options import Options
 except ImportError:
-    print "Selenium module is not installed...Exiting program."
+    logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
 try:
     import json
 except ImportError:
-    print "json module is not installed...Exiting program."
+    logging.critical("json module is not installed...Exiting program.")
     exit(1)
 try:
     from navigation import Navigation
 except ImportError:
-    print "navigation.py is missing...Exiting program."
+    logging.critical("navigation.py is missing...Exiting program.")
     exit(1)
 try:
     from window import Window
 except ImportError:
-    print "window.py is missing...Exiting program."
+    logging.critical("window.py is missing...Exiting program.")
     exit(1)
 try:
     from element import Element
 except ImportError:
-    print "element.py is missing...Exiting program."
+    logging.critical("element.py is missing...Exiting program.")
     exit(1)
 try:
     from interaction import Interaction
 except ImportError:
-    print "interaction.py is missing...Exiting program."
+    logging.critical("interaction.py is missing...Exiting program.")
     exit(1)
 try:
     from browser import Browser
 except ImportError:
-    print "browser.py is missing...Exiting program."
+    logging.critical("browser.py is missing...Exiting program.")
     exit(1)
 try:
     from capture import Capture
 except ImportError:
-    print "capture.py is missing...Exiting program."
+    logging.critical("capture.py is missing...Exiting program.")
     exit(1)
 try:
     from combo import Combo
 except ImportError:
-    print "combo.py is missing...Exiting program."
+    logging.critical("combo.py is missing...Exiting program.")
     exit(1)
 
 class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
@@ -85,22 +90,23 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
         self.ghost = False
         if ghostmode and self.validateGhostmode(ghostmode):
             self.ghost = ghostmode
-
+            logging.info("Ghost Mode: {}".format(self.ghost))
         if config_filename:
             self.config_filename = config_filename
             file_directory = "{}/{}".format(self.directory,self.config_filename)
             if(os.path.exists(file_directory)):
-                print "Reading {} file".format(self.config_filename)
                 self.readJSONFile(self.config_filename,ghostmode=ghostmode)
             else:
-                print("{} is not in {}".format(self.config_filename,self.directory))
+                logging.critical("{} is not in {}".format(self.config_filename,self.directory))
                 exit(1)
+        logging.info("Starting the WebDriver with ghostmode {}".format(self.ghost))
         self.__start(ghostmode=self.ghost)
         return
 
     def readJSONFile(self, config_filename = 0, ghostmode = 0):
         if config_filename:
             self.config_filename = config_filename
+            logging.info("Reading configuration file {}".format(self.config_filename))
         with open(self.config_filename) as jsonFile:
             config = json.load(jsonFile)
         self.drivername = config.get('driver')
@@ -111,22 +117,21 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             if os.path.exists(file_directory):
                 self.directory = directory
             else:
-                print("{} is not in {}".format(self.drivername,directory))
+                logging.critical("{} is not in {}".format(self.drivername,directory))
                 exit(1)
         else:
             directory = self.bin_dir
             file_directory = "{}/{}".format(directory,self.drivername)
             if os.path.exists(file_directory):
                 self.bin_dir = directory
-                #self.directory = directory
             else:
-                print("{} is not in {}".format(self.drivername,self.directory))
+                logging.critical("{} is not in {}".format(self.drivername,self.directory))
                 exit(1)
 
         pageload_timeout = config.get('pageload_timeout')
         if self.validatePageLoadTimeout(pageload_timeout):
             self.pageload_timeout = pageload_timeout
-
+            logging.info("Page Load Timeout Set to {}".format(self.pageload_timeout))
         if ghostmode and self.validateGhostmode(ghostmode):
             self.ghost = ghostmode
         else:
@@ -140,10 +145,11 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             self.ghost = ghostmode
         if self.ghost:
             self.drivername = "phantomjs"
+            logging.info("Using WebDrver {}".format(self.drivername))
         file_directory = "{}/{}".format(self.bin_dir,self.drivername)
         if (os.path.exists(file_directory)):
             if self.ghost == False:
-                print "Starting Chrome Browser"
+                logging.info("Starting Chrome Browser")
                 chrome_options = Options()
                 prefs = {"profile.default_content_setting_values.notifications" : 2}
                 chrome_options.add_experimental_option("prefs",prefs)
@@ -156,10 +162,10 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
                 self.positionWin = self.window.positionWin
                 self.driver.set_page_load_timeout(self.pageload_timeout)
             else:
-                print "Starting Ghost Browser"
+                logging.info("Starting Ghost Browser")
                 self.driver = webdriver.PhantomJS(executable_path=file_directory)
-            print("Driver Location: {}".format(self.bin_dir))
-            print("Driver Name: {}\n".format(self.drivername))
+            logging.info("Driver Location: {}".format(self.bin_dir))
+            logging.info("Driver Name: {}\n".format(self.drivername))
             time.sleep(1)
 
             if self.browser == None:
@@ -181,13 +187,13 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             self.capture.ghostmode = self.ghost
 
         else:
-            print("Driver is not present!")
+            logging.critical("Driver is not present!")
             exit(1)
 
     def quit(self):
-        print "Quiting {}".format(self.drivername)
+        logging.info("Quiting {} Session".format(self.drivername))
         if self.driver == None:
-            print "There is no Driver present"
+            logging.warning("Driver is not present! And you are trying to dealloc it")
             return 1
         if self.browser:
             self.browser.close()
@@ -233,9 +239,11 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
 
     def switchDriverMode(self, ghostmode = 0):
         if ghostmode and self.validateGhostmode(ghostmode):
+            logging.info("Setting Ghost Mode to {}".format(ghostmode))
             self.ghost = ghostmode
             self.ghostmode = self.ghost
         else:
+            logging.info("Switching Ghost Mode: {} -> {}".format(self.ghost,self.ghost ^ True))
             self.ghost = self.ghost ^ True
         self.quit()
         self.__init__(self.config_filename,self.ghost)
@@ -245,18 +253,22 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
         try:
             pageload_timeout = int(pageload_timeout)
         except ValueError:
-            print "Page Load Timeout Invalid Format"
+            logging.error("ValueError Exep: Page Load Timeout Invalid Format: {}".format(pageload_timeout))
             return 0
         if not isinstance(pageload_timeout,int):
+            logging.error("Page Load Timeout is not Int instance".format(pageload_timeout))
             return 0
         if pageload_timeout < -1:
+            logging.error("Page Load Timeout is < -1".format(pageload_timeout))
             return 0
         if pageload_timeout > 120:
+            logging.error("Page Load Timeout is > 120".format(pageload_timeout))
             return 0
         return 1
 
     def validateGhostmode(self,ghostmode):
         if not isinstance(ghostmode, bool):
+            logging.error("Ghost Mode is not Boolean expression".format(ghostmode))
             return 0
         return 1
 
@@ -270,5 +282,5 @@ if __name__ == "__main__":
     directory = os.getcwd()
     file_directory = "{}/{}".format(directory,filename)
     if(not os.path.exists(file_directory)):
-        print("{} is not in {}".format(filename,directory))
+        logging.critical("{} is not in {}".format(filename,directory))
         exit(1)

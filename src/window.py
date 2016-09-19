@@ -1,5 +1,6 @@
 import time
 import json
+import logging
 
 try:
     from selenium import webdriver
@@ -12,7 +13,7 @@ try:
     from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.common.keys import Keys
 except ImportError:
-    print "Selenium module is not installed...Exiting program."
+    logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
 
 ##### Window #######
@@ -85,60 +86,60 @@ class Window:
 
     def position(self, windowPosition):
         if not isinstance(windowPosition,tuple):
-            print "Invalid Window Position Format {}".format(windowPosition)
+            logging.error("Invalid Window Position Format {}".format(windowPosition))
             return 1
         windowPosition = self.validatePosition(windowPosition)
         if windowPosition == 0:
-            print "Invalid Window Position Format {}".format(windowPosition)
+            logging.error("Invalid Window Position Format {}".format(windowPosition))
             return 1
         self.positionWin = windowPosition
         self.driver.set_window_position(self.positionWin[0],self.positionWin[1])
         actualPosition = self.driver.get_window_position()
         self.positionWin = [actualPosition.get('x'),actualPosition.get('y')]
-        print("Window Position \t X: {} \t Y: {}".format(self.positionWin[0],self.positionWin[1]))
+        logging.info("Window Position \t X: {} \t Y: {}".format(self.positionWin[0],self.positionWin[1]))
         return 0
 
     def size(self, windowSize):
         if not isinstance(windowSize,tuple):
-            print "Invalid Window Size Format {}".format(windowSize)
+            logging.error("Invalid Window Size Format {}".format(windowSize))
             return 1
         windowSize = self.validateSize(windowSize)
         if windowSize == 0:
-            print "Invalid Window Size Format {}".format(windowSize)
+            logging.error("Invalid Window Size Format {}".format(windowSize))
             return 1
         self.sizeWin = windowSize
         self.driver.set_window_size(self.sizeWin[0], self.sizeWin[1])
         actualSize = self.driver.get_window_size()
         self.sizeWin = [actualSize.get('width'),actualSize.get('height')]
-        print("Window Size \t\t W: {} \t H: {}".format(self.sizeWin[0],self.sizeWin[1]))
+        logging.info("Window Size \t\t W: {} \t H: {}".format(self.sizeWin[0],self.sizeWin[1]))
         return 0
 
     def zoom(self, percent):
         if not isinstance(percent,int):
-            print "Invalid Value format for Percent {}".format(percent)
+            logging.error("Invalid Value format for Percent {}".format(percent))
             return 1
         if self.validateZoom(percent) == 0:
-            print "Zoom {} not in range (10-100)".format(percent)
+            logging.error("Zoom {} not in range (10-100)".format(percent))
             return 1
         self.zoomWin = percent
         self.driver.execute_script("document.body.style.zoom='{}%'".format(self.zoomWin))
-        print "Window Zoom: \t\t {}".format(self.zoomWin)
+        logging.info("Window Zoom: \t\t {}".format(self.zoomWin))
         return 0
 
     def zoomIn(self):
         if self.zoomWin + 10 > 100:
-            print "Can't Zoom In to {}%".format(self.zoomWin+10)
+            logging.error("Can't Zoom In to {}%".format(self.zoomWin+10))
             return 1
-        print "Zooming In: {} -> {}".format(self.zoomWin,self.zoomWin+10)
+        logging.info("Zooming In: {} -> {}".format(self.zoomWin,self.zoomWin+10))
         self.zoomWin = self.zoomWin + 10
         self.zoom(self.zoomWin)
         return 0
 
     def zoomOut(self):
         if self.zoomWin - 10 < 1:
-            print "Can't Zoom Out to {}%".format(self.zoomWin-10)
+            logging.error("Can't Zoom Out to {}%".format(self.zoomWin-10))
             return 1
-        print "Zooming Out: {} -> {}".format(self.zoomWin,self.zoomWin-10)
+        logging.info("Zooming Out: {} -> {}".format(self.zoomWin,self.zoomWin-10))
         self.zoomWin = self.zoomWin - 10
         self.zoom(self.zoomWin)
         return 0
@@ -147,32 +148,33 @@ class Window:
         try:
             self.driver.execute_script("return arguments[0].scrollIntoView();", element)
         except NoSuchElementException:
-            print "NoSuchElementException: Couldn't find"
+            logging.error("NoSuchElementException: Couldn't find element")
             return 1
         location_dic = element.location
         if isinstance(location_dic,dict):
             x = location_dic.get('x')
             y = location_dic.get('y')
             self.scrollWin = (int(x),int(y))
-            print "Scrolling to point {}".format(element.location)
+            logging.info("Scrolling to point {}".format(element.location))
             time.sleep(1)
             return 0
         else:
+            logging.error("Didn't scroll to Element")
             return 1
 
     def scrol(self,scrollWin):
         if not isinstance(scrollWin,tuple):
-            print "Invalid Scroll Format {}".format(scrollWin)
+            logging.error("Invalid Scroll Format {}".format(scrollWin))
             return 1
         if self.validateScroll(scrollWin) == 0:
-            print "Can't scroll to ({},{})".format(scrollWin[0],scrollWin[1])
+            logging.error("Can't scroll to ({},{})".format(scrollWin[0],scrollWin[1]))
             return 1
         else:
             self.scrollWin = scrollWin
             x = scrollWin[0]
             y = scrollWin[1]
             self.driver.execute_script("window.scrollTo({}, {})".format(x,y))
-            print "Window Scroll: \t\t {}".format(self.scrollWin)
+            logging.info("Window Scroll: \t\t {}".format(self.scrollWin))
         time.sleep(1)
         return 0
 
@@ -182,24 +184,31 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (y + step) > scrollHeight:
-            print "Can't Scroll Down to {}".format(y + step)
+            logging.warning("Can't Scroll Down to {}".format(y + step))
             return 1
-        print "Scrolling Down: {} -> {}".format(y,y+step)
+        logging.info("Scrolling Down: {} -> {}".format(y,y+step))
         self.scrollWin = (x,y+step)
         self.scrol(self.scrollWin)
         time.sleep(0.5)
         return 0
 
     def scrollBottom(self,animate = 0):
-        timeout = 5.0
-        initial = 0
-        pause = 0.2
-        while not self.scrollDown():
-            if animate:
-                time.sleep(pause)
-            initial = initial + pause
-            if initial > timeout:
-                break
+        if animate:
+            timeout = 5.0
+            initial = 0
+            pause = 0.2
+            while not self.scrollDown():
+                if animate:
+                    time.sleep(pause)
+                initial = initial + pause
+                if initial > timeout:
+                    break
+        else:
+            scrollHeight = self.driver.execute_script("return document.body.scrollHeight")
+            x = self.scrollWin[0]
+            logging.info("Scrolling to bottom of the page at ({},{})".format(x,scrollHeight))
+            self.scrollWin = (x,scrollHeight)
+            self.scrol(self.scrollWin)
         return 0
 
     def scrollUp(self):
@@ -208,24 +217,29 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (y - step) < 0:
-            print "Can't Scroll Up to {}".format(y - step)
+            logging.error("Can't Scroll Up to {}".format(y - step))
             return 1
-        print "Scrolling Up: {} -> {}".format(y,y-step)
+        logging.info("Scrolling Up: {} -> {}".format(y,y-step))
         self.scrollWin = (x,y-step)
         self.scrol(self.scrollWin)
         time.sleep(0.5)
         return 0
 
     def scrollTop(self,animate = 0):
-        timeout = 5.0
-        initial = 0
-        pause = 0.2
-        while not self.scrollUp():
-            if animate:
-                time.sleep(pause)
-            initial = initial + pause
-            if initial > timeout:
-                break
+        if animate:
+            timeout = 5.0
+            initial = 0
+            pause = 0.2
+            while not self.scrollUp():
+                if animate:
+                    time.sleep(pause)
+                initial = initial + pause
+                if initial > timeout:
+                    break
+        else:
+            self.scrollWin = (0,0)
+            self.scrol(self.scrollWin)
+            logging.info("Scrolling to top of the page at {}".format(self.scrollWin))
         return 0
 
     def scrollRight(self):
@@ -234,9 +248,9 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (x + step) > scrollWidth:
-            print "Can't Scroll Right to {}".format(x + step)
+            logging.error("Can't Scroll Right to {}".format(x + step))
             return 1
-        print "Scrolling Right: {} -> {}".format(x,x+step)
+        logging.info("Scrolling Right: {} -> {}".format(x,x+step))
         self.scrollWin = (x+step,y)
         self.scrol(self.scrollWin)
         time.sleep(0.3)
@@ -248,9 +262,9 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (x - step) < 0:
-            print "Can't Scroll Left to {}".format(x - step)
+            logging.error("Can't Scroll Left to {}".format(x - step))
             return 1
-        print "Scrolling Left: {} -> {}".format(x,x-step)
+        logging.info("Scrolling Left: {} -> {}".format(x,x-step))
         self.scrollWin = (x-step,y)
         self.scrol(self.scrollWin)
         time.sleep(0.3)
@@ -258,40 +272,41 @@ class Window:
 
     def validateSize(self, sizeWin):
         if not sizeWin and not len(sizeWin) == 2:
-            print ("Invalid Size Format {}".format(sizeWin))
+            logging.error("Invalid Size Format {}".format(sizeWin))
             return 0
         w = sizeWin[0]
         h = sizeWin[1]
         if (w < 400):
-            print "Min: {} Passed: {}".format(400,w)
+            logging.warning("Out of Range for Width: Passed {} Selected {}",w,400)
             w = 400
         elif (w > 2000):
-            print "Max: {} Passed: {}".format(2000,w)
+            logging.warning("Out of Range for Width: Passed {} Selected {}",w,2000)
             w = 2000
         if (h < 272):
-            print "Min: {} Passed: {}".format(272,h)
+            logging.warning("Out of Range for Height: Passed {} Selected {}",h,272)
             h = 272
         elif (h > 1000):
-            print "Max: {} Passed: {}".format(1000,h)
+            logging.warning("Out of Range for Height: Passed {} Selected {}",h,1000)
             h = 1000
         sizeWin = (w,h)
+        logging.info("Window Sized to {}".format(sizeWin))
         return sizeWin
 
     def validateZoom(self, percent):
         if not isinstance(percent,int):
-            print "Invalid Zoom Format {}".format(percent)
+            logging.error("Invalid Zoom Format {}".format(percent))
             return 0
         if (percent < 10):
-            print "Min: {} Passed: {}".format(10,percent)
+            logging.warning("Out of Range for Zoom: Passed {} Selected {}",percent,10)
             return 0
         elif (percent > 100):
-            print "Max: {} Passed: {}".format(100,percent)
+            logging.warning("Out of Range for Zoom: Passed {} Selected {}",percent,100)
             return 0
         return 1
 
     def validateScroll(self, scrollWin):
         if not isinstance(scrollWin,tuple):
-            print "Invalid Scroll Format {}".format(scrollWin)
+            logging.error("Invalid Scroll Format {}".format(scrollWin))
             return 0
         x = int(scrollWin[0])
         y = int(scrollWin[1])
@@ -301,38 +316,40 @@ class Window:
             scrollHeight = self.driver.execute_script("return document.body.scrollHeight")
             scrollWidth = self.driver.execute_script("return document.body.scrollWidth")
         if (x < 0):
-            print "X Min: {} Passed: {}".format(0,x)
+            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}",x,0)
             return 0
         if (x > scrollWidth):
-            print "X Max: {} Passed: {}".format(scrollWidth,x)
+            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}",x,scrollWidth)
             return 0
         if (y < 0):
-            print "Y Min: {} Passed: {}".format(0,y)
+            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}",y,0)
             return 0
         if (y > scrollHeight):
-            print "Y Max: {} Passed: {}".format(scrollHeight,y)
+            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}",y,scrollHeight)
             return 0
         scrollWin = (x,y)
+        logging.info("Scrolling to {}".format(scrollWin))
         return scrollWin
 
     def validatePosition(self, positionWin):
         if not positionWin and not len(positionWin) == 2:
-            print ("Invalid Position Format {}".format(positionWin))
+            logging.error("Invalid Position Format {}".format(positionWin))
             return 0
         x = positionWin[0]
         y = positionWin[1]
         if (x < 0):
-            print "Min: {} Passed: {}".format(0,x)
+            logging.warning("Out of Range for X Position: Passed {} Selected {}",x,0)
             x = 0
         elif (x > 2000):
-            print "Max: {} Passed: {}".format(2000,x)
+            logging.warning("Out of Range for X Position: Passed {} Selected {}",x,2000)
             x = 2000
         if (y < 23):
-            print "Min: {} Passed: {}".format(23,y)
+            logging.warning("Out of Range for Y Position: Passed {} Selected {}",y,23)
             y = 23
         elif (y > 1000):
-            print "Max: {} Passed: {}".format(1000,y)
+            logging.warning("Out of Range for Y Position: Passed {} Selected {}",y,1000)
             y = 1000
         positionWin = (x,y)
+        logging.info("Window Position to {}".format(positionWin))
         return positionWin
 

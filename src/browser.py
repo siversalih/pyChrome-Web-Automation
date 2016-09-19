@@ -1,41 +1,42 @@
 import time
+import logging
 
 try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.remote.webelement import WebElement
 except ImportError:
-    print "Selenium module is not installed...Exiting program."
+    logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
 try:
     import urllib2
 except ImportError:
-    print "urllib2 module is not installed...Exiting program."
+    logging.critical("urllib2 module is not installed...Exiting program.")
     exit(1)
 try:
     import urllib
 except ImportError:
-    print "urllib module is not installed...Exiting program."
+    logging.critical("urllib module is not installed...Exiting program.")
     exit(1)
 try:
     from element import Element
 except ImportError:
-    print "element.py is missing...Exiting program."
+    logging.critical("element.py is missing...Exiting program.")
     exit(1)
 try:
     from interaction import Interaction
 except ImportError:
-    print "interaction.py is missing...Exiting program."
+    logging.critical("interaction.py is missing...Exiting program.")
     exit(1)
 try:
     from navigation import Navigation
 except ImportError:
-    print "navigation.py is missing...Exiting program."
+    logging.critical("navigation.py is missing...Exiting program.")
     exit(1)
 try:
     from tab import Tab
 except ImportError:
-    print "tab.py is missing...Exiting program."
+    logging.critical("tab.py is missing...Exiting program.")
     exit(1)
 
 ##### Browser #####
@@ -66,14 +67,14 @@ class Browser:
     def open(self, url):
         # Invalid URL
         if url == 0 or len(url) == 0:
-            print "Couldn't Open the page {}\nPlease check the URL".format(url)
+            logging.error("Couldn't Open the page {}\nPlease check the URL".format(url))
             return 1
 
         # Search Instead
         if not "www." in url and not ".com" in url and not "." in url:
             err = self.search(url)
             if err:
-                print "Failed to Search"
+                logging.error("Failed to Search")
                 return 1
             return 0
 
@@ -91,9 +92,9 @@ class Browser:
                         if item == current_window:
                             break
                 if self.ghostmode:
-                    print("Opening in GhostMode: {} on Tab {}".format(url,position+1))
+                    logging.info("Opening in GhostMode: {} on Tab {}".format(url,position+1))
                 else:
-                    print("Opening: {} on Tab {}".format(url,position+1))
+                    logging.info("Opening: {} on Tab {}".format(url,position+1))
                 try:
                     self.driver.get(url)
                     self.tab.link = self.driver.current_url
@@ -105,19 +106,19 @@ class Browser:
                         self.selectedElement = element
                         self.element.selectElement(element)
                 except TimeoutException:
-                    print "TimeoutException: Didn't load the page fully"
+                    logging.warning("TimeoutException: Didn't load the page fully")
                     return 0
                 except WebDriverException:
-                    print "Couldn't Open {}\nPlease check the URL or Internet Connection".format(url)
+                    logging.error("WebDriverException: Couldn't Open {}\nPlease check the URL or Internet Connection".format(url))
                     return 1
-            print "Page Title: {}".format(self.tab.title)
+            logging.info("Page Title: {}".format(self.tab.title))
             return 0
         time.sleep(2)
         return 0
 
     def close(self):
         if self.tabs:
-            print "Closing {} Tabs".format(len(self.tabs))
+            logging.info("Closing {} Tabs".format(len(self.tabs)))
         if self.driver == None:
             return 1
         if self.tabs and len(self.tabs):
@@ -127,7 +128,7 @@ class Browser:
                         self.driver.switch_to_window(tab.windowHandle)
                         self.driver.close()
                     except WebDriverException:
-                        print "WebDriverException: Window Not Found"
+                        logging.error("WebDriverException: WebDriver Not Found")
                         return 1
                     tab.dealloc()
                     tab = None
@@ -153,24 +154,24 @@ class Browser:
 
     def closeTab(self, tabnum = 0):
         if not self.driver or not self.tab:
-            print "There is no session or client or tab to close"
+            logging.error("There is no session or client or tab to close")
             return 0
         if self.tab:
             if tabnum:
                 if tabnum < 1 or tabnum > 9:
-                    print "Tab Range Invalid: Can't Close Tab {}".format(tabnum)
+                    logging.error("Tab Range Invalid: Can't Close Tab {}".format(tabnum))
                     return 1
                 if tabnum > len(self.tabs):
-                    print "There is no Tab {}".format(tabnum)
+                    logging.error("There is no Tab {}".format(tabnum))
                     return 1
                 self.tab = self.tabs[tabnum-1]
                 try:
                     self.driver.switch_to_window(self.tab.windowHandle)
                 except WebDriverException:
-                    print "WebDriverException: Can't Switch to Tab {}".format(self.tab.index)
+                    logging.error("WebDriverException: Can't Switch to Tab {}".format(self.tab.index))
                     return 1
                 time.sleep(1)
-            print "Closing Tab: Tab {}".format(self.tab.index)
+            logging.error("Closing Tab: Tab {}".format(self.tab.index))
             if len(self.tabs) == 1:
                 self.tabs.remove(self.tab)
                 self.tabs = None
@@ -195,34 +196,34 @@ class Browser:
                 try:
                     self.driver.switch_to_window(self.tab.windowHandle)
                 except WebDriverException:
-                    print "WebDriverException: Can't Switch to Tab {}".format(self.tab.index)
+                    logging.error("WebDriverException: Can't Switch to Tab {}".format(self.tab.index))
                     return 1
                 time.sleep(1)
                 title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
                 try:
-                    print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
+                    logging.info("Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url))
                 except TimeoutException:
-                    print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+                    logging.info("Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url))
         return 0
 
     def newTab(self,url=None):
         if len(self.tabs) == 9:
-            print "Max Number of Tabs Reached {}".format(len(self.tabs))
+            logging.warning("Max Number of Tabs Reached {}".format(len(self.tabs)))
             return 1
         link = "https://www.google.com"
         time.sleep(1)
         try:
             self.driver.execute_script("window.open('{}');".format(link))
         except WebDriverException:
-            print "WebDriverException: Couldn't open a new tab"
+            logging.error("WebDriverException: Couldn't open a new tab")
             return 1
         location = len(self.driver.window_handles)
-        print "New Tab: Tab {}".format(location)
+        logging.info("New Tab: Tab {}".format(location))
         time.sleep(1)
         try:
             self.driver.switch_to_window(self.driver.window_handles[len(self.tabs)])
         except WebDriverException:
-            print "WebDriverException: Can't Switch to New Tab"
+            logging.error("WebDriverException: Can't Switch to New Tab")
             return 1
         time.sleep(1)
         if url:
@@ -230,16 +231,17 @@ class Browser:
             if url:
                 err = self.open(url)
                 if err:
+                    logging.error("Couldn't open URL in the new Tab")
                     return 1
         title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         newTab = Tab(location,self.driver.window_handles[len(self.tabs)],self.driver.current_url,title)
         self.tab = newTab
         self.tabs.append(self.tab)
-        self.tab.printTab()
+        #self.tab.printTab()
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
+            logging.info("Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url))
         except TimeoutException:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+            logging.error("TimeoutException: Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url))
         element=self.element.findElementByTag("body")
         if element:
             self.element.selectedElement = element
@@ -247,26 +249,26 @@ class Browser:
 
     def rightTab(self):
         if self.tab.index == 9:
-            print "Window at Tab {}. Can't Switch to Right Tab".format(self.tab.index)
+            logging.warning("Window at Tab {}. Can't Switch to Right Tab".format(self.tab.index))
             return 0
         if self.tab.index == len(self.tabs):
-            print "Window at Tab {}. There is No Right Tab".format(self.tab.index)
+            logging.warning("Window at Tab {}. There is No Right Tab".format(self.tab.index))
             return 0
-        print "Switching to Right Tab ({} -> {})".format(self.tab.index,self.tab.index+1)
+        logging.info("Switching to Right Tab ({} -> {})".format(self.tab.index,self.tab.index+1))
         self.tab = self.tabs[self.tab.index]
         try:
             self.driver.switch_to_window(self.tab.windowHandle)
         except WebDriverException:
-            print "WebDriverException: Can't Switch to Right Tab"
+            logging.error("WebDriverException: Can't Switch to Right Tab")
             return 1
         except UnicodeEncodeError:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
+            logging.error("UnicodeEncodeError: Tab {} Focus: URL {}".format(self.tab.index,self.tab.link))
         time.sleep(1)
         title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
+            logging.info("Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url))
         except TimeoutException:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+            logging.error("Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url))
         element=self.element.findElementByTag("body")
         if element:
             self.element.selectedElement = element
@@ -274,27 +276,27 @@ class Browser:
 
     def leftTab(self):
         if self.tab.index == 1:
-            print "Window at Tab {}. Can't Switch to Left Tab".format(self.tab.index)
+            logging.warning("Window at Tab {}. Can't Switch to Left Tab".format(self.tab.index))
             return 0
         if len(self.tabs) < 2:
-            print "This is the only Tab. There is not left Tab"
+            logging.warning("This is the only Tab Opened. There is not left Tab")
             return 0
         leftTab = self.tabs[self.tab.index-2]
-        print "Switching to Left Tab ({} <- {})".format(leftTab.index,self.tab.index)
+        logging.info("Switching to Left Tab ({} <- {})".format(leftTab.index,self.tab.index))
         self.tab = leftTab
         try:
             self.driver.switch_to_window(self.tab.windowHandle)
         except WebDriverException:
-            print "WebDriverException: Can't Switch to Left Tab"
+            logging.error("WebDriverException: Can't Switch to Left Tab")
             return 1
         time.sleep(1)
         title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
+            logging.info("Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url))
         except TimeoutException:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+            logging.warning("TimeoutException: Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url))
         except UnicodeEncodeError:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.tab.link)
+            logging.warning("UnicodeEncodeError: Tab {} Focus: URL {}".format(self.tab.index,self.tab.link))
         element=self.element.findElementByTag("body")
         if element:
             self.element.selectedElement = element
@@ -302,24 +304,23 @@ class Browser:
 
     def switchTab(self, index):
         if index == 0:
-            print "Tab Index starts from index 1"
+            logging.error("Tab Index starts from index 1")
             return 1
         if index > len(self.tabs):
-            print "Tab Index '{}' is greater than number of tabs opened '{}'".format(index,len(self.tabs))
+            logging.error("Tab Index '{}' is greater than number of tabs opened '{}'".format(index,len(self.tabs)))
             return 1
-
         self.tab = self.tabs[index-1]
         try:
             self.driver.switch_to_window(self.tab.windowHandle)
         except WebDriverException:
-            print "WebDriverException: Can't Switch to Tab {}".format(index)
+            logging.error("WebDriverException: Can't Switch to Tab {}".format(index))
             return 1
         time.sleep(1)
         title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
         try:
-            print "Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url)
+            logging.info("Tab {} Focus: {}  URL {}".format(self.tab.index,title,self.driver.current_url))
         except TimeoutException:
-            print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
+            logging.warning("TimeoutException: Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url))
         element=self.element.findElementByTag("body")
         if element:
             self.element.selectedElement = element
@@ -335,33 +336,32 @@ class Browser:
         try:
             urllib2.urlopen(link)
         except urllib2.HTTPError, e:
-            print "{}: {} not reachable".format(e.code,link)
-            print(e.code)
+            logging.error("{}: {} not reachable".format(e.code,link))
             return 0
         except urllib2.URLError, e:
-            print "{}: {} not reachable".format(e.args,link)
+            logging.error("{}: {} not reachable".format(e.args,link))
             return 0
         return link
 
     def search(self, text):
         if text == 0 or len(text) == 0:
-            print "Nothing to search {}".format(text)
+            logging.error("Nothing to search {}".format(text))
             return 1
-        print "Preparing to Search..."
+        logging.info("Preparing to Search...")
         if not self.driver.current_url is "http://www.google.com":
             self.open("http://www.google.com")
         name_str = "q"
         element = self.element.findElementByName(name_str)
         if element == 0:
-            print "Couldn't find any element by its name attribute {}".format(name_str)
+            logging.error("Couldn't find any element by its name attribute {}".format(name_str))
             return 1
         self.interaction.sendTextToElement(text,element)
         name_str = "btnG"
         element = self.element.findElementByName(name_str)
         if element == 0:
-            print "Couldn't find any element by its name attribute {}".format(name_str)
+            logging.error("Couldn't find any element by its name attribute {}".format(name_str))
             return 1
-        print "Searching for {}".format(text)
+        logging.info("Searching for {}".format(text))
         if self.interaction.clickElement(element):
             return 1
         self.tab.link = self.driver.current_url

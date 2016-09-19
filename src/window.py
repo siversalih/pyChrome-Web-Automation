@@ -60,6 +60,7 @@ class Window:
             self.zoomWin = zoomWin
 
         scrollWin = config.get('scroll')
+        scrollWin = (scrollWin[0],scrollWin[1])
         if self.validateScroll(scrollWin):
             self.scrollWin = scrollWin
 
@@ -164,7 +165,7 @@ class Window:
 
     def scrol(self,scrollWin):
         if not isinstance(scrollWin,tuple):
-            logging.error("Invalid Scroll Format {}".format(scrollWin))
+            logging.error("Invalid Scroll Format ({},{})".format(scrollWin[0],scrollWin[1]))
             return 1
         if self.validateScroll(scrollWin) == 0:
             logging.error("Can't scroll to ({},{})".format(scrollWin[0],scrollWin[1]))
@@ -174,7 +175,7 @@ class Window:
             x = scrollWin[0]
             y = scrollWin[1]
             self.driver.execute_script("window.scrollTo({}, {})".format(x,y))
-            logging.info("Window Scroll: \t\t {}".format(self.scrollWin))
+            logging.warning("Window Scroll: \t\t {}".format(self.scrollWin))
         time.sleep(1)
         return 0
 
@@ -184,7 +185,7 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (y + step) > scrollHeight:
-            logging.warning("Can't Scroll Down to {}".format(y + step))
+            logging.warning("Scrolling Down: Can't Scroll to {}".format(y + step))
             return 1
         logging.info("Scrolling Down: {} -> {}".format(y,y+step))
         self.scrollWin = (x,y+step)
@@ -217,7 +218,7 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (y - step) < 0:
-            logging.error("Can't Scroll Up to {}".format(y - step))
+            logging.warning("Scrolling Up: Can't Scroll to {}".format(y - step))
             return 1
         logging.info("Scrolling Up: {} -> {}".format(y,y-step))
         self.scrollWin = (x,y-step)
@@ -248,7 +249,7 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (x + step) > scrollWidth:
-            logging.error("Can't Scroll Right to {}".format(x + step))
+            logging.warning("Scrolling Right: Can't Scroll to {}".format(x + step))
             return 1
         logging.info("Scrolling Right: {} -> {}".format(x,x+step))
         self.scrollWin = (x+step,y)
@@ -262,7 +263,7 @@ class Window:
         x = self.scrollWin[0]
         y = self.scrollWin[1]
         if (x - step) < 0:
-            logging.error("Can't Scroll Left to {}".format(x - step))
+            logging.warning("Scrolling Left: Can't Scroll to {}".format(x - step))
             return 1
         logging.info("Scrolling Left: {} -> {}".format(x,x-step))
         self.scrollWin = (x-step,y)
@@ -306,7 +307,7 @@ class Window:
 
     def validateScroll(self, scrollWin):
         if not isinstance(scrollWin,tuple):
-            logging.error("Invalid Scroll Format {}".format(scrollWin))
+            logging.error("Invalid Scroll Format ({},{})".format(scrollWin[0],scrollWin[1]))
             return 0
         x = int(scrollWin[0])
         y = int(scrollWin[1])

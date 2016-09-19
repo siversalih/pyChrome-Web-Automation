@@ -1,3 +1,5 @@
+import logging
+
 class Tab:
     link = ""
     index = 1
@@ -26,10 +28,10 @@ class Tab:
             del self.windowHandle
 
     def printTab(self):
-        print "-----Tab Info-------"
-        print "Tab: {}".format(self.index)
-        print "Title: {}".format(self.title)
-        print "Link: {}".format(self.link)
-        print "Window Handle: {}".format(self.windowHandle)
-        print "--------------------"
+        logging.info("-----Tab Info-------")
+        logging.info("Tab: {}".format(self.index))
+        logging.info("Title: {}".format(self.title))
+        logging.info("Link: {}".format(self.link))
+        logging.info("Window Handle: {}".format(self.windowHandle))
+        logging.info("--------------------")
 

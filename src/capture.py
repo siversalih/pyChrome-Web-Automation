@@ -21,34 +21,14 @@ except ImportError:
     logging.critical("element.py is missing...Exiting program.")
     exit(1)
 
-
 #### Record ####
 
 class Capture:
     driver = None
-    element = None
     directory = None
-    ghostmode = None
 
-    def __init__(self,driver,element,directory,ghostmode):
-        self.driver = driver
-        self.element = element
-        self.directory = directory
-        self.ghostmode = ghostmode
-
-    def dealloc(self):
-        if self.driver:
-            del self.driver
-        if self.element:
-            self.element.dealloc()
-            del self.element
-        del self.directory
-        del self.ghostmode
-
-    def screenshot(self, save_name = 0, save_directory = 0):
+    def screenshot(self, save_name=None, save_directory=None):
         filename = "save_image"
-        if self.ghostmode:
-            filename = "save_image_ghost"
         extension = "png"
         directory = self.directory
         if save_name:
@@ -59,53 +39,50 @@ class Capture:
             self.driver.save_screenshot('{}/{}.{}'.format(directory,filename,extension))
             logging.info("Screen Captured: {}".format("{}/{}.{}".format(directory,filename,extension)))
         except Exception:
-            logging.error("Failed to Screen Capture {}".format(self.driver.current_url))
+            logging.error("Failed to Screen Capture {}".format(self.cur_tab.link))
             return 1
         return 0
 
-    def sourceDump(self, filename = 0):
+    def sourceDump(self, filename=None):
         extension = ".html"
         name = "source"
         if filename:
             name = filename
-
-        if not self.driver or not self.driver.current_url:
+        if not self.driver:
             logging.error("There is no driver or URL to get the source")
             return 1
         try:
-            urlopen = urllib.urlopen(self.driver.current_url) # Open the URL.
+            urlopen = urllib.urlopen(self.cur_tab.link) # Open the URL.
         except Exception:
-            logging.error("Failed to get the source code for {}".format(self.driver.current_url))
+            logging.error("Failed to get the source code for {}".format(self.cur_tab.link))
             return 1
-        source = urlopen.readlines() # Read the source and save it to a variable.
+        source = urlopen.readlines() # Read source and save it to a variable.
         if not extension in name:
             name = "{}{}".format(name,extension)
-        file = open(name,"wb") #open file in binary mode
+        file = open(name,"wb") # Open file in binary mode
         file.writelines(source)
         file.close()
         logging.info("Source Code Dump: {}".format("{}/{}".format(self.directory,name)))
         return 0
 
-    def elementDump(self, element = 0, filename = 0):
+    def elementDump(self,element,filename=None):
         extension = ".html"
         name = "source"
         if filename:
             name = filename
-        if element:
-            self.element.selectedElement = element
 
-        if not isinstance(self.element.selectedElement,WebElement) or self.element.selectedElement == None:
+        if not isinstance(element,WebElement):
             logging.error("There is no element to get the source code")
             return 1
         try:
-            source=self.element.selectedElement.get_attribute('innerHTML')
+            source=element.get_attribute('innerHTML')
         except Exception:
-            logging.error("Failed to get the source code for {}".format(self.element.selectedElement))
+            logging.error("Failed to get the source code for {}".format(element))
             return 1
         if not extension in name:
             name = "{}{}".format(name,extension)
-        file = open(name,"wb") #open file in binary mode
+        file = open(name,"wb")
         file.writelines(source)
         file.close()
-        logging.info("Element Source Dump: {}".format("{}/{}".format(self.directory,name)))
+        logging.info("Web Element Source Dump: {}".format("{}/{}".format(self.directory,name)))
         return 0

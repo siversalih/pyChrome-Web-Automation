@@ -13,6 +13,36 @@ if not(os.path.exists(src_dir)):
     exit(1)
 sys.path.insert(0, src_dir)
 
+try:
+    from window import Window
+except ImportError:
+    logging.critical("window.py is missing...Exiting program.")
+    exit(1)
+
+try:
+    from browser import Browser
+except ImportError:
+    logging.critical("browser.py is missing...Exiting program.")
+    exit(1)
+
+try:
+    from element import Element
+except ImportError:
+    logging.critical("element.py is missing...Exiting program.")
+    exit(1)
+
+try:
+    from interaction import Interaction
+except ImportError:
+    logging.critical("interaction.py is missing...Exiting program.")
+    exit(1)
+
+try:
+    from combo import Combo
+except ImportError:
+    logging.critical("combo.py is missing...Exiting program.")
+    exit(1)
+
 binary_dir = "{}/bin".format(curr_dir)
 logging.info("Binary directory: {}".format(binary_dir))
 if(not os.path.exists(binary_dir)):
@@ -32,43 +62,9 @@ try:
 except ImportError:
     logging.critical("json module is not installed...Exiting program.")
     exit(1)
-try:
-    from navigation import Navigation
-except ImportError:
-    logging.critical("navigation.py is missing...Exiting program.")
-    exit(1)
-try:
-    from window import Window
-except ImportError:
-    logging.critical("window.py is missing...Exiting program.")
-    exit(1)
-try:
-    from element import Element
-except ImportError:
-    logging.critical("element.py is missing...Exiting program.")
-    exit(1)
-try:
-    from interaction import Interaction
-except ImportError:
-    logging.critical("interaction.py is missing...Exiting program.")
-    exit(1)
-try:
-    from browser import Browser
-except ImportError:
-    logging.critical("browser.py is missing...Exiting program.")
-    exit(1)
-try:
-    from capture import Capture
-except ImportError:
-    logging.critical("capture.py is missing...Exiting program.")
-    exit(1)
-try:
-    from combo import Combo
-except ImportError:
-    logging.critical("combo.py is missing...Exiting program.")
-    exit(1)
 
-class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
+
+class PyChrome(Element,Interaction,Combo):
     config_filename = ""
     drivername = ""
     directory = ""
@@ -78,12 +74,11 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
     ghost = 0
     window = None
     browser = None
-    capture = None
-    combo = None
+    selectedElement = None
+    elements = None
 
-    def __init__(self, config_filename = 0, ghostmode = 0):
+    def __init__(self, config_filename=None, ghostmode=0):
         self.config_filename = "config.json"
-        self.drivername = "chromedriver"
         self.bin_dir = binary_dir
         self.directory = os.getcwd()
         self.pageload_timeout = -1
@@ -95,22 +90,20 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             self.config_filename = config_filename
             file_directory = "{}/{}".format(self.directory,self.config_filename)
             if(os.path.exists(file_directory)):
-                self.readJSONFile(self.config_filename,ghostmode=ghostmode)
+                self.__readJSONFile(self.config_filename,ghostmode=ghostmode)
             else:
                 logging.critical("{} is not in {}".format(self.config_filename,self.directory))
                 exit(1)
-        logging.info("Starting the WebDriver with ghostmode {}".format(self.ghost))
         self.__start(ghostmode=self.ghost)
         return
 
-    def readJSONFile(self, config_filename = 0, ghostmode = 0):
+    def __readJSONFile(self, config_filename=None, ghostmode=0):
         if config_filename:
             self.config_filename = config_filename
             logging.info("Reading configuration file {}".format(self.config_filename))
         with open(self.config_filename) as jsonFile:
             config = json.load(jsonFile)
         self.drivername = config.get('driver')
-        directory = ""
         directory = config.get('directory')
         file_directory = "{}/{}".format(directory,self.drivername)
         if directory and len(directory):
@@ -127,7 +120,6 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             else:
                 logging.critical("{} is not in {}".format(self.drivername,self.directory))
                 exit(1)
-
         pageload_timeout = config.get('pageload_timeout')
         if self.validatePageLoadTimeout(pageload_timeout):
             self.pageload_timeout = pageload_timeout
@@ -146,95 +138,60 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
         if self.ghost:
             self.drivername = "phantomjs"
             logging.info("Using WebDrver {}".format(self.drivername))
-        file_directory = "{}/{}".format(self.bin_dir,self.drivername)
-        if (os.path.exists(file_directory)):
-            if self.ghost == False:
-                logging.info("Starting Chrome Browser")
+            logging.info("Starting Ghost Browser")
+            file_directory = "{}/{}".format(self.bin_dir,self.drivername)
+            if (os.path.exists(file_directory)):
+                self.driver = webdriver.PhantomJS(executable_path=file_directory)
+                self.driver.set_page_load_timeout(self.pageload_timeout)
+                self.browser = Browser(self.driver,True)
+            else:
+                logging.critical("GhostDriver (PhantomJS) is not present!")
+                exit(1)
+        else:
+            self.drivername = "chromedriver"
+            logging.info("Using WebDrver {}".format(self.drivername))
+            logging.info("Starting Chrome Browser")
+            file_directory = "{}/{}".format(self.bin_dir,self.drivername)
+            if (os.path.exists(file_directory)):
                 chrome_options = Options()
                 prefs = {"profile.default_content_setting_values.notifications" : 2}
                 chrome_options.add_experimental_option("prefs",prefs)
                 chrome_options.add_argument("--disable-extensions")
                 self.driver = webdriver.Chrome(file_directory,0,chrome_options,None,None,None)
-                self.window = Window(self.driver, config=self.config_filename)
-                self.zoomWin = self.window.zoomWin
-                self.sizeWin = self.window.sizeWin
-                self.scrollWin = self.window.scrollWin
-                self.positionWin = self.window.positionWin
                 self.driver.set_page_load_timeout(self.pageload_timeout)
+                self.window = Window(self.driver, config_filename=self.config_filename)
+                self.browser = self.window.browser
             else:
-                logging.info("Starting Ghost Browser")
-                self.driver = webdriver.PhantomJS(executable_path=file_directory)
-            logging.info("Driver Location: {}".format(self.bin_dir))
-            logging.info("Driver Name: {}\n".format(self.drivername))
-            time.sleep(1)
-
-            if self.browser == None:
-                self.browser = Browser(self.driver,self.ghost)
-                self.tabs = self.browser.tabs
-                self.tab = self.browser.tab
-            self.ghostmode = self.ghost
-            self.element = self.browser.element
-            self.elements = self.browser.element.elements
-            self.selectedElement = self.browser.element.selectedElement
-            self.interaction = self.browser.interaction
-            self.navigation = self.browser.navigation
-
-            if self.combo == None:
-                self.combo = Combo(self.driver,self.browser)
-
-            if self.capture == None:
-                self.capture = Capture(self.driver,self.browser.element,self.directory,self.ghostmode)
-            self.capture.ghostmode = self.ghost
-
-        else:
-            logging.critical("Driver is not present!")
-            exit(1)
+                logging.critical("ChromeDriver is not present!")
+                exit(1)
+        logging.info("Driver Location: {}".format(self.bin_dir))
+        logging.info("Driver Name: {}\n".format(self.drivername))
+        self.findBodyElement()
+        self.elements = []
+        time.sleep(1)
+        return 0
 
     def quit(self):
         logging.info("Quiting {} Session".format(self.drivername))
-        if self.driver == None:
-            logging.warning("Driver is not present! And you are trying to dealloc it")
-            return 1
         if self.browser:
-            self.browser.close()
+            self.browser.dealloc()
             del self.browser
-        if self.driver:
-            self.driver.stop_client()
-            self.driver.quit()
-            self.driver = None
-        if self.capture:
-            self.capture.dealloc()
-            del self.capture
-        if self.interaction:
-            self.interaction.dealloc()
-            del self.interaction
-        if self.navigation:
-            self.navigation.dealloc()
-            del self.navigation
-        if self.element:
-            self.element.dealloc()
-            del self.element
         if self.window:
             self.window.dealloc()
             del self.window
-            del self.sizeWin
-            del self.zoomWin
-            del self.scrollWin
-            del self.positionWin
-        if self.combo:
-            self.combo.dealloc()
-            del self.combo
+        if self.driver:
+            self.driver.stop_client()
+            self.driver.quit()
+            del self.driver
+        else:
+            logging.warning("Driver is not present! There is not Driver to deallocate")
+            return 1
+        logging.info("Quited the Session and Closed the Client")
         if self.elements:
+            del self.elements[:]
             del self.elements
         if self.selectedElement:
             del self.selectedElement
-        if self.tabs:
-            del self.tabs[:]
-            del self.tabs
-        if self.tab:
-            del self.tab
-        if self.drivername:
-            del self.drivername
         return 0
 
     def switchDriverMode(self, ghostmode = 0):
@@ -272,6 +229,128 @@ class PyChrome(Window,Browser,Navigation,Element,Interaction,Capture,Combo):
             return 0
         return 1
 
+    def open(self,url):
+        # Invalid URL
+        if url == 0 or len(url) == 0:
+            logging.error("Couldn't Open the page {}. \nPlease check the URL".format(url))
+            return 1
+        # Search Instead
+        if not "www." in url and not ".com" in url and not "." in url:
+            err = self.search(url)
+            if err:
+                logging.error("Failed to Search")
+                return 1
+            return 0
+        err=self.browser.open(url)
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def close(self):
+        return self.browser.close()
+
+    def closeTab(self, tabnum=0):
+        err = self.browser.closeTab(tabnum=tabnum)
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def newTab(self,url=None):
+        err = self.browser.newTab(url=url)
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def rightTab(self):
+        err = self.browser.rightTab()
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def leftTab(self):
+        err = self.browser.leftTab()
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def switchTab(self, index):
+        err = self.browser.switchTab(index)
+        element = self.findBodyElement()
+        if not element:
+            err = 1
+        return err
+
+    def position(self, windowPosition):
+        return self.window.position(windowPosition)
+
+    def size(self, windowSize):
+        return self.window.size(windowSize)
+
+    def zoom(self, percent):
+        return self.window.zoom(percent)
+
+    def zoomIn(self):
+        return self.window.zoomIn()
+
+    def zoomOut(self):
+        return self.window.zoomOut()
+
+    def scrollToElement(self, element):
+        err = self.selectElement(element)
+        return  err or self.window.scrollToElement(element)
+
+    def scrol(self,scrollWin):
+        return self.window.scrol(scrollWin=scrollWin)
+
+    def scrollDown(self):
+        return self.window.scrollDown()
+
+    def scrollBottom(self,animate=0):
+        return self.window.scrollBottom(animate)
+
+    def scrollUp(self):
+        return self.window.scrollUp()
+
+    def scrollTop(self,animate=0):
+        return self.window.scrollTop(animate)
+
+    def scrollRight(self):
+        return self.window.scrollRight()
+
+    def scrollLeft(self):
+        return self.window.scrollLeft()
+
+    def validateSize(self, sizeWin):
+        return self.window.validateSize(sizeWin)
+
+    def validateZoom(self, percent):
+        return self.window.validateZoom(percent)
+
+    def validateScroll(self, scrollWin):
+        return self.window.validateScroll(scrollWin)
+
+    def validatePosition(self, positionWin):
+        return self.window.validatePosition(positionWin)
+
+    def back(self):
+        return self.browser.back()
+
+    def forward(self):
+        return self.browser.forward()
+
+    def elementDump(self,element,filename=None):
+        return self.browser.elementDump(element,filename=filename)
+
+    def screenshot(self, save_name=None, save_directory=None):
+        return self.browser.screenshot(save_name=save_name,save_directory=save_directory)
+
+    def sourceDump(self, filename=None):
+        return self.browser.sourceDump(filename=filename)
 
 if __name__ == "__main__":
     argv = sys.argv[1:]

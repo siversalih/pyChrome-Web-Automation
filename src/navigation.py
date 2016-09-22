@@ -25,8 +25,8 @@ class Navigation:
         except WebDriverException:
             logging.error("WebDriverException: Couldn't return to previous page")
             return 1
-        page_title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
-        logging.info("Returning to Page: {}".format(page_title))
+        self.cur_tab.update()
+        logging.info("Returning to Page: {}".format(self.cur_tab.title))
         time.sleep(1)
         return 0
 
@@ -36,7 +36,7 @@ class Navigation:
         except WebDriverException:
             logging.error("WebDriverException: Couldn't forward to next page")
             return 1
-        page_title = self.driver.title.encode('ascii', 'ignore').decode('ascii')
-        logging.info("Forwarding to Page: {}".format(page_title))
+        self.cur_tab.update()
+        logging.info("Forwarding to Page: {}".format(self.cur_tab.title))
         time.sleep(1)
         return 0

@@ -12,22 +12,10 @@ try:
 except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
-try:
-    from element import Element
-except ImportError:
-    logging.critical("element.py is missing...Exiting program.")
-    exit(1)
-
-try:
-    from window import Window
-except ImportError:
-    logging.critical("window.py is missing...Exiting program.")
-    exit(1)
-
 
 ##### Interactions ######
 
-class Interaction(Element,Window):
+class Interaction:
     driver = None
 
     def __init__(self,driver):
@@ -111,16 +99,15 @@ class Interaction(Element,Window):
             return 1
         try:
             try:
-                logging.info("Click the page: {}".format(self.selectedElement.text))
+                element_text = self.selectedElement.text.encode('ascii', 'ignore').decode('ascii')
+                logging.info("Click the page: {}".format(element_text))
             except UnicodeEncodeError:
                 logging.error("Click the page: {}".format(self.selectedElement.id))
             self.selectedElement.click()
-            try:
-                logging.info("Page Title: {}".format(self.driver.title))
-            except UnicodeEncodeError:
-                logging.error("UnicodeEncodeError: Page Title: {}".format(self.driver.title.encode('ascii', 'ignore').decode('ascii')))
-            except StaleElementReferenceException:
-                logging.error("StaleElementReferenceException: Page Title")
+            err = self.browser.cur_tab.update()
+            if err:
+                return err
+            logging.info("Page Title: {}".format(self.browser.cur_tab.title))
         except ElementNotVisibleException:
             logging.error("ElementNotVisibleException: Element is Not Visible to Click")
             return 1
@@ -128,7 +115,8 @@ class Interaction(Element,Window):
             logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
             return 1
         time.sleep(2)
-        self.scrol((0,0))
+        if self.ghost == False:
+            self.scrol((0,0))
         return 0
 
     def clickLink(self,element=None):

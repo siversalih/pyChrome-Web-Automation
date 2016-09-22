@@ -1,26 +1,8 @@
 import logging
 
-try:
-    from browser import Browser
-except ImportError:
-    logging.critical("browser.py is missing...Exiting program.")
-    exit(1)
-
 ##### Combo #####
 
 class Combo:
-    driver = None
-    browser = None
-
-    def __init__(self,driver,browser):
-        self.driver = driver
-        self.browser = browser
-
-    def dealloc(self):
-        if self.browser:
-            del self.browser
-        if self.driver:
-            del self.driver
 
     def loginFacebook(self,username,password):
         if(self.driver):
@@ -30,28 +12,49 @@ class Combo:
             passwordID = "pass"
             loginID = "loginbutton"
             loginURL = "http://www.facebook.com"
-            current_url = self.driver.current_url
+            current_url = self.browser.cur_tab.link
             if not current_url is loginURL:
                 err = self.browser.open(loginURL)
                 if err: return 1
             logging.debug("Using ID {} and Password {} to Login".format(username,password))
             logging.info("\nLog into {}".format(loginURL))
-
-            element = self.browser.element.findElementByID(usernameID)
+            element = self.findElementByID(usernameID)
             if element:
-                self.browser.interaction.sendTextToElement(username, element)
+                self.sendTextToElement(username, element)
             else: return 1
-            element = self.browser.element.findElementByID(passwordID)
+            element = self.findElementByID(passwordID)
             if element:
-                self.browser.interaction.sendTextToElement(password, element)
+                self.sendTextToElement(password, element)
             else: return 1
-            element = self.browser.element.findElementByID(loginID)
+            element = self.findElementByID(loginID)
             if element:
-                self.browser.interaction.clickElement(element)
+                self.clickElement(element)
             else: return 1
-            self.browser.tab.link = self.driver.current_url
-            self.browser.tab.title = self.driver.title
             return 0
         else:
             logging.error("WebDriver is not present")
             return 1
+
+
+    def search(self, text):
+        if text == 0 or len(text) == 0:
+            logging.error("Nothing to search {}".format(text))
+            return 1
+        logging.info("Preparing to Search...")
+        if not self.driver.current_url is "http://www.google.com":
+            self.open("http://www.google.com")
+        name_str = "q"
+        element = self.findElementByName(name_str)
+        if element == 0:
+            logging.error("Couldn't find any element by its name attribute {}".format(name_str))
+            return 1
+        self.sendTextToElement(text,element)
+        name_str = "btnG"
+        element = self.findElementByName(name_str)
+        if element == 0:
+            logging.error("Couldn't find any element by its name attribute {}".format(name_str))
+            return 1
+        logging.info("Searching for {}".format(text))
+        if self.clickElement(element):
+            return 1
+        return 0

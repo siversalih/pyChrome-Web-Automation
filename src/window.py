@@ -1,6 +1,8 @@
 import time
 import json
 import logging
+import os
+import sys
 
 try:
     from selenium import webdriver
@@ -16,60 +18,73 @@ except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
 
-##### Window #######
+try:
+    from browser import Browser
+except ImportError:
+    logging.critical("browser.py is missing...Exiting program.")
+    exit(1)
 
+##### Window #######
 class Window:
-    config_filename = None
+    directory = ""
+    config_filename = ""
     driver = None
     drivername = ""
     positionWin = ()
     sizeWin = ()
     zoomWin = 0
     scrollWin = ()
+    browser = None
 
-    def __init__(self,driver, config = 0):
-        self.driver = driver
-        self.config_filename = "config.json"
-        self.drivername = "chromedriver"
-        self.positionWin = (100,50)
-        self.sizeWin = (720,480)
-        self.zoomWin = 70
-        self.scrollWin = (0,0)
-
-        if config:
-            self.config_filename = config
+    def __readJSONFile(self):
+        file_directory = "{}/{}".format(self.directory,self.config_filename)
+        if not (os.path.exists(file_directory)):
+            logging.critical("{} is not in {}".format(self.config_filename,self.directory))
+            exit(1)
         with open(self.config_filename) as jsonFile:
             config = json.load(jsonFile)
-
         positionWin = config.get('position')
         x = positionWin[0]
         y = positionWin[1]
         positionWin = self.validatePosition(positionWin)
         if positionWin:
             self.positionWin = positionWin
-
         sizeWin = config.get('size')
         w = sizeWin[0]
         h = sizeWin[1]
         sizeWin = self.validateSize((w,h))
         if sizeWin:
             self.sizeWin = sizeWin
-
         zoomWin = config.get('zoom')
         if self.validateZoom(zoomWin):
             self.zoomWin = zoomWin
-
         scrollWin = config.get('scroll')
         scrollWin = (scrollWin[0],scrollWin[1])
         if self.validateScroll(scrollWin):
             self.scrollWin = scrollWin
+        return 0
 
+    def __init__(self,driver, config_filename=0):
+        self.driver = driver
+        self.directory = os.getcwd()
+        self.config_filename = "config.json"
+        self.drivername = "chromedriver"
+        self.positionWin = (100,50)
+        self.sizeWin = (720,480)
+        self.zoomWin = 70
+        self.scrollWin = (0,0)
+        if config_filename:
+            self.config_filename = config_filename
+            self.__readJSONFile()
         self.size(self.sizeWin)
         self.position(self.positionWin)
         self.zoom(self.zoomWin)
         self.scrol(self.scrollWin)
+        self.browser = Browser(self.driver,False)
 
     def dealloc(self):
+        if self.directory:
+            del self.directory
         if self.config_filename:
             del self.config_filename
         if self.driver:
@@ -84,6 +99,9 @@ class Window:
             del self.zoomWin
         if self.scrollWin:
             del self.scrollWin
+        if self.browser:
+            self.browser.dealloc()
+            del self.browser
 
     def position(self, windowPosition):
         if not isinstance(windowPosition,tuple):
@@ -175,7 +193,7 @@ class Window:
             x = scrollWin[0]
             y = scrollWin[1]
             self.driver.execute_script("window.scrollTo({}, {})".format(x,y))
-            logging.warning("Window Scroll: \t\t {}".format(self.scrollWin))
+            logging.info("Window Scroll: \t\t {}".format(self.scrollWin))
         time.sleep(1)
         return 0
 
@@ -278,16 +296,16 @@ class Window:
         w = sizeWin[0]
         h = sizeWin[1]
         if (w < 400):
-            logging.warning("Out of Range for Width: Passed {} Selected {}",w,400)
+            logging.warning("Out of Range for Width: Passed {} Selected {}".format(w,400))
             w = 400
         elif (w > 2000):
-            logging.warning("Out of Range for Width: Passed {} Selected {}",w,2000)
+            logging.warning("Out of Range for Width: Passed {} Selected {}".format(w,2000))
             w = 2000
         if (h < 272):
-            logging.warning("Out of Range for Height: Passed {} Selected {}",h,272)
+            logging.warning("Out of Range for Height: Passed {} Selected {}".format(h,272))
             h = 272
         elif (h > 1000):
-            logging.warning("Out of Range for Height: Passed {} Selected {}",h,1000)
+            logging.warning("Out of Range for Height: Passed {} Selected {}".format(h,1000))
             h = 1000
         sizeWin = (w,h)
         logging.info("Window Sized to {}".format(sizeWin))
@@ -298,10 +316,10 @@ class Window:
             logging.error("Invalid Zoom Format {}".format(percent))
             return 0
         if (percent < 10):
-            logging.warning("Out of Range for Zoom: Passed {} Selected {}",percent,10)
+            logging.warning("Out of Range for Zoom: Passed {} Selected {}".format(percent,10))
             return 0
         elif (percent > 100):
-            logging.warning("Out of Range for Zoom: Passed {} Selected {}",percent,100)
+            logging.warning("Out of Range for Zoom: Passed {} Selected {}".format(percent,100))
             return 0
         return 1
 
@@ -317,16 +335,16 @@ class Window:
             scrollHeight = self.driver.execute_script("return document.body.scrollHeight")
             scrollWidth = self.driver.execute_script("return document.body.scrollWidth")
         if (x < 0):
-            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}",x,0)
+            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}".format(x,0))
             return 0
         if (x > scrollWidth):
-            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}",x,scrollWidth)
+            logging.warning("Out of Range for Scroll Width: Passed {} Selected {}".format(x,scrollWidth))
             return 0
         if (y < 0):
-            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}",y,0)
+            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}".format(y,0))
             return 0
         if (y > scrollHeight):
-            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}",y,scrollHeight)
+            logging.warning("Out of Range for Scroll Height: Passed {} Selected {}".format(y,scrollHeight))
             return 0
         scrollWin = (x,y)
         logging.info("Scrolling to {}".format(scrollWin))
@@ -339,16 +357,16 @@ class Window:
         x = positionWin[0]
         y = positionWin[1]
         if (x < 0):
-            logging.warning("Out of Range for X Position: Passed {} Selected {}",x,0)
+            logging.warning("Out of Range for X Position: Passed {} Selected {}".format(x,0))
             x = 0
         elif (x > 2000):
-            logging.warning("Out of Range for X Position: Passed {} Selected {}",x,2000)
+            logging.warning("Out of Range for X Position: Passed {} Selected {}".format(x,2000))
             x = 2000
         if (y < 23):
-            logging.warning("Out of Range for Y Position: Passed {} Selected {}",y,23)
+            logging.warning("Out of Range for Y Position: Passed {} Selected {}".format(y,23))
             y = 23
         elif (y > 1000):
-            logging.warning("Out of Range for Y Position: Passed {} Selected {}",y,1000)
+            logging.warning("Out of Range for Y Position: Passed {} Selected {}".format(y,1000))
             y = 1000
         positionWin = (x,y)
         logging.info("Window Position to {}".format(positionWin))

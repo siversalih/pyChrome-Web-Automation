@@ -17,21 +17,6 @@ class Element:
     selectedElement = None
     elements = None
 
-    def __init__(self,driver):
-        self.driver = driver
-        self.elements = None
-        self.elements = []
-        self.selectedElement = self.findElementByTag('body')
-
-    def dealloc(self):
-        if self.driver:
-            del self.driver
-        if self.elements:
-            del self.elements[:]
-            del self.elements
-        if self.selectedElement:
-            del self.selectedElement
-
     ##### Locating Element #####
 
     def findElementByID(self,id_str, element=None):

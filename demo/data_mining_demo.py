@@ -46,7 +46,6 @@ browser.sendText(text)
 locator = "btnG"
 browser.findElement(name=locator)
 browser.clickElement()
-page_title = browser.tab.title
 
 pages = 3
 
@@ -57,6 +56,7 @@ while pages:
     locator = "g"
     elements = browser.findElementsByClass(locator,element)
     search_numbers = len(elements)
+    page_link = browser.browser.cur_tab.link
 
     for index in range(0,search_numbers):
         del elements[:]
@@ -83,15 +83,15 @@ while pages:
         title = link_element.text.encode('ascii', 'ignore').decode('ascii')
         print ("\n>>>> Collecting Data: {}\n".format(title))
         browser.clickElement(link_element)
-        time.sleep(2)
+        time.sleep(1)
         browser.scrollBottom(animate=True)
         print ("\n>>>> Collected Data: {}\n".format(description))
         time.sleep(1)
 
-        while page_title != browser.tab.title:
+        while page_link != browser.browser.cur_tab.link:
             browser.back()
 
-        time.sleep(5)
+        time.sleep(2)
 
     locator = "Next"
     next_element = browser.findElement(linktext=locator)

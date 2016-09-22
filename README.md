@@ -67,6 +67,7 @@ API functions and structure that have been integrated:
 - Quick Access
 	- Search using Google Search Engine
 	- Facebook Login
+- Logging Level
 
 ## Objectives
 1. Create a WebDriver browser using Selenium Webdriver APIs.

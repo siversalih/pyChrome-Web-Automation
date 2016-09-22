@@ -27,7 +27,7 @@ print "1. Open the URL www.yahoo.com \n" \
 
 raw_input('\nPress Enter to Start\n>')
 browser = PyChrome()
-point = (0,0)
+point = (0,23)
 browser.position(point)
 sleep(1)
 size = (820,800)

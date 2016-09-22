@@ -102,7 +102,7 @@ class openTest(unittest.TestCase):
         self.url = None
 
     def runTest(self):
-        print "Test Begin: Openning Page {}".format(self.url)
+        print "Test Begin: Openning Page"
         time.sleep(1)
         err = self.browser.open(self.url)
         self.assertFalse(err,0)
@@ -144,7 +144,7 @@ class openTabTest(unittest.TestCase):
         err = err or self.browser.newTab(url="https://www.python.org")
         time.sleep(1)
 
-        totalTabs = len(self.browser.tabs)
+        totalTabs = len(self.browser.browser.tabs)
         if totalTabs == 5:
             err = err or 0
         else: err = 1
@@ -190,38 +190,38 @@ class closeTabTest(unittest.TestCase):
         time.sleep(1)
 
         err = err or self.browser.closeTab()
-        if self.browser.tab.index == 4:
+        if self.browser.browser.cur_tab.index == 4:
             err = err or 0
         else: err = 1
-        if len(self.browser.tabs) == 4:
+        if len(self.browser.browser.tabs) == 4:
             err = err or 0
         else: err = 1
-        if self.browser.driver.current_window_handle == self.browser.tab.windowHandle:
+        if self.browser.driver.current_window_handle == self.browser.browser.cur_tab.windowHandle:
             err = err or 0
         else: err = 1
 
         err = err or self.browser.leftTab()
         err = err or self.browser.leftTab()
         err = err or self.browser.closeTab()
-        if self.browser.tab.index == 2:
+        if self.browser.browser.cur_tab.index == 2:
             err = err or 0
         else: err = 1
-        if len(self.browser.tabs) == 3:
+        if len(self.browser.browser.tabs) == 3:
             err = err or 0
         else: err = 1
-        if self.browser.driver.current_window_handle == self.browser.tab.windowHandle:
+        if self.browser.driver.current_window_handle == self.browser.browser.cur_tab.windowHandle:
             err = err or 0
         else: err = 1
 
         err = err or self.browser.leftTab()
         err = err or self.browser.closeTab()
-        if self.browser.tab.index == 1:
+        if self.browser.browser.cur_tab.index == 1:
             err = err or 0
         else: err = 1
-        if len(self.browser.tabs) == 2:
+        if len(self.browser.browser.tabs) == 2:
             err = err or 0
         else: err = 1
-        if self.browser.driver.current_window_handle == self.browser.tab.windowHandle:
+        if self.browser.driver.current_window_handle == self.browser.browser.cur_tab.windowHandle:
             err = err or 0
         else: err = 1
 
@@ -272,7 +272,7 @@ class switchToLeftTabTest(unittest.TestCase):
         err = err or self.browser.leftTab()
         err = err or self.browser.leftTab()
 
-        if self.browser.tab.index == 1:
+        if self.browser.browser.cur_tab.index == 1:
             err = err or 0
         else: err = 1
 
@@ -325,96 +325,12 @@ class switchToRightTabTest(unittest.TestCase):
         err = err or self.browser.rightTab()
         err = err or self.browser.rightTab()
 
-        if self.browser.tab.index == 5:
+        if self.browser.browser.cur_tab.index == 5:
             err = err or 0
         else: err = 1
 
         self.assertFalse(err,0)
         print "Test Ended"
-
-
-    def closeTab(self):
-        if not self.driver or not self.tab:
-            print "There is no session or client or tab to close"
-            return 0
-        if self.tab:
-            print "Closing Tab: Tab {}".format(self.tab.index)
-            location = 0
-            if len(self.tabs) == 1:
-                location = 1
-                self.tabs.remove(self.tab)
-                self.tabs = []
-                self.tab.dealloc()
-                del self.tab
-                self.tab = None
-                self.driver.close()
-            else:
-                location = self.tab.index
-                self.tabs.remove(self.tab)
-                self.tab.dealloc()
-                del self.tab
-                self.tab = None
-                self.driver.close()
-                for i in range(len(self.tabs)):
-                    tab = self.tabs[i]
-                    tab.index = i+1
-                if location > len(self.tabs):
-                    self.tab = self.tabs[len(self.tabs)-1]
-                else:
-                    self.tab = self.tabs[location-1]
-                try:
-                    self.driver.switch_to_window(self.tab.windowHandle)
-                except WebDriverException:
-                    print "WebDriverException: Can't Switch to Tab {}".format(self.tab.index)
-                    return 1
-                time.sleep(1)
-                try:
-                    print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
-                except TimeoutException:
-                    print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
-        return 0
-
-
-    def closeTab(self):
-        if not self.driver or not self.tab:
-            print "There is no session or client or tab to close"
-            return 0
-        if self.tab:
-            print "Closing Tab: Tab {}".format(self.tab.index)
-            location = 0
-            if len(self.tabs) == 1:
-                location = 1
-                self.tabs.remove(self.tab)
-                self.tabs = []
-                self.tab.dealloc()
-                del self.tab
-                self.tab = None
-                self.driver.close()
-            else:
-                location = self.tab.index
-                self.tabs.remove(self.tab)
-                self.tab.dealloc()
-                del self.tab
-                self.tab = None
-                self.driver.close()
-                for i in range(len(self.tabs)):
-                    tab = self.tabs[i]
-                    tab.index = i+1
-                if location > len(self.tabs):
-                    self.tab = self.tabs[len(self.tabs)-1]
-                else:
-                    self.tab = self.tabs[location-1]
-                try:
-                    self.driver.switch_to_window(self.tab.windowHandle)
-                except WebDriverException:
-                    print "WebDriverException: Can't Switch to Tab {}".format(self.tab.index)
-                    return 1
-                time.sleep(1)
-                try:
-                    print "Tab {} Focus: {}  URL {}".format(self.tab.index,self.driver.title,self.driver.current_url)
-                except TimeoutException:
-                    print "Tab {} Focus: URL {}".format(self.tab.index,self.driver.current_url)
-        return 0
 
 class switchToTabTest(unittest.TestCase):
     browser = None
@@ -453,13 +369,13 @@ class switchToTabTest(unittest.TestCase):
         time.sleep(1)
 
         err = err or self.browser.switchTab(3)
-        if self.browser.tab.index == 3:
+        if self.browser.browser.cur_tab.index == 3:
             err = err or 0
         else: err = 1
-        if len(self.browser.tabs) == 5:
+        if len(self.browser.browser.tabs) == 5:
             err = err or 0
         else: err = 1
-        if self.browser.driver.current_window_handle == self.browser.tab.windowHandle:
+        if self.browser.driver.current_window_handle == self.browser.browser.cur_tab.windowHandle:
             err = err or 0
         else: err = 1
 
@@ -501,13 +417,13 @@ class closeTabAtIndexTest(unittest.TestCase):
         time.sleep(1)
 
         err = err or self.browser.closeTab(tabnum=self.index)
-        if self.browser.tab.index == self.index:
+        if self.browser.browser.cur_tab.index == self.index:
             err = err or 0
         else: err = 1
-        if len(self.browser.tabs) == 2:
+        if len(self.browser.browser.tabs) == 2:
             err = err or 0
         else: err = 1
-        if self.browser.driver.current_window_handle == self.browser.tab.windowHandle:
+        if self.browser.driver.current_window_handle == self.browser.browser.cur_tab.windowHandle:
             err = err or 0
         else: err = 1
 
@@ -1100,7 +1016,7 @@ class findElementsByXPathTest(unittest.TestCase):
             err = 1
         else:
             err = 0 or err
-            print "Found {} elements by Classname {}".format(len(elements),self.locator)
+            print "Found {} elements by Xpath {}".format(len(elements),self.locator)
         if not len(elements) == 2:
             err = 1
         else: err = err or 0
@@ -1994,7 +1910,7 @@ class scrollLeftTest(unittest.TestCase):
         self.size = None
 
     def runTest(self):
-        print "\nTest Begin: Scroll Right"
+        print "\nTest Begin: Scroll Left"
         time.sleep(1)
         err = self.browser.open(self.url)
         time.sleep(1)

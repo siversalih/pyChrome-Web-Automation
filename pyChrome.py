@@ -286,55 +286,106 @@ class PyChrome(Element,Interaction,Combo):
         return err
 
     def position(self, windowPosition):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.position(windowPosition)
 
     def size(self, windowSize):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.size(windowSize)
 
     def zoom(self, percent):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.zoom(percent)
 
     def zoomIn(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.zoomIn()
 
     def zoomOut(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.zoomOut()
 
     def scrollToElement(self, element):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         err = self.selectElement(element)
         return  err or self.window.scrollToElement(element)
 
     def scrol(self,scrollWin):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrol(scrollWin=scrollWin)
 
     def scrollDown(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollDown()
 
     def scrollBottom(self,animate=0):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollBottom(animate)
 
     def scrollUp(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollUp()
 
     def scrollTop(self,animate=0):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollTop(animate)
 
     def scrollRight(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollRight()
 
     def scrollLeft(self):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.scrollLeft()
 
     def validateSize(self, sizeWin):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.validateSize(sizeWin)
 
     def validateZoom(self, percent):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.validateZoom(percent)
 
     def validateScroll(self, scrollWin):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.validateScroll(scrollWin)
 
     def validatePosition(self, positionWin):
+        if self.ghost:
+            logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
+            return 0
         return self.window.validatePosition(positionWin)
 
     def back(self):

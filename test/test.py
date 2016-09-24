@@ -1298,6 +1298,293 @@ class parentElementSearchTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
+class findElementBodyTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.seleniumhq.org/projects/webdriver/"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Locate Body Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findBodyElement()
+        if self.element.tag_name == 'body':
+            err = err or 0
+        else: err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findActiveElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    text = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.text = "First"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.text = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Active Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == 0:
+            err = 1
+        err = err or self.browser.sendTextToElement(self.text,self.element)
+        self.element = self.browser.findActiveElement()
+        if self.element.tag_name != "input":
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class highlightElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    text = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.text = "First"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.text = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Active Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == 0:
+            err = 1
+        err = err or self.browser.sendTextToElement(self.text,self.element)
+        err = err or self.browser.highlightElement()
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findElementValueTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    text = ""
+    value = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.text = "First"
+        self.element = None
+        self.value = ""
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.text = None
+        self.locator = None
+        self.value = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Element Value Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == 0:
+            err = 1
+        err = err or self.browser.sendTextToElement(self.text,self.element)
+        self.element = self.browser.findActiveElement()
+        if self.element.tag_name != "input":
+            err = 1
+        self.value = self.browser.getElementValue()
+        if self.value != self.text:
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findAttributeValueTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    text = ""
+    value = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.text = "First"
+        self.element = None
+        self.value = ""
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.text = None
+        self.locator = None
+        self.value = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Attribute Value of an Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == 0:
+            err = 1
+        err = err or self.browser.sendTextToElement(self.text,self.element)
+        self.element = self.browser.findActiveElement()
+        if self.element.tag_name != "input":
+            err = 1
+        self.value = self.browser.getAttributeValue(attribute="id")
+        if self.value != "FirstName":
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findXpathTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    xpath = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.xpath = ""
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.locator = None
+        self.xpath = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Xpath of an Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == 0:
+            err = 1
+        self.xpath = self.browser.getXpath()
+        if self.xpath != "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/div[1]/fieldset[1]/label[1]/input[1]":
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
 ##### Interaction ######
 
 class sendTextToElementTest(unittest.TestCase):
@@ -2130,6 +2417,254 @@ class elementSourceDumpTest(unittest.TestCase):
             time.sleep(1)
             err = self.browser.elementDump(element,self.source_filename)
             time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class recordTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+    recorded_elements = []
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.recorded_elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+        for recorded_element in self.recorded_elements:
+            recorded_element.dealloc()
+            del recorded_element
+        del self.recorded_elements[:]
+        del self.recorded_elements
+
+    def runTest(self):
+        print "\nTest Begin: Record Test"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        err = err or self.browser.record(element=self.element)
+        self.locator = "LastName"
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        err = err or self.browser.record(element=self.element)
+        self.recorded_elements = self.browser.getRecordedElements()
+        if len(self.recorded_elements) != 2:
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class playbackTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+    recorded_elements = []
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.recorded_elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+        for recorded_element in self.recorded_elements:
+            recorded_element.dealloc()
+            del recorded_element
+        del self.recorded_elements[:]
+        del self.recorded_elements
+
+    def runTest(self):
+        print "\nTest Begin: Playback Test"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        self.browser.sendTextToElement("FirstName",self.element)
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        self.locator = "LastName"
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        self.browser.sendTextToElement("LastName",self.element)
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        self.recorded_elements = self.browser.getRecordedElements()
+        if len(self.recorded_elements) != 2:
+            err = 1
+        self.url = "http://www.google.com"
+        err = err or self.browser.open(self.url)
+        err = err or self.browser.playback()
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class storeRecordsTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+    filename_recorder = ""
+    file_directory = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.filename_recorder = "recorded_elements"
+        self.file_directory = "{}/{}.json".format(self.directory,self.filename_recorder)
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+        os.remove(self.file_directory)
+        self.filename_recorder = None
+        self.file_directory = None
+
+    def runTest(self):
+        print "\nTest Begin: Store Recorded Elements Test"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        self.locator = "LastName"
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        err = err or self.browser.storeRecorder(self.filename_recorder)
+        if not os.path.exists(self.file_directory):
+            err = 1
+
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class loadRecordsTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+    filename_recorder = ""
+    file_directory = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+        self.locator = "FirstName"
+        self.filename_recorder = "recorded_elements"
+        self.file_directory = "{}/{}.json".format(self.directory,self.filename_recorder)
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+        os.remove(self.file_directory)
+        self.filename_recorder = None
+        self.file_directory = None
+
+    def runTest(self):
+        print "\nTest Begin: Load Recorded Elements Test"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        self.browser.sendTextToElement("First",self.element)
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        self.locator = "LastName"
+        self.element = self.browser.findElementByName(name_str=self.locator)
+        if self.element == None or self.element == 0:
+            err = 1
+        time.sleep(1)
+        self.browser.sendTextToElement("Last",self.element)
+        time.sleep(1)
+        err = err or self.browser.record(element=self.element)
+        err = err or self.browser.storeRecorder(self.filename_recorder)
+        if not os.path.exists(self.file_directory):
+            err = 1
+        time.sleep(1)
+        err = err or self.browser.loadRecorder(self.filename_recorder)
+        time.sleep(1)
+        err = err or self.browser.open("www.google.com")
+        time.sleep(1)
+        err = err or self.browser.playback()
+        time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
 

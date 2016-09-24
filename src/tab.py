@@ -24,26 +24,6 @@ class Tab:
     cur_tab = None
     tabs = None
 
-    #def __init__(self,driver):
-    #    self.driver = driver
-    #    self.cur_tab = TabObject(self.driver,1,self.driver.window_handles[0],self.driver.current_url,self.driver.title)
-    #    self.tabs = None
-    #    self.tabs = []
-    #    self.tabs.append(self.cur_tab)
-
-    #def dealloc(self):
-    #    if self.cur_tab:
-    #        self.tabs.remove(self.cur_tab)
-    #        self.cur_tab.dealloc()
-    #        del self.cur_tab
-    #    if self.tabs:
-    #        for tab in self.tabs:
-    #            tab.dealloc()
-    #        del self.tabs[:]
-    #        del self.tabs
-    #    if self.driver:
-    #        del self.driver
-
     def open(self, url):
         # Try Open the URL
         if not url is "http://www.google.com":
@@ -255,13 +235,13 @@ class TabObject:
             link = "http://{}".format(link)
         if link == "http://www.google.com" or link == "www.google.com":
             return link
-        try:
-            urllib2.urlopen(link)
-        except urllib2.HTTPError, e:
-            logging.error("{}: {} not reachable".format(e.code,link))
-            return 0
-        except urllib2.URLError, e:
-            logging.error("{}: {} not reachable".format(e.args,link))
-            return 0
+        #try:
+        #    urllib2.urlopen(link)
+        #except urllib2.HTTPError, e:
+        #    logging.error("{}: {} not reachable".format(e.code,link))
+        #    return 0
+        #except urllib2.URLError, e:
+        #    logging.error("{}: {} not reachable".format(e.args,link))
+        #    return 0
         self.link = link
         return link

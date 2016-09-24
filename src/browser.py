@@ -59,5 +59,10 @@ class Browser(Navigation,Tab,Capture):
             del self.tabs
         if self.directory:
             del self.directory
+        if self.captured_elements:
+            for captured_element in self.captured_elements:
+                captured_element.dealloc()
+                del captured_element
+            del self.captured_elements[:]
         if self.driver:
             del self.driver

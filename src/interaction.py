@@ -18,17 +18,6 @@ except ImportError:
 class Interaction:
     driver = None
 
-    def __init__(self,driver):
-        self.driver = driver
-
-    def dealloc(self):
-        if self.driver:
-            del self.driver
-        if self.elements:
-            del self.elements
-        if self.selectedElement:
-            del self.selectedElement
-
     def sendTextToElement(self, text, element=None):
         if element:
             if isinstance(element,WebElement):

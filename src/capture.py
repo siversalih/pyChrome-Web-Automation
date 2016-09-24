@@ -250,17 +250,23 @@ class Capture(Element,Interaction):
                 time.sleep(1)
             element = self.findElementByXPath(xpath)
             if element == None or element == 0 or not isinstance(element,WebElement):
+                logging.error("Element couldn't be found from its Xpath {}".format(xpath))
                 return 1
             if captured_element.element == None:
+                logging.info("Updating captured element element field")
                 captured_element.updateElement(element)
             if tag == "input":
-                self.highlightElement(element)
+                err = self.highlightElement(element)
+                if err:
+                    logging.warning("Element couldn't be highlighted")
                 ele_value = self.getElementValue()
                 cap_value = captured_element.value
                 self.sendTextToElement(cap_value,element)
                 element.click()
             elif tag == 'div':
-                self.highlightElement(element)
+                err = self.highlightElement(element)
+                if err:
+                    logging.warning("Element couldn't be highlighted")
                 ele_value = element.text
                 cap_value = captured_element.value
                 if ele_value != cap_value:
@@ -269,14 +275,20 @@ class Capture(Element,Interaction):
             elif tag == 'select':
                 temp_element = element
                 self.findParentElement(element)
-                self.highlightElement(self.selectedElement)
+                err = self.highlightElement(self.selectedElement)
+                if err:
+                    logging.warning("Element couldn't be highlighted")
                 element = temp_element
                 element.click()
             elif tag == 'button':
-                self.highlightElement(element)
+                err = self.highlightElement(element)
+                if err:
+                    logging.warning("Element couldn't be highlighted")
                 element.click()
             elif tag == 'a':
-                self.highlightElement(element)
+                err = self.highlightElement(element)
+                if err:
+                    logging.warning("Element couldn't be highlighted")
                 element.click()
             else:
                 logging.error("Element with tag {} is not supported for Playback".format(tag))

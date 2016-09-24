@@ -440,7 +440,6 @@ class Element:
 
 
     ##### Wrapper Functions #####
-
     def validateLocator(self, locator):
         if not locator:
             logging.error("Locator is NULL")
@@ -511,7 +510,6 @@ class Element:
         else:
             logging.error("Current selected element is not Web Element type")
             return 0
-
 
     def findSubElement(self,element=None,id=None,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None):
         if element:
@@ -707,3 +705,132 @@ class Element:
             logging.info("Found Body Web Element: {}".format(element))
             self.selectElement(element)
             return self.selectedElement
+
+    def findActiveElement(self):
+        logging.info("Getting Active Element")
+        element = None
+        try:
+            element = self.driver.switch_to_active_element()
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: Couldn't find active element")
+            return 0
+        if element and isinstance(element,WebElement):
+            logging.info("Got Active Element")
+            self.selectElement(element)
+        else:
+            logging.warning("Couldn't find Active element")
+            return 0
+        return element
+
+    def highlightElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return 1
+        try:
+            self.driver.execute_script("arguments[0].style.border='3px solid red'", self.selectedElement)
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: No element to highlight")
+            return 1
+        return 0
+
+    def getElementValue(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        try:
+            val = self.selectedElement.get_attribute('value')
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: No element to get the value")
+            return None
+        if val == 'None' or val == None:
+            return None
+        return str(val)
+
+    def getAttributeValue(self,attribute,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        try:
+            val = self.selectedElement.get_attribute('{}'.format(attribute))
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: No element to get the value")
+            return None
+        if val == 'None' or val == None:
+            return None
+        return str(val)
+
+    def getXpath(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        try:
+            xpath = self.driver.execute_script("function absoluteXPath(element) {"+
+                        "var comp, comps = [];"+
+                        "var parent = null;"+
+                        "var xpath = '';"+
+                        "var getPos = function(element) {"+
+                        "var position = 1, curNode;"+
+                        "if (element.nodeType == Node.ATTRIBUTE_NODE) {"+
+                        "return null;"+
+                        "}"+
+                        "for (curNode = element.previousSibling; curNode; curNode = curNode.previousSibling){"+
+                        "if (curNode.nodeName == element.nodeName) {"+
+                        "++position;"+
+                        "}"+
+                        "}"+
+                        "return position;"+
+                        "};"+
+                        "if (element instanceof Document) {"+
+                        "return '/';"+
+                        "}"+
+                        "for (; element && !(element instanceof Document); element = element.nodeType ==Node.ATTRIBUTE_NODE ? element.ownerElement : element.parentNode) {"+
+                        "comp = comps[comps.length] = {};"+
+                        "switch (element.nodeType) {"+
+                        "case Node.TEXT_NODE:"+
+                        "comp.name = 'text()';"+
+                        "break;"+
+                        "case Node.ATTRIBUTE_NODE:"+
+                        "comp.name = '@' + element.nodeName;"+
+                        "break;"+
+                        "case Node.PROCESSING_INSTRUCTION_NODE:"+
+                        "comp.name = 'processing-instruction()';"+
+                        "break;"+
+                        "case Node.COMMENT_NODE:"+
+                        "comp.name = 'comment()';"+
+                        "break;"+
+                        "case Node.ELEMENT_NODE:"+
+                        "comp.name = element.nodeName;"+
+                        "break;"+
+                        "}"+
+                        "comp.position = getPos(element);"+
+                        "}"+
+                        "for (var i = comps.length - 1; i >= 0; i--) {"+
+                        "comp = comps[i];"+
+                        "xpath += '/' + comp.name.toLowerCase();"+
+                        "if (comp.position !== null) {"+
+                        "xpath += '[' + comp.position + ']';"+
+                        "}"+
+                        "}"+
+                        "return xpath;"+
+                        "} return absoluteXPath(arguments[0]);", element)
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: No element to get the value")
+            return None
+        return str(xpath)
+

@@ -48,7 +48,6 @@ logging.info("Binary directory: {}".format(binary_dir))
 if(not os.path.exists(binary_dir)):
     logging.critical("Path {} does not exist".format(binary_dir))
     exit(1)
-
 try:
     from selenium import webdriver
     from selenium.common.exceptions import WebDriverException
@@ -62,7 +61,6 @@ try:
 except ImportError:
     logging.critical("json module is not installed...Exiting program.")
     exit(1)
-
 
 class PyChrome(Element,Interaction,Combo):
     config_filename = ""
@@ -402,6 +400,36 @@ class PyChrome(Element,Interaction,Combo):
 
     def sourceDump(self, filename=None):
         return self.browser.sourceDump(filename=filename)
+
+    def record(self,element=None):
+        if element:
+            err = self.selectElement(element)
+            if err:
+                logging.error("Failed to Select Element to Record")
+                return 1
+        else:
+            self.findActiveElement()
+        err = self.browser.record(self.selectedElement)
+        return err
+
+    def storeRecorder(self,filename=None):
+        err = self.browser.storeRecorder(filename=filename)
+        return err
+
+    def loadRecorder(self,filename=None):
+        err = self.browser.loadRecorder(filename)
+        return err
+
+    def playback(self):
+        err = self.browser.playback()
+        return err
+
+    def recordButton(self,element=None):
+        err = self.browser.recordButton(element=element)
+        return err
+
+    def getRecordedElements(self):
+        return self.browser.getRecordedElements()
 
 if __name__ == "__main__":
     argv = sys.argv[1:]

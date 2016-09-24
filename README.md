@@ -25,7 +25,7 @@ pyChrome is a scripted Web Automation Platform using Selenium with Python. Curre
 
 Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
 
-***Note: pyChrome is not the Web application, rather its the engine to create the Web Automation application.***
+*Note: pyChrome is not a Web application, rather its a toolkit to create a Web Automation application.*
 
 ## Milestones
 
@@ -55,10 +55,6 @@ API functions and structure that have been integrated:
 - Interaction
 	- Click On (Element,Button,Link)
 	- Send Text to (Element,Query,Input)
-- Capture
-	- Take Screenshot
-	- Dump Web Page HTML code
-	- Dump Web Element HTML code
 - Headless Browser capabilities
 	- Init/Start with GhostDriver Mode
 	- Switch to GhostDriver Mode at Runtime
@@ -70,13 +66,19 @@ API functions and structure that have been integrated:
 	- Search using Google Search Engine
 	- Facebook Login
 - Logging Level
+	- Level (info,warning,error,critical)
+- Capture
+	- Take Screenshot
+	- Dump Web Page HTML code
+	- Dump Web Element HTML code
+	- Recorder (record,playback,store,load)
 
 ## Objectives
-1. Create a WebDriver browser using Selenium Webdriver APIs.
-2. Leverage Webdriver from ChromeDriver and PhantomJS, and other Python libraries (i.e urllib2, scipy) to create an Automation Platform engine.
-3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques in Python to design smarter higher layer functions.
-4. Headless Engine - Use PhantomJS to browse, automate, and mine unnoticeably.
-5. Console Application - Run only via command-line so it can be imported to other Python projects
+1. Create a Web Automation Toolkit using Selenium WebDriver with Python
+2. Leverage Selenium APIs, with Javascript, and other Python libraries to create an Automation Platform engine.
+3. Ease of use APIs - Using Algorithms and Object-oriented programming techniques to design smarter and easier higher layer functions.
+4. Headless Engine - Use PhantomJS to browse, automate, and test web unnoticeably.
+5. Console Application - Run only via command-line so it can be imported to other Python projects with ease
 
 ## Requirements
 
@@ -276,20 +278,22 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Capture
--   Screenshot
+-	**Screenshot**
 
     ```sh
 	name = "screenshot_capture"
 	browser.screenshot(save_name=name)
 	```
--   Dump Web Page HTML
+-	**Dump Source Code**
+
+	- Web Page
 
     ```sh
 	browser.open("http://www.google.com")
 	filename = "pagesource"
 	browser.sourceDump(filename=filename)
 	```
--   Dump Web Element HTML
+	- Web Element
 
     ```sh
     url = "http://www.seleniumhq.org/projects/webdriver/"
@@ -300,8 +304,63 @@ $ git clone https://github.com/siversalih/pyChrome.git
     browser.elementDump(element,filename)
 	```
 
+-	**Recorder**
+
+	- Record
+
+	There are two ways of recording Web element, manually or programmatically. However, it's recorded with a single command and using same function. To record an element, the user must manually select an element on the client (Browser); to select an element with button or link tag, it can be selected with a right click; to select an element with input or div (textfield or radio button) tag, it can be selected with left click or entering text; to select an element with select (dropdown menu) tag, it can be selected when picking one of the options. The second method is programmatically locating Web Element and then sending the element to record. 
+
+    ```sh
+    url = "https://signup.live.com"
+    browser.open(url)
+    # Manually from the client (Browser), Click a Textfield and Enter a text, then run the command:
+    browser.record()
+    # Or Programmatically Locate a Web Element, then send the element to record it with the command:
+    element = browser.findBodyElement()
+    browser.record(element=element)
+   
+	```
+
+	- Playback
+
+	In order to playback the recorded element, atleast one element must be recorded.
+
+    ```sh
+   url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+    browser.open(url)
+   # Manually from the Browser, click a Textfield and Enter a text, then run the command: 
+	browser.record()
+   # To playback, run the command:
+   browser.playback()
+	```
+
+	- Store Recorder
+
+	The Recorder stores the captured elements in JSON format with given filename at the root directory of the project. 
+
+    ```sh
+    url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+    browser.open(url)
+    locator = "FirstName"
+    element = browser.findElementByName(name_str=locator)
+    browser.record(element=element)
+    filename_recorder = "recorded_elements"
+    browser.storeRecorder(filename_recorder)
+	```
+
+	- Load Recorder
+
+	Before loading the Recorder, the client (Browser) must be opened on any page, and the specified file must be in the project root directory. Then the recorder can be loaded with a command as shown in below.
+		
+    ```sh
+    url = "http://www.google.com"
+    browser.open(url)
+    filename_recorder = "recorded_elements"
+    browser.loadRecorder(filename_recorder)
+	```
+
 #####Locate Web Element
-The most challenging part of Web Automation is finding the required locator. And it's done manually by the Automator prior of locating it's Web Element. Once the Web Element location is known, the Web Element can be obtained by id, name, tag, class, partial text, link text, css selector and xpath. Depending of which locator (or attribute) is available and the Automator approach, finding the Web element is easy as follows:
+The most challenging part of Web Automation is finding the Web Element locator (or xpath). And it's done manually by the Automator prior of locating it's Web Element. Once the Web Element location determined, the Web Element itself can be obtained by id, name, tag, class, partial text, link text, css selector and xpath. Depending of which attribute is available and the Automator approach, finding the Web element is easy as follows:
 
 -	**Locating Web Element**
 	
@@ -485,6 +544,62 @@ The most challenging part of Web Automation is finding the required locator. And
 	elements = browser.findElementsByXPath(locator)
 	```
 
+-	**Locating Body Web Element**
+
+	```sh
+    url = "https://www.yahoo.com/"
+	browser.open(url)
+	body_element = browser.findBodyElement()
+	```
+
+-	**Locate or Switch to Active Web Element**
+
+	```sh
+    url = "https://www.yahoo.com/"
+	browser.open(url)
+	active_element = browser.findActiveElement()
+	```
+
+-	**Highlight Web Element**
+
+	```sh
+    url = "https://www.yahoo.com/"
+	browser.open(url)
+	body_element = browser.findBodyElement()
+	browser.highlightElement()
+	```
+
+-	**Get Web Element Value**
+	
+	```sh
+	url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+	browser.open(url)
+	locator = "FirstName"
+	browser.findElementByName(name_str=locator)
+	value = browser.getElementValue()
+	```
+
+-	**Get Value for Attribute of a Web Element**
+	
+	```sh
+	url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+	browser.open(url)
+	locator = "FirstName"
+	browser.findElementByName(name_str=locator)
+	attribute = 'id'
+	value = browser.getAttributeValue(attribute=attribute)
+	```
+
+-	**Find Xpath of a Web Element (Absolute Path)**
+
+	```sh
+	url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+	browser.open(url)
+	locator = "FirstName"
+	browser.findElementByName(name_str=locator)
+	xpath = browser.getXpath()
+	```
+
 #####Interaction
 -   Send Text to Element
 
@@ -536,7 +651,6 @@ The most challenging part of Web Automation is finding the required locator. And
 	browser.findElement(id=locator)
 	browser.clickLink()
 	```
-
 
 #####Tab Control
 -	Open New Tab

@@ -98,8 +98,13 @@ class Interaction:
                 return err
             logging.info("Page Title: {}".format(self.browser.cur_tab.title))
         except ElementNotVisibleException:
-            logging.error("ElementNotVisibleException: Element is Not Visible to Click")
-            return 1
+            logging.warning("Couldn't Click on this element. Trying to Click on it's parent element")
+            parent_element = self.findParentElement(element=self.selectedElement)
+            err = self.clickElement(parent_element)
+            if err:
+                logging.error("ElementNotVisibleException: Element is Not Visible to Click")
+                return err
+            else: self.selectElement(parent_element)
         except WebDriverException:
             logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
             return 1

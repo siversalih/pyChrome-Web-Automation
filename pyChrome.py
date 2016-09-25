@@ -431,6 +431,12 @@ class PyChrome(Element,Interaction,Combo):
     def getRecordedElements(self):
         return self.browser.getRecordedElements()
 
+    def deleteRecord(self):
+        return self.browser.deleteRecord()
+
+    def clearRecorder(self):
+        return self.browser.clearRecorder()
+
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if(argv):

@@ -155,6 +155,10 @@ class Tab:
         time.sleep(1)
         return 0
 
+    def getcurrentTabLink(self):
+        self.cur_tab.update()
+        return self.cur_tab.link
+
 class TabObject:
     driver = None
     link = ""

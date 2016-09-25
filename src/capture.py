@@ -50,7 +50,7 @@ class Capture(Element,Interaction):
             self.driver.save_screenshot('{}/{}.{}'.format(directory,filename,extension))
             logging.info("Screen Captured: {}".format("{}/{}.{}".format(directory,filename,extension)))
         except Exception:
-            logging.error("Failed to Screen Capture {}".format(self.cur_tab.link))
+            logging.error("Failed to Screen Capture {}".format(self.getcurrentTabLink()))
             return 1
         return 0
 
@@ -63,9 +63,9 @@ class Capture(Element,Interaction):
             logging.error("There is no driver or URL to get the source")
             return 1
         try:
-            urlopen = urllib.urlopen(self.cur_tab.link) # Open the URL.
+            urlopen = urllib.urlopen(self.getcurrentTabLink()) # Open the URL.
         except Exception:
-            logging.error("Failed to get the source code for {}".format(self.cur_tab.link))
+            logging.error("Failed to get the source code for {}".format(self.getcurrentTabLink()))
             return 1
         source = urlopen.readlines() # Read source and save it to a variable.
         if not extension in name:
@@ -114,13 +114,16 @@ class Capture(Element,Interaction):
             if err:
                 logging.error("Failed to Select Element to Record")
                 return 1
-        err = self.highlightElement()
-        if err:
-            logging.error("Failed to Highlight Element to Record")
-            return 1
         logging.info("Recording Element {}".format(element))
+        self.highlightElement()
         tag = element.tag_name
+        type = self.getAttributeValue('type')
         if tag == 'input':
+            if type and type.lower() == "checkbox":
+                element = self.findParentElement(element)
+                tag = element.tag_name
+                type = self.getAttributeValue('type')
+                self.selectElement(element)
             value = self.getElementValue()
         elif tag == 'div':
             value = element.text
@@ -136,6 +139,29 @@ class Capture(Element,Interaction):
             value = element.text
         elif tag == 'a':
             value = element.text
+        elif tag == 'label':
+            input_element = self.findElementByTag("input",element)
+            if isinstance(input_element,WebElement):
+                self.record(input_element)
+                return 0
+            button_element = self.findElementByTag("button",element)
+            if isinstance(button_element,WebElement):
+                self.record(button_element)
+                return 0
+            select_element = self.findElementByTag("select",element)
+            if isinstance(select_element,WebElement):
+                self.record(select_element)
+                return 0
+            link_element = self.findElementByTag("a",element)
+            if isinstance(link_element,WebElement):
+                self.record(link_element)
+                return 0
+            div_element = self.findElementByTag("div",element)
+            if isinstance(div_element,WebElement):
+                self.record(div_element)
+                return 0
+            logging.error("Element with tag {} is not supported for recording".format(tag))
+            return 1
         else:
             logging.error("Element with tag {} is not supported for recording".format(tag))
             return 1
@@ -146,8 +172,8 @@ class Capture(Element,Interaction):
                 print "Updated Record Element"
                 print contain_captured_element
         else:
-            link = self.cur_tab.link
-            type = self.getAttributeValue('type')
+            self.highlightElement()
+            link = self.getcurrentTabLink()
             id = self.getAttributeValue('id')
             name = self.getAttributeValue('name')
             xpath = self.getXpath(element)
@@ -245,7 +271,7 @@ class Capture(Element,Interaction):
             type = captured_element.type
             link = captured_element.link
             xpath = captured_element.xpath
-            if link != self.cur_tab.link:
+            if link != self.getcurrentTabLink():
                 self.open(link)
                 time.sleep(1)
             element = self.findElementByXPath(xpath)
@@ -256,48 +282,66 @@ class Capture(Element,Interaction):
                 logging.info("Updating captured element element field")
                 captured_element.updateElement(element)
             if tag == "input":
-                err = self.highlightElement(element)
-                if err:
-                    logging.warning("Element couldn't be highlighted")
                 ele_value = self.getElementValue()
                 cap_value = captured_element.value
                 self.sendTextToElement(cap_value,element)
+                if type and type.lower() == "checkbox":
+                    element = self.findParentElement(element)
+                    self.selectElement(element)
+                    err = self.highlightElement(element)
+                    if err:
+                        logging.warning("Element couldn't be highlighted")
                 element.click()
             elif tag == 'div':
-                err = self.highlightElement(element)
-                if err:
-                    logging.warning("Element couldn't be highlighted")
                 ele_value = element.text
                 cap_value = captured_element.value
                 if ele_value != cap_value:
                     element.send_keys(cap_value)
-                    element.click()
+                    #element.click()
             elif tag == 'select':
-                temp_element = element
-                self.findParentElement(element)
-                err = self.highlightElement(self.selectedElement)
-                if err:
-                    logging.warning("Element couldn't be highlighted")
-                element = temp_element
+                parent_element = self.findParentElement(element)
+                if parent_element.tag_name != "select":
+                    parent_element = self.findParentElement(parent_element)
+                self.highlightElement(parent_element)
                 element.click()
             elif tag == 'button':
-                err = self.highlightElement(element)
-                if err:
-                    logging.warning("Element couldn't be highlighted")
                 element.click()
             elif tag == 'a':
-                err = self.highlightElement(element)
-                if err:
-                    logging.warning("Element couldn't be highlighted")
+                element.click()
+            elif tag == 'label':
+                self.highlightElement(element)
                 element.click()
             else:
                 logging.error("Element with tag {} is not supported for Playback".format(tag))
                 return 1
+            err = self.highlightElement(element)
+            if err:
+                logging.warning("Element couldn't be highlighted")
             time.sleep(1)
         return 0
 
     def getRecordedElements(self):
         return self.captured_elements
+
+    def deleteRecord(self):
+        if len(self.captured_elements) == 0:
+            logging.error("There is not recorded element to delete")
+            return 1
+        else:
+            last_element = self.captured_elements[len(self.captured_elements)-1]
+            logging.info("Deleted last captured element: {}".format(last_element))
+            self.captured_elements.remove(last_element)
+            last_element.dealloc()
+            del last_element
+        return 0
+
+    def clearRecorder(self):
+        if self.captured_elements:
+            for captured_element in self.captured_elements:
+                captured_element.dealloc()
+                del captured_element
+            del self.captured_elements[:]
+        return 0
 
     def __compareElement(self,element_one,element_two):
         if not isinstance(element_one,WebElement):

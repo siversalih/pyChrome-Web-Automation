@@ -779,6 +779,7 @@ class Element:
             logging.error("Element is not Web Element instance")
             return None
         element = self.selectedElement
+        temp = self.selectedElement
         try:
             xpath = self.driver.execute_script("function absoluteXPath(element) {"+
                         "var comp, comps = [];"+
@@ -831,6 +832,54 @@ class Element:
                         "} return absoluteXPath(arguments[0]);", element)
         except NoSuchElementException:
             logging.error("NoSuchElementException: No element to get the value")
+            self.selectElement(temp)
             return None
         return str(xpath)
+
+    def findSiblingsElements(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        temp = self.selectedElement
+        element = self.findParentElement(temp)
+        xpath = self.getXpath(element)
+        xpath = "{}/*".format(xpath)
+        elements = self.findElementsByXPath(xpath)
+        if elements and len(elements):
+            return elements
+        else:
+            self.selectElement(temp)
+            return 0
+
+    def findPreviousElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        elements = self.findSiblingsElements(element)
+        if elements and len(elements):
+            index = 0
+            for index,temp_element in enumerate(elements):
+                if temp_element == element:
+                    break
+            if index == 0:
+                return 0
+            else:
+                self.selectElement(elements[index-1])
+                return elements[index-1]
+        else:
+            return 0
+
 

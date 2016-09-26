@@ -882,4 +882,45 @@ class Element:
         else:
             return 0
 
+    def findInteractiveElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
 
+        element = self.selectedElement
+        if element.tag_name == "input" or element.tag_name == "button" or element.tag_name == "select" or \
+                        element.tag_name == "option" or element.tag_name == "a":
+            self.selectElement(element)
+            return element
+        elif element.tag_name == "body":
+            return 0
+
+        temp = element
+        element = self.findParentElement(temp)
+        input_element = self.findElementByTag('input',element=element)
+        if input_element:
+            self.selectElement(element=input_element)
+            return input_element
+        button_element = self.findElementByTag('button',element=element)
+        if button_element:
+            self.selectElement(element=button_element)
+            return button_element
+        select_element = self.findElementByTag('select',element=element)
+        if select_element:
+            self.selectElement(element=select_element)
+            return select_element
+        option_element = self.findElementByTag('option',element=element)
+        if option_element:
+            self.selectElement(element=option_element)
+            return option_element
+        link_element = self.findElementByTag('a',element=element)
+        if link_element:
+            self.selectElement(element=link_element)
+            return link_element
+        return self.findInteractiveElement(element=element)

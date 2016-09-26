@@ -392,6 +392,9 @@ class PyChrome(Element,Interaction,Combo):
     def forward(self):
         return self.browser.forward()
 
+    def refresh(self):
+        return self.browser.refresh()
+
     def elementDump(self,element,filename=None):
         return self.browser.elementDump(element,filename=filename)
 

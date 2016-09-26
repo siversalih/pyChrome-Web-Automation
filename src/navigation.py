@@ -40,3 +40,14 @@ class Navigation:
         logging.info("Forwarding to Page: {}".format(self.cur_tab.title))
         time.sleep(1)
         return 0
+
+    def refresh(self):
+        try:
+            self.driver.refresh()
+        except WebDriverException:
+            logging.error("WebDriverException: Couldn't refresh the page")
+            return 1
+        self.cur_tab.update()
+        logging.info("Page Refreshed: {}".format(self.cur_tab.title))
+        time.sleep(1)
+        return 0

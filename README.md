@@ -38,9 +38,6 @@ API functions and structure that have been integrated:
 - Window Control
 	- Size
 	- Position
-- Browser Navigation
-	- Back
-	- Forward
 - Zoom Functionality
 	- Zoom (In,Out,Value)
 - Scroll Functionality
@@ -71,7 +68,11 @@ API functions and structure that have been integrated:
 	- Take Screenshot
 	- Dump Web Page HTML code
 	- Dump Web Element HTML code
-	- Recorder (record,playback,store,load)
+	- Recorder (record,playback,store,load,delete,clear)
+- Browser Navigation
+	- Back
+	- Forward
+	- Refresh
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python

@@ -277,6 +277,12 @@ $ git clone https://github.com/siversalih/pyChrome.git
     ```sh
 	browser.forward()
 	```
+-   Refresh
+
+    ```sh
+	browser.refresh()
+	```
+
 
 #####Capture
 -	**Screenshot**

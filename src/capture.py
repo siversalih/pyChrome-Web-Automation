@@ -20,6 +20,7 @@ try:
     from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import ElementNotVisibleException
     from selenium.common.exceptions import TimeoutException
+    from selenium.common.exceptions import StaleElementReferenceException
     from selenium.webdriver.remote.webelement import WebElement
 except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
@@ -123,7 +124,10 @@ class Capture(Element,Interaction):
         # Record Value & Highlight
         tag = element.tag_name
         type = self.getAttributeValue('type')
-        if tag == 'input':
+        if tag == 'body':
+            logging.warning("Currently at the 'body' element of the page. No specific element is selected to record")
+            return 1
+        elif tag == 'input':
             if type and "radio" in type.lower():
                 parent_element = self.findParentElement(element)
                 self.highlightElement(parent_element)
@@ -138,18 +142,20 @@ class Capture(Element,Interaction):
                 self.highlightElement(element)
             value = self.getElementValue()
         elif tag == 'div':
+            self.highlightElement(element)
             interactive_element = self.findInteractiveElement(element)
+            interactive_element_tag = element.tag_name
+            interactive_element_type = self.getAttributeValue('type')
             if interactive_element:
-                err = self.record(interactive_element)
-                return err
+                if interactive_element_type == 'hidden':
+                    value = element.text
+                else:
+                    err = self.record(interactive_element)
+                    return err
             else:
                 logging.error("Element with tag {} is not supported for recording".format(tag))
                 return 1
-            value = element.text
-            self.highlightElement()
         elif tag == 'select':
-            #parent_element = self.findParentElement(element)
-            #self.highlightElement(parent_element)
             self.highlightElement(element)
             self.selectElement(element)
             value = self.getElementValue()
@@ -175,34 +181,12 @@ class Capture(Element,Interaction):
             self.highlightElement()
         elif tag == 'label':
             interactive_element = self.findInteractiveElement(element)
-            #self.highlightElement()
             if interactive_element:
                 err = self.record(interactive_element)
                 return err
             else:
                 logging.error("Element with tag {} is not supported for recording".format(tag))
                 return 1
-            #input_element = self.findElementByTag("input",element)
-            #if isinstance(input_element,WebElement):
-            #    err = self.record(input_element)
-            #    return err
-            #button_element = self.findElementByTag("button",element)
-            #if isinstance(button_element,WebElement):
-            #    err = self.record(button_element)
-            #    return err
-            #select_element = self.findElementByTag("select",element)
-            #if isinstance(select_element,WebElement):
-            #    err = self.record(select_element)
-            #    return err
-            #link_element = self.findElementByTag("a",element)
-            #if isinstance(link_element,WebElement):
-            #    err = self.record(link_element)
-            #    return err
-            #div_element = self.findElementByTag("div",element)
-            #if isinstance(div_element,WebElement):
-            #    err = self.record(div_element)
-            #    return err
-            #self.highlightElement()
         else:
             logging.error("Element with tag {} is not supported for recording".format(tag))
             return 1
@@ -211,8 +195,7 @@ class Capture(Element,Interaction):
         if contain_captured_element != 0:
             if contain_captured_element.value != value:
                 contain_captured_element.value = value
-                print "Updated Record Element"
-                print contain_captured_element
+                logging.info("Updated Record Element")
         else:
             link = self.getcurrentTabLink()
             id = self.getAttributeValue('id')
@@ -220,8 +203,8 @@ class Capture(Element,Interaction):
             xpath = self.getXpath(element)
             element_captured = CaptureElement(link,xpath,element,type=type,id=id,tag=tag,value=value,name=name)
             self.captured_elements.append(element_captured)
-            print "Recorded New Element"
-            print element_captured
+            logging.info("Recorded New Element")
+            logging.info("{}".format(element_captured.output()))
         return 0
 
     def recordButton(self,element=None):
@@ -314,7 +297,6 @@ class Capture(Element,Interaction):
             xpath = captured_element.xpath
             if link != self.getcurrentTabLink():
                 self.open(link)
-                time.sleep(1)
             element = self.findElementByXPath(xpath)
             if element == None or element == 0 or not isinstance(element,WebElement):
                 logging.error("Element couldn't be found from its Xpath {}".format(xpath))
@@ -327,20 +309,31 @@ class Capture(Element,Interaction):
                     parent_element = self.findParentElement(element)
                     self.highlightElement(parent_element)
                     self.selectElement(element)
-                    element.click()
+                    try:
+                        element.click()
+                    except ElementNotVisibleException:
+                        logging.error("ElementNotVisibleException: Element is not visible to click")
+                        return 1
                 elif type and "radio" in type.lower():
                     parent_element = self.findParentElement(element)
                     self.highlightElement(parent_element)
                     self.selectElement(element)
-                    element.click()
+                    try:
+                        element.click()
+                    except ElementNotVisibleException:
+                        logging.error("ElementNotVisibleException: Element is not visible to click")
+                        return 1
                 else:
-                    #element.click()
                     self.highlightElement(element)
                     ele_value = self.getElementValue()
                     cap_value = captured_element.value
                     self.sendTextToElement(cap_value,element)
                     try:
-                        element.click()
+                        try:
+                            element.click()
+                        except ElementNotVisibleException:
+                            logging.error("ElementNotVisibleException: Element is not visible to click")
+                            return 1
                     except WebDriverException:
                         logging.warning("Element is not clickable")
             elif tag == 'div':
@@ -349,25 +342,30 @@ class Capture(Element,Interaction):
                 cap_value = captured_element.value
                 if ele_value != cap_value:
                     element.send_keys(cap_value)
-                    #element.click()
             elif tag == 'select':
                 parent_element = self.findParentElement(element)
                 if parent_element.tag_name != "select":
                     parent_element = self.findParentElement(parent_element)
                 self.highlightElement(parent_element)
-                element.click()
+                try:
+                    element.click()
+                except ElementNotVisibleException:
+                    logging.error("ElementNotVisibleException: Element is not visible to click")
+                    return 1
             elif tag == 'button':
                 self.highlightElement(element)
-                #cap_value = captured_element.value
-                #element.send_keys(cap_value)
-                #self.sendTextToElement(cap_value,element)
-                element.click()
+                try:
+                    element.click()
+                except ElementNotVisibleException:
+                    logging.error("ElementNotVisibleException: Element is not visible to click")
+                    return 1
             elif tag == 'a':
                 self.highlightElement(element)
-                element.click()
-            #elif tag == 'label':
-            #    self.highlightElement(element)
-            #    element.click()
+                try:
+                    element.click()
+                except ElementNotVisibleException:
+                    logging.error("ElementNotVisibleException: Element is not visible to click")
+                    return 1
             elif tag == "textarea":
                 self.highlightElement()
                 cap_value = captured_element.value
@@ -453,6 +451,10 @@ class CaptureElement:
     def __str__(self):
         str = "Link: {}\nTag: {}\nID: {}\nName: {}\nType: {}\nValue: {}".format(self.link,self.tag,self.id,self.name,
                                                                                 self.type,self.value)
+        return str
+
+    def output(self):
+        str = "Tag: {} ID: {} Name: {} Type: {} Value: {}".format(self.tag,self.id,self.name,self.type,self.value)
         return str
 
     def dealloc(self):

@@ -231,12 +231,14 @@ class Capture(Element,Interaction):
             logging.info("Button Element Recorded")
         return err
 
-    def storeRecorder(self,filename=None):
+    def storeRecorder(self,filename=None,directory=None):
         if len(self.captured_elements) == 0:
             logging.error("There is no element captured to store.")
             return 1
         if filename == None:
             filename = "recorded_elements"
+        if directory:
+            self.directory = directory
         extension = "json"
         captured_elements_dic = []
         for captured_element in self.captured_elements:
@@ -254,10 +256,12 @@ class Capture(Element,Interaction):
             json.dump(captured_elements_dic, outfile, indent=4, sort_keys=True, separators=(',', ':'))
         return 0
 
-    def loadRecorder(self,filename=None):
+    def loadRecorder(self,filename=None,directory=None):
         extension = ".json"
         if not filename:
             filename = "recorded_elements"
+        if directory:
+            self.directory = directory
         if extension not in filename:
             filename = "{}{}".format(filename,extension)
         file_directory = "{}/{}".format(self.directory,filename)
@@ -279,7 +283,7 @@ class Capture(Element,Interaction):
             type = str(captured_element_dic.get('type'))
             id = str(captured_element_dic.get('id'))
             tag = str(captured_element_dic.get('tag'))
-            value = str(captured_element_dic.get('value'))
+            value = str(captured_element_dic.get('value').encode('ascii', 'ignore').decode('ascii'))
             name = str(captured_element_dic.get('name'))
             xpath = str(captured_element_dic.get('xpath'))
             element_captured = CaptureElement(link,xpath,type=type,id=id,tag=tag,value=value,name=name)
@@ -290,6 +294,7 @@ class Capture(Element,Interaction):
         if len(self.captured_elements) == 0:
             logging.error("There is not element recorded to playback")
             return 1
+        self.refresh()
         for captured_element in self.captured_elements:
             tag = captured_element.tag
             type = captured_element.type
@@ -450,11 +455,11 @@ class CaptureElement:
 
     def __str__(self):
         str = "Link: {}\nTag: {}\nID: {}\nName: {}\nType: {}\nValue: {}".format(self.link,self.tag,self.id,self.name,
-                                                                                self.type,self.value)
+                                                                                self.type,self.value.encode('ascii', 'ignore').decode('ascii'))
         return str
 
     def output(self):
-        str = "Tag: {} ID: {} Name: {} Type: {} Value: {}".format(self.tag,self.id,self.name,self.type,self.value)
+        str = "Tag: {} ID: {} Name: {} Type: {} Value: {}".format(self.tag,self.id,self.name,self.type,self.value.encode('ascii', 'ignore').decode('ascii'))
         return str
 
     def dealloc(self):

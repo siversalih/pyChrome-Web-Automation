@@ -366,6 +366,24 @@ $ git clone https://github.com/siversalih/pyChrome.git
     browser.loadRecorder(filename_recorder)
 	```
 
+	- Delete Last Recorded Element
+	
+	```sh
+    browser.deleteRecord()
+	```
+	
+	- Clear all the Recorded Element
+	
+	```sh
+    browser.clearRecorder()
+	```
+
+	- Get all the Recorded Element
+	
+	```sh
+    recorded_items = browser.getRecordedElements()
+	```
+	
 #####Locate Web Element
 The most challenging part of Web Automation is finding the Web Element locator (or xpath). And it's done manually by the Automator prior of locating it's Web Element. Once the Web Element location determined, the Web Element itself can be obtained by id, name, tag, class, partial text, link text, css selector and xpath. Depending of which attribute is available and the Automator approach, finding the Web element is easy as follows:
 
@@ -605,6 +623,36 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	locator = "FirstName"
 	browser.findElementByName(name_str=locator)
 	xpath = browser.getXpath()
+	```
+
+-	**Find Sibling Elements**
+
+	```sh
+	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+	browser.open(url)
+	locator = "menu_support"
+	browser.findElement(id=locator)
+	sibling_elements = browser.findSiblingsElements()
+	```
+
+-	**Find Previous Element at Current Node**
+
+	```sh
+	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+	browser.open(url)
+	locator = "menu_download"
+	element = browser.findElement(id=locator)
+	element = browser.findPreviousElement(element)
+	```
+
+-	**Find Next Element at Current Node**
+
+	```sh
+	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+	browser.open(url)
+	locator = "menu_about"
+	element = browser.findElement(id=locator)
+	element = browser.findNextElement(element)
 	```
 
 #####Interaction

@@ -415,12 +415,12 @@ class PyChrome(Element,Interaction,Combo):
         err = self.browser.record(self.selectedElement)
         return err
 
-    def storeRecorder(self,filename=None):
-        err = self.browser.storeRecorder(filename=filename)
+    def storeRecorder(self,filename=None,directory=None):
+        err = self.browser.storeRecorder(filename=filename,directory=directory)
         return err
 
-    def loadRecorder(self,filename=None):
-        err = self.browser.loadRecorder(filename)
+    def loadRecorder(self,filename=None,directory=None):
+        err = self.browser.loadRecorder(filename,directory=directory)
         return err
 
     def playback(self):

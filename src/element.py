@@ -4,6 +4,7 @@ try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import ElementNotVisibleException
+    from selenium.common.exceptions import StaleElementReferenceException
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.remote.webelement import WebElement
 except ImportError:
@@ -850,7 +851,14 @@ class Element:
         element = self.findParentElement(temp)
         xpath = self.getXpath(element)
         xpath = "{}/*".format(xpath)
-        elements = self.findElementsByXPath(xpath)
+        try:
+            elements = self.findElementsByXPath(xpath)
+        except NoSuchElementException:
+            logging.error("NoSuchElementException: Couldn't find Elements")
+            return 0
+        except StaleElementReferenceException:
+            logging.error("StaleElementReferenceException: Element is destroyed")
+            return 0
         if elements and len(elements):
             return elements
         else:
@@ -879,6 +887,31 @@ class Element:
             else:
                 self.selectElement(elements[index-1])
                 return elements[index-1]
+        else:
+            return 0
+
+    def findNextElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.selectElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        elements = self.findSiblingsElements(element)
+        if elements and len(elements):
+            index = 0
+            for index,temp_element in enumerate(elements):
+                if temp_element == element:
+                    break
+            if index == len(elements)-1:
+                return 0
+            else:
+                self.selectElement(elements[index+1])
+                return elements[index+1]
         else:
             return 0
 

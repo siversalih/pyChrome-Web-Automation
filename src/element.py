@@ -4,9 +4,10 @@ try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import ElementNotVisibleException
-    from selenium.common.exceptions import StaleElementReferenceException
     from selenium.common.exceptions import TimeoutException
+    from selenium.common.exceptions import StaleElementReferenceException
     from selenium.webdriver.remote.webelement import WebElement
+    from selenium.webdriver.support.ui import Select
 except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
@@ -478,6 +479,16 @@ class Element:
         else:
             logging.error("Error: No element selected")
             return 1
+        return 0
+
+    def selectElements(self,elements):
+        if not isinstance(elements,list):
+            logging.error("Elements is not a list")
+            return 1
+        if self.elements and len(self.elements):
+            del self.elements[:]
+        self.elements = []
+        self.elements = elements
         return 0
 
     def findElementLink(self,element=None):
@@ -957,3 +968,29 @@ class Element:
             self.selectElement(element=link_element)
             return link_element
         return self.findInteractiveElement(element=element)
+
+    def findOptionElement(self,value,select):
+        if not value:
+            logging.error("Value is empty")
+            return 0
+        if isinstance(select,Select):
+            options = select.options
+            for element in options:
+                if element.get_attribute("value") == value:
+                    self.selectElements(options)
+                    self.selectElement(element)
+                    return element
+        elif isinstance(select,WebElement):
+            select = Select(select)
+            return self.findOptionElement(value,select=select)
+        elif isinstance(select,list):
+            for element in select:
+                if element.get_attribute("value") == value:
+                    self.selectElements(elements=select)
+                    self.selectElement(element)
+                    return element
+        else:
+            logging.error("input select {}, is not instance of Select, Web Element, or List.".format(select))
+            return 0
+        logging.warning("Couldn't find any element with the value {} from select".format(value))
+        return 0

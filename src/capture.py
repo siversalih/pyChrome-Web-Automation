@@ -172,12 +172,12 @@ class Capture(Element,Interaction):
                 return 1
         elif tag == 'option':
             value = self.getElementValue()
-            while True:
-                select_element = self.findParentElement(element)
+            select_element = self.findParentElement(element)
+            select_tag = select_element.tag_name
+            while select_tag != 'select':
+                select_element = self.findParentElement(select_element)
                 select_tag = select_element.tag_name
-                if select_tag == "select":
-                    break
-                elif select_tag == "body":
+                if select_tag == "body":
                     logging.error("base element is not select type.")
                     return 1
             if value:
@@ -381,12 +381,12 @@ class Capture(Element,Interaction):
                     return 1
             elif tag == 'option':
                 value = self.getElementValue()
-                while True:
-                    select_element = self.findParentElement(element)
+                select_element = self.findParentElement(element)
+                select_tag = select_element.tag_name
+                while select_tag != 'select':
+                    select_element = self.findParentElement(select_element)
                     select_tag = select_element.tag_name
-                    if select_tag == "select":
-                        break
-                    elif select_tag == "body":
+                    if select_tag == "body":
                         logging.error("base element is not select type.")
                         return 1
                 if value:

@@ -22,6 +22,7 @@ try:
     from selenium.common.exceptions import TimeoutException
     from selenium.common.exceptions import StaleElementReferenceException
     from selenium.webdriver.remote.webelement import WebElement
+    from selenium.webdriver.support.ui import Select
 except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
@@ -168,6 +169,21 @@ class Capture(Element,Interaction):
                         break
             else:
                 logging.error("Attempting to locate sub-element of 'select' but it's failing. Currently only 'option' tag supported")
+                return 1
+        elif tag == 'option':
+            value = self.getElementValue()
+            select_element = self.findParentElement(element)
+            select_tag = select_element.tag_name
+            if select_tag == "select":
+                if value:
+                    select = Select(select_element)
+                    select.select_by_value(value)
+                else:
+                    logging.warning("option tag doesn't contain value")
+                self.highlightElement(select_element)
+                self.selectElement(element)
+            else:
+                logging.error("base element is not select type. And element with tag {} is not supported".format(select_tag))
                 return 1
         elif tag == 'button':
             self.selectElement(element)
@@ -356,6 +372,21 @@ class Capture(Element,Interaction):
                     element.click()
                 except ElementNotVisibleException:
                     logging.error("ElementNotVisibleException: Element is not visible to click")
+                    return 1
+            elif tag == 'option':
+                value = self.getElementValue()
+                select_element = self.findParentElement(element)
+                select_tag = select_element.tag_name
+                if select_tag == "select":
+                    if value:
+                        select = Select(select_element)
+                        select.select_by_value(value)
+                    else:
+                        logging.warning("option tag doesn't contain value")
+                    self.highlightElement(select_element)
+                    self.selectElement(element)
+                else:
+                    logging.error("base element is not select type. And element with tag {} is not supported".format(select_tag))
                     return 1
             elif tag == 'button':
                 self.highlightElement(element)

@@ -176,8 +176,12 @@ class Capture(Element,Interaction):
             select_tag = select_element.tag_name
             if select_tag == "select":
                 if value:
-                    select = Select(select_element)
-                    select.select_by_value(value)
+                    try:
+                        select = Select(select_element)
+                        select.select_by_value(value)
+                    except ElementNotVisibleException:
+                        logging.error("ElementNotVisibleException: Element is not visible to record")
+                        return 1
                 else:
                     logging.warning("option tag doesn't contain value")
                 self.highlightElement(select_element)
@@ -379,8 +383,12 @@ class Capture(Element,Interaction):
                 select_tag = select_element.tag_name
                 if select_tag == "select":
                     if value:
-                        select = Select(select_element)
-                        select.select_by_value(value)
+                        try:
+                            select = Select(select_element)
+                            select.select_by_value(value)
+                        except ElementNotVisibleException:
+                            logging.error("ElementNotVisibleException: Element is not visible to select")
+                            return 1
                     else:
                         logging.warning("option tag doesn't contain value")
                     self.highlightElement(select_element)

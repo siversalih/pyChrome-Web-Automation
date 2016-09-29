@@ -172,23 +172,25 @@ class Capture(Element,Interaction):
                 return 1
         elif tag == 'option':
             value = self.getElementValue()
-            select_element = self.findParentElement(element)
-            select_tag = select_element.tag_name
-            if select_tag == "select":
-                if value:
-                    try:
-                        select = Select(select_element)
-                        select.select_by_value(value)
-                    except ElementNotVisibleException:
-                        logging.error("ElementNotVisibleException: Element is not visible to record")
-                        return 1
-                else:
-                    logging.warning("option tag doesn't contain value")
-                self.highlightElement(select_element)
-                self.selectElement(element)
+            while True:
+                select_element = self.findParentElement(element)
+                select_tag = select_element.tag_name
+                if select_tag == "select":
+                    break
+                elif select_tag == "body":
+                    logging.error("base element is not select type.")
+                    return 1
+            if value:
+                try:
+                    select = Select(select_element)
+                    select.select_by_value(value)
+                except ElementNotVisibleException:
+                    logging.error("ElementNotVisibleException: Element is not visible to record")
+                    return 1
             else:
-                logging.error("base element is not select type. And element with tag {} is not supported".format(select_tag))
-                return 1
+                logging.warning("option tag doesn't contain value")
+            self.highlightElement(select_element)
+            self.selectElement(element)
         elif tag == 'button':
             self.selectElement(element)
             value = element.text
@@ -379,23 +381,25 @@ class Capture(Element,Interaction):
                     return 1
             elif tag == 'option':
                 value = self.getElementValue()
-                select_element = self.findParentElement(element)
-                select_tag = select_element.tag_name
-                if select_tag == "select":
-                    if value:
-                        try:
-                            select = Select(select_element)
-                            select.select_by_value(value)
-                        except ElementNotVisibleException:
-                            logging.error("ElementNotVisibleException: Element is not visible to select")
-                            return 1
-                    else:
-                        logging.warning("option tag doesn't contain value")
-                    self.highlightElement(select_element)
-                    self.selectElement(element)
+                while True:
+                    select_element = self.findParentElement(element)
+                    select_tag = select_element.tag_name
+                    if select_tag == "select":
+                        break
+                    elif select_tag == "body":
+                        logging.error("base element is not select type.")
+                        return 1
+                if value:
+                    try:
+                        select = Select(select_element)
+                        select.select_by_value(value)
+                    except ElementNotVisibleException:
+                        logging.error("ElementNotVisibleException: Element is not visible to record")
+                        return 1
                 else:
-                    logging.error("base element is not select type. And element with tag {} is not supported".format(select_tag))
-                    return 1
+                    logging.warning("option tag doesn't contain value")
+                self.highlightElement(select_element)
+                self.selectElement(element)
             elif tag == 'button':
                 self.highlightElement(element)
                 try:

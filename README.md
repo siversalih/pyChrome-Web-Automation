@@ -577,12 +577,22 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	body_element = browser.findBodyElement()
 	```
 
--	**Locate or Switch to Active Web Element**
+-	** Switch to Active Web Element**
 
 	```sh
     url = "https://www.yahoo.com/"
 	browser.open(url)
-	active_element = browser.findActiveElement()
+	browser.switchElement()
+	active_element = browser.selectedElement
+	```
+
+-	**Switch to Web Element**
+
+	```sh
+    url = "https://www.yahoo.com/"
+	browser.open(url)
+	body_element = browser.findBodyElement()
+	browser.switchElement(body_element)
 	```
 
 -	**Highlight Web Element**
@@ -625,7 +635,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	xpath = browser.getXpath()
 	```
 
--	**Find Sibling Elements**
+-	**Find Sibling of a Web Elements**
 
 	```sh
 	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
@@ -706,6 +716,13 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.findElement(id=locator)
 	browser.clickLink()
 	```
+
+-   Select Element (Dropdown Menu)
+
+    ```sh
+   
+	```
+
 
 #####Tab Control
 -	Open New Tab

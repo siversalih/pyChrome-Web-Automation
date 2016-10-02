@@ -157,7 +157,7 @@ class Tab:
 
     def getcurrentTabLink(self):
         self.cur_tab.update()
-        return self.cur_tab.link
+        return str(self.cur_tab.link)
 
 class TabObject:
     driver = None

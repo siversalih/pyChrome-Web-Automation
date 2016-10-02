@@ -224,7 +224,7 @@ def main(argv):
                             continue
                         if index > 0 and index <= len(elements):
                             element = elements[index-1]
-                            browser.selectElement(element)
+                            browser.switchElement(element)
                             print "Selected Element {} at Index {}".format(element,index)
                             break
                         if index == 0:

@@ -9,6 +9,7 @@ try:
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.common.keys import Keys
+    from selenium.webdriver.support.ui import Select
 except ImportError:
     logging.critical("Selenium module is not installed...Exiting program.")
     exit(1)
@@ -21,7 +22,7 @@ class Interaction:
     def sendTextToElement(self, text, element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     logging.error("Select Element returned Error")
                     return 1
@@ -32,30 +33,27 @@ class Interaction:
             logging.error("Current selected element is not Web Element type {}".format(self.selectedElement))
             return 1
         element = self.selectedElement
-        tag_name = element.tag_name
-        if tag_name != "input":
-            logging.warning("The selected element is not input type element. "
-                            "Attempting to search for input tag inside element {}".format(element))
-            element = self.findElementByTag("input",element)
-            if element == 0 or not isinstance(element,WebElement):
-                logging.error("Couldn't find input tag inside selected element {}".format(element))
-                return 1
-            else:
-                self.selectElement(element)
-        element = self.selectedElement
         if text == 0 or text == None or len(text) == 0:
             logging.error("Text is empty or not defined")
             return 1
-        try:
-            logging.info("Sending '{}' to Element '{}'".format(text,element))
-            element.send_keys(text)
-        except ElementNotVisibleException:
-            logging.error("Element is Not Visible")
-            return 1
-        except StaleElementReferenceException:
-            logging.error("Trying to send Text to Stale Element {}".format(element))
-            return 1
-        time.sleep(1)
+        type = self.getAttributeValue('type')
+        if type == "number":
+            self.driver.execute_script("arguments[0].setAttribute('value', arguments[1])",element,text)
+        else:
+            try:
+                element.clear()
+                logging.info("Sending '{}' to Element '{}'".format(text,element))
+                element.send_keys(text)
+            except ElementNotVisibleException:
+                logging.error("ElementNotVisibleException: Element is Not Visible")
+                return 1
+            except StaleElementReferenceException:
+                logging.error("StaleElementReferenceException: Trying to send Text to Stale Element {}".format(element))
+                return 1
+            except WebDriverException:
+                logging.error("WebDriverException: WebDriver does not exist or failing to interact with the element")
+                return 1
+        time.sleep(0.5)
         return 0
 
     def sendText(self, text):
@@ -70,14 +68,14 @@ class Interaction:
             if input_element == 0 or not isinstance(input_element,WebElement):
                 logging.error("Couldn't find name='q' inside current element")
             else:
-                self.selectElement(input_element)
+                self.switchElement(input_element)
         err = self.sendTextToElement(text)
         return err
 
     def clickElement(self, element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 1
             else:
@@ -87,28 +85,18 @@ class Interaction:
             logging.error("Current selected element is not Web Element type {}".format(self.selectedElement))
             return 1
         try:
-            try:
-                element_text = self.selectedElement.text.encode('ascii', 'ignore').decode('ascii')
-                logging.info("Click the page: {}".format(element_text))
-            except UnicodeEncodeError:
-                logging.error("Click the page: {}".format(self.selectedElement.id))
             self.selectedElement.click()
             err = self.browser.cur_tab.update()
             if err:
                 return err
             logging.info("Page Title: {}".format(self.browser.cur_tab.title))
         except ElementNotVisibleException:
-            logging.warning("Couldn't Click on this element. Trying to Click on it's parent element")
-            parent_element = self.findParentElement(element=self.selectedElement)
-            err = self.clickElement(parent_element)
-            if err:
-                logging.error("ElementNotVisibleException: Element is Not Visible to Click")
-                return err
-            else: self.selectElement(parent_element)
+            logging.error("ElementNotVisibleException: Couldn't Click on this element.")
+            return 1
         except WebDriverException:
             logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
             return 1
-        time.sleep(2)
+        time.sleep(1)
         if self.ghost == False:
             self.scrol((0,0))
         return 0
@@ -116,7 +104,7 @@ class Interaction:
     def clickLink(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 1
             else:
@@ -145,7 +133,7 @@ class Interaction:
     def clickButton(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 1
             else:
@@ -163,10 +151,45 @@ class Interaction:
                 logging.error("Couldn't find button tag inside current element")
                 return 1
             else:
-                self.selectElement(button_element)
+                self.switchElement(button_element)
         err = self.clickElement(self.selectedElement)
         if err:
             logging.error("Couldn't Click on Button of Current Selected Element")
             return 1
         else:
             return 0
+
+    def selectElement(self,option=None,value=None):
+        if option:
+            if isinstance(option,WebElement):
+                self.switchElement(option)
+            else:
+                logging.error("Option is not instance of Web Element")
+                return 1
+        option = self.selectedElement
+        tag = option.tag_name
+        if tag == "select":
+            if value:
+                try:
+                    select = Select(option)
+                    select.select_by_value(value)
+                except ElementNotVisibleException:
+                    logging.error("ElementNotVisibleException: Element is not visible to record")
+                    return 1
+            else:
+                logging.error("To select an element, value is required")
+                return 1
+        elif tag == "option":
+            value = self.getElementValue()
+            select_element = self.findParentElement(option)
+            select_tag = select_element.tag_name
+            while select_tag != 'select':
+                select_element = self.findParentElement(select_element)
+                select_tag = select_element.tag_name
+                if select_tag == "body":
+                    logging.error("base element is not select type.")
+                    return 1
+            return self.selectElement(select_element,value=value)
+        else:
+            logging.error("Element with tag {} can't be selected".format(tag))
+            return 1

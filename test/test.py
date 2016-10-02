@@ -1158,7 +1158,7 @@ class subElementSearchTest_2(unittest.TestCase):
         if self.elements == 0 or self.elements == None or len(self.elements) == 0:
             err = 1
         else: err = 0 or err
-        err = self.browser.selectElement(2)
+        err = self.browser.switchElement(2)
         if err:
             err = 1
         else: err = 0 or err
@@ -1223,7 +1223,7 @@ class subElementSearchTest_3(unittest.TestCase):
         if self.elements == None or self.elements == 0 or len(self.elements) < 3:
             err = 1
         else: err = 0 or err
-        err = err or self.browser.selectElement(2)
+        err = err or self.browser.switchElement(2)
         err = err or self.browser.clickElement(self.element)
         time.sleep(1)
         self.assertFalse(err,0)
@@ -1281,7 +1281,7 @@ class parentElementSearchTest(unittest.TestCase):
         if self.elements == None or self.elements == 0 or len(self.elements) < 3:
             err = 1
         else: err = 0 or err
-        err = err or self.browser.selectElement(2)
+        err = err or self.browser.switchElement(2)
         self.element = self.browser.findParentElement()
         if self.element == 0:
             err = 1
@@ -1378,7 +1378,7 @@ class findActiveElementTest(unittest.TestCase):
         if self.element == 0:
             err = 1
         err = err or self.browser.sendTextToElement(self.text,self.element)
-        self.element = self.browser.findActiveElement()
+        self.browser.switchElement(self.element)
         if self.element.tag_name != "input":
             err = 1
         time.sleep(1)
@@ -1475,7 +1475,7 @@ class findElementValueTest(unittest.TestCase):
         if self.element == 0:
             err = 1
         err = err or self.browser.sendTextToElement(self.text,self.element)
-        self.element = self.browser.findActiveElement()
+        self.browser.switchElement(self.element)
         if self.element.tag_name != "input":
             err = 1
         self.value = self.browser.getElementValue()
@@ -1529,7 +1529,7 @@ class findAttributeValueTest(unittest.TestCase):
         if self.element == 0:
             err = 1
         err = err or self.browser.sendTextToElement(self.text,self.element)
-        self.element = self.browser.findActiveElement()
+        self.browser.switchElement(self.element)
         if self.element.tag_name != "input":
             err = 1
         self.value = self.browser.getAttributeValue(attribute="id")
@@ -1582,6 +1582,195 @@ class findXpathTest(unittest.TestCase):
         if self.xpath != "/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/div[1]/fieldset[1]/label[1]/input[1]":
             err = 1
         time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findSiblingElementsTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+    elements = []
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+        self.locator = "menu_support"
+        self.element = None
+        self.elements = []
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+        if self.elements:
+            del self.elements[:]
+
+    def runTest(self):
+        print "\nTest Begin: Find Sibling Elements"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElement(id=self.locator)
+        if self.element == None:
+            err = 1
+        self.elements = self.browser.findSiblingsElements()
+        if self.elements == None or len(self.elements) != 5:
+            err = 1
+
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findPreviousElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+        self.locator = "menu_download"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Previous Element"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElement(id=self.locator)
+        if self.element == None:
+            err = 1
+        self.element = self.browser.findPreviousElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_documentation":
+            err = 1
+        self.element = self.browser.findPreviousElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_support":
+            err = 1
+        self.element = self.browser.findPreviousElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_about":
+            err = 1
+        self.element = self.browser.findPreviousElement(self.element)
+        if self.element:
+            err = 1
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class findNextElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
+        self.locator = "menu_about"
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Next Element"
+        err = self.browser.open(self.url)
+        self.element = self.browser.findElement(id=self.locator)
+        if self.element == None:
+            err = 1
+        self.element = self.browser.findNextElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_support":
+            err = 1
+        self.element = self.browser.findNextElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_documentation":
+            err = 1
+        self.element = self.browser.findNextElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_download":
+            err = 1
+        self.element = self.browser.findNextElement(self.element)
+        if self.element == 0:
+            err = 1
+        self.locator = self.browser.getAttributeValue('id')
+        if self.locator == None:
+            err = None
+        if self.locator != "menu_projects":
+            err = 1
+        self.element = self.browser.findNextElement(self.element)
+        if self.element:
+            err = 1
         self.assertFalse(err,0)
         print "Test Ended"
 

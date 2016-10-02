@@ -1774,6 +1774,56 @@ class findNextElementTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
+class findOptionElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    value = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.destinylfg.net/"
+        self.locator = "collapsed"
+        self.value = "ps4"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.locator = None
+        self.value = None
+
+    def runTest(self):
+        print "\nTest Begin: Find Option Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElement(classname=self.locator)
+        if self.element == 0:
+            err = 1
+        self.browser.clickElement(self.element)
+        self.locator = "filters-platform-select"
+        self.element = self.browser.findElement(id=self.locator)
+        self.element = self.browser.findOptionElement(value=self.value,select=self.element)
+
+        if self.element == 0 or self.element.tag_name != "option":
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
 ##### Interaction ######
 
 class sendTextToElementTest(unittest.TestCase):
@@ -1982,6 +2032,57 @@ class clickLinkTest(unittest.TestCase):
         else: err = 0 or err
         err = err or self.browser.clickLink()
 
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class selectOptionElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    element = None
+    locator = ""
+    value = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.destinylfg.net/"
+        self.locator = "collapsed"
+        self.value = "ps4"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.element = None
+        self.locator = None
+        self.value = None
+
+    def runTest(self):
+        print "\nTest Begin: Select Option Element Test"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElement(classname=self.locator)
+        if self.element == 0:
+            err = 1
+        self.browser.clickElement(self.element)
+        self.locator = "filters-platform-select"
+        self.element = self.browser.findElement(id=self.locator)
+        self.element = self.browser.findOptionElement(value=self.value,select=self.element)
+
+        if self.element == 0 or self.element.tag_name != "option":
+            err = 1
+        err = err or self.browser.selectElement(self.element)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"
@@ -2482,6 +2583,42 @@ class forwardTest(unittest.TestCase):
         time.sleep(1)
         err = err or self.browser.forward()
         time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class refreshTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://www.gmail.com"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+
+    def runTest(self):
+        print "\nTest Begin: Refresh Page"
+        time.sleep(0.5)
+        err = self.browser.open(self.url)
+        time.sleep(0.5)
+        err = err or self.browser.refresh()
+        time.sleep(0.5)
         self.assertFalse(err,0)
         print "Test Ended"
 

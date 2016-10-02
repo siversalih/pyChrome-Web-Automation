@@ -456,29 +456,45 @@ class Element:
 
     # This function is required to register a particular Web Element (which is defines by the user), so that the browser
     # internel variable (selectedElement) can be assigned to that user defined element.
-    def selectElement(self,element):
-        # If the user pass in valid Web Element, it will discard the current focused element, and it assigns the
-        # new Web Element that passed-in by the user
-        if isinstance(element,WebElement):
-            logging.info("Switching Current Web Element focus from {} to {}".format(self.selectedElement,element))
-            self.selectedElement = element
-        # If the user pass in element as an integer. It will then treat this as an index to grab particular element
-        # in elements variable. If the variable elements is empty, it will return 1 as in the variable is empty.
-        elif isinstance(element,int):
-            if self.elements == None or len(self.elements) == 0:
-                logging.warning("Elements is empty")
-                return 1
-            else:
-                index = element
-                if index > len(self.elements)-1 or index < 0:
-                    logging.warning("Invalid index to select element")
+    def switchElement(self,element=None):
+        if element:
+            logging.info("Switching to Element")
+            # If the user pass in valid Web Element, it will discard the current focused element, and it assigns the
+            # new Web Element that passed-in by the user
+            if isinstance(element,WebElement):
+                logging.info("Switching Current Web Element focus from {} to {}".format(self.selectedElement,element))
+                self.selectedElement = element
+            # If the user pass in element as an integer. It will then treat this as an index to grab particular element
+            # in elements variable. If the variable elements is empty, it will return 1 as in the variable is empty.
+            elif isinstance(element,int):
+                if self.elements == None or len(self.elements) == 0:
+                    logging.warning("Elements is empty")
                     return 1
-                logging.info("Switching Current Web Element focus from {} to {}".format(self.selectedElement,self.elements[index]))
-                self.selectedElement = self.elements[index]
-        # It didn't select any element
+                else:
+                    index = element
+                    if index > len(self.elements)-1 or index < 0:
+                        logging.warning("Invalid index to select element")
+                        return 1
+                    logging.info("Switching Current Web Element focus from {} to {}".format(self.selectedElement,self.elements[index]))
+                    self.selectedElement = self.elements[index]
+            # It didn't select any element
+            else:
+                logging.error("Error: No element selected")
+                return 1
         else:
-            logging.error("Error: No element selected")
-            return 1
+            logging.info("Switching to Active Element")
+            element = None
+            try:
+                element = self.driver.switch_to_active_element()
+            except NoSuchElementException:
+                logging.error("NoSuchElementException: Couldn't find active element")
+                return 0
+            if element and isinstance(element,WebElement):
+                logging.info("Got Active Element")
+                self.switchElement(element)
+            else:
+                logging.warning("Couldn't find Active element")
+                return 0
         return 0
 
     def selectElements(self,elements):
@@ -494,7 +510,7 @@ class Element:
     def findElementLink(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 0
             else:
@@ -510,7 +526,7 @@ class Element:
                     logging.error("The current element does not contain link address")
                     return 0
                 elif isinstance(element_link, WebElement):
-                    self.selectElement(element_link)
+                    self.switchElement(element_link)
                     return element_link
                 else:
                     return 0
@@ -526,7 +542,7 @@ class Element:
     def findSubElement(self,element=None,id=None,name=None,classname=None,xpath=None,tag=None,css=None,linktext=None,partialtext=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 0
             else:
@@ -582,7 +598,7 @@ class Element:
         if subelement == None:
             logging.error("Web Element locator not specified to find sub-element of {}".format(element))
             return  0
-        err = self.selectElement(subelement)
+        err = self.switchElement(subelement)
         if err:
             logging.error("Couldn't locate sub-element of {}".format(element))
             return 0
@@ -631,7 +647,7 @@ class Element:
                 if not valid:
                     return 0
                 element = self.findElementByPartialText(partialtext)
-            err = self.selectElement(element)
+            err = self.switchElement(element)
             if err:
                 logging.error("No input argument to find element")
                 return 0
@@ -652,32 +668,32 @@ class Element:
                     if classname:
                         class_attr = temp_element.get_attribute("class")
                         if class_attr == classname:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                     if name:
                         name_attr = temp_element.get_attribute("name")
                         if name_attr == name:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                     if id:
                         id_attr = temp_element.get_attribute("id")
                         if id_attr == id:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                     if tag:
                         tag_attr = temp_element.tag_name
                         if tag_attr == tag:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                     if linktext:
                         linktext_attr = temp_element.text
                         if linktext_attr == linktext:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                     if partialtext:
                         linktext_attr = temp_element.text
                         if partialtext in linktext_attr:
-                            self.selectElement(temp_element)
+                            self.switchElement(temp_element)
                             return temp_element
                 logging.error("Couldn't find particular element from the list by given its locator")
                 return 0
@@ -686,7 +702,7 @@ class Element:
     def findParentElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                err = self.selectElement(element)
+                err = self.switchElement(element)
                 if err:
                     return 0
             else:
@@ -705,7 +721,7 @@ class Element:
             return 0
         else:
             logging.info("Found Parent Element: {}".format(element))
-            self.selectElement(element)
+            self.switchElement(element)
             return self.selectedElement
 
     def findBodyElement(self):
@@ -715,29 +731,13 @@ class Element:
             return 0
         else:
             logging.info("Found Body Web Element: {}".format(element))
-            self.selectElement(element)
+            self.switchElement(element)
             return self.selectedElement
-
-    def findActiveElement(self):
-        logging.info("Getting Active Element")
-        element = None
-        try:
-            element = self.driver.switch_to_active_element()
-        except NoSuchElementException:
-            logging.error("NoSuchElementException: Couldn't find active element")
-            return 0
-        if element and isinstance(element,WebElement):
-            logging.info("Got Active Element")
-            self.selectElement(element)
-        else:
-            logging.warning("Couldn't find Active element")
-            return 0
-        return element
 
     def highlightElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return 1
@@ -751,7 +751,7 @@ class Element:
     def getElementValue(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -767,7 +767,7 @@ class Element:
     def getAttributeValue(self,attribute,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -783,7 +783,7 @@ class Element:
     def getXpath(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -844,14 +844,14 @@ class Element:
                         "} return absoluteXPath(arguments[0]);", element)
         except NoSuchElementException:
             logging.error("NoSuchElementException: No element to get the value")
-            self.selectElement(temp)
+            self.switchElement(temp)
             return None
         return str(xpath)
 
     def findSiblingsElements(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -873,13 +873,13 @@ class Element:
         if elements and len(elements):
             return elements
         else:
-            self.selectElement(temp)
+            self.switchElement(temp)
             return 0
 
     def findPreviousElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -896,7 +896,7 @@ class Element:
             if index == 0:
                 return 0
             else:
-                self.selectElement(elements[index-1])
+                self.switchElement(elements[index-1])
                 return elements[index-1]
         else:
             return 0
@@ -904,7 +904,7 @@ class Element:
     def findNextElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -921,7 +921,7 @@ class Element:
             if index == len(elements)-1:
                 return 0
             else:
-                self.selectElement(elements[index+1])
+                self.switchElement(elements[index+1])
                 return elements[index+1]
         else:
             return 0
@@ -929,7 +929,7 @@ class Element:
     def findInteractiveElement(self,element=None):
         if element:
             if isinstance(element,WebElement):
-                self.selectElement(element)
+                self.switchElement(element)
             else:
                 logging.error("Element is not Web Element instance")
                 return None
@@ -940,32 +940,35 @@ class Element:
         element = self.selectedElement
         if element.tag_name == "input" or element.tag_name == "button" or element.tag_name == "select" or \
                         element.tag_name == "option" or element.tag_name == "a":
-            self.selectElement(element)
+            self.switchElement(element)
             return element
         elif element.tag_name == "body":
             return 0
-
         temp = element
         element = self.findParentElement(temp)
         input_element = self.findElementByTag('input',element=element)
         if input_element:
-            self.selectElement(element=input_element)
+            self.switchElement(element=input_element)
             return input_element
+        i_element = self.findElementByTag('i',element=element)
+        if i_element:
+            self.switchElement(element=i_element)
+            return i_element
         button_element = self.findElementByTag('button',element=element)
         if button_element:
-            self.selectElement(element=button_element)
+            self.switchElement(element=button_element)
             return button_element
         select_element = self.findElementByTag('select',element=element)
         if select_element:
-            self.selectElement(element=select_element)
+            self.switchElement(element=select_element)
             return select_element
         option_element = self.findElementByTag('option',element=element)
         if option_element:
-            self.selectElement(element=option_element)
+            self.switchElement(element=option_element)
             return option_element
         link_element = self.findElementByTag('a',element=element)
         if link_element:
-            self.selectElement(element=link_element)
+            self.switchElement(element=link_element)
             return link_element
         return self.findInteractiveElement(element=element)
 
@@ -976,9 +979,10 @@ class Element:
         if isinstance(select,Select):
             options = select.options
             for element in options:
-                if element.get_attribute("value") == value:
+                cur_element_val = str(element.get_attribute("value").encode('ascii', 'ignore').decode('ascii'))
+                if cur_element_val == value:
                     self.selectElements(options)
-                    self.selectElement(element)
+                    self.switchElement(element)
                     return element
         elif isinstance(select,WebElement):
             select = Select(select)
@@ -987,7 +991,7 @@ class Element:
             for element in select:
                 if element.get_attribute("value") == value:
                     self.selectElements(elements=select)
-                    self.selectElement(element)
+                    self.switchElement(element)
                     return element
         else:
             logging.error("input select {}, is not instance of Select, Web Element, or List.".format(select))

@@ -317,7 +317,7 @@ class PyChrome(Element,Interaction,Combo):
         if self.ghost:
             logging.warning("When in Ghost Mode using {}, there is no Window.".format(self.drivername))
             return 0
-        err = self.selectElement(element)
+        err = self.switchElement(element)
         return  err or self.window.scrollToElement(element)
 
     def scrol(self,scrollWin):
@@ -406,12 +406,12 @@ class PyChrome(Element,Interaction,Combo):
 
     def record(self,element=None):
         if element:
-            err = self.selectElement(element)
+            err = self.switchElement(element)
             if err:
                 logging.error("Failed to Select Element to Record")
                 return 1
         else:
-            self.findActiveElement()
+            self.switchElement()
         err = self.browser.record(self.selectedElement)
         return err
 

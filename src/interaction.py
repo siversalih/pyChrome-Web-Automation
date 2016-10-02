@@ -193,3 +193,4 @@ class Interaction:
         else:
             logging.error("Element with tag {} can't be selected".format(tag))
             return 1
+        return 0

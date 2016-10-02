@@ -48,7 +48,7 @@ sleep(1)
 locator = "ov-a"
 elements = browser.findElementsByClass(locator)
 sleep(1)
-browser.selectElement(elements[1])
+browser.switchElement(elements[1])
 browser.clickLink()
 
 print "\n*****Demo Complete*****"

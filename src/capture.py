@@ -336,7 +336,7 @@ class Capture(Element,Interaction):
                 self.open(link)
             if xpath:
                 element = self.findElement(xpath=xpath)
-            if id:
+            if id and not element:
                 element = self.findElement(id=id)
             if name and not element:
                 element = self.findElement(name=name)

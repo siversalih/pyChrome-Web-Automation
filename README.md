@@ -879,4 +879,4 @@ For getting started with PhantomJS, see [PhantomJS][df7]
 [df7]: <http://phantomjs.org/quick-start.html>
 
 [DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>
-[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf>=
+[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf

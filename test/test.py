@@ -2079,7 +2079,6 @@ class selectOptionElementTest(unittest.TestCase):
         self.locator = "filters-platform-select"
         self.element = self.browser.findElement(id=self.locator)
         self.element = self.browser.findOptionElement(value=self.value,select=self.element)
-
         if self.element == 0 or self.element.tag_name != "option":
             err = 1
         err = err or self.browser.selectElement(self.element)

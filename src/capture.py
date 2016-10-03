@@ -413,7 +413,10 @@ class Capture(Element,Interaction):
                 ele_value = element.text
                 cap_value = captured_element.value
                 if ele_value != cap_value:
-                    element.send_keys(cap_value)
+                    try:
+                        element.send_keys(cap_value)
+                    except ElementNotVisibleException:
+                        logging.warning("ElementNotVisibleException: Element not visible to send {}. ".format(cap_value))
             elif tag == 'select':
                 parent_element = self.findParentElement(element)
                 if parent_element.tag_name != "select":

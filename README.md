@@ -42,16 +42,6 @@ API functions and structure that have been integrated:
 	- Zoom (In,Out,Value)
 - Scroll Functionality
 	- Scroll (Down,Right,Up,Left,Value,Element inView)
-- Web Element
-	-	Locate Single Element (id,tag,name,class,text,link,css,xpath)
-	- 	Locate Multiple Elements (id,tag,name,class,text,link,css,xpath)
-	-  Locate Sub-Element (id,tag,name,class,text,link)
-	-  Locate Parent-Element
-	-	Locate Body Element
-	- 	Register/Focus on Element
-- Interaction
-	- Click On (Element,Button,Link)
-	- Send Text to (Element,Query,Input)
 - Headless Browser capabilities
 	- Init/Start with GhostDriver Mode
 	- Switch to GhostDriver Mode at Runtime
@@ -73,6 +63,27 @@ API functions and structure that have been integrated:
 	- Back
 	- Forward
 	- Refresh
+- Web Element
+	-	Locate Single Element (id,tag,name,class,text,link,css,xpath)
+	-	Locate Multiple Elements (id,tag,name,class,text,link,css,xpath)
+	- 	Locate Sub-Element (id,tag,name,class,text,link)
+	- 	Locate Parent Element
+	-	Locate SiblingsElements
+	-	Locate Next Element
+	-	Locate Previous Element
+	-	Locate Body Element
+	-	Locate Active Element
+	-	Find Interactive Element (a,button,input,i,select,option)
+	-	Find Option Element in Select
+	-	Find Xpath of Element
+	-	Find Element Value
+	-	Find Element Value for Attribute
+	-	Switch/Focus to Element
+	-	Highlight Element
+- Interaction
+	- Click On Element
+	- Send Text to Element
+	- Select Option Element (from dropdown menu)
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python
@@ -106,13 +117,13 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	-	It is a subclass of pyChrome.py. It manages the client (Chrome or Ghostdriver) such as for opening and closing web page, navigating through pages, controlling tabs, finding Web element within the page, and interacting with the page.
 
 -	**src/window.py**
-	-	It is a subclass of pyChrome.py. It handles position, size, zooming and scrolling functionality of the window. It is required component when browsing using Chrome Driver. However, it does not have any effect when using PhantomJS driver (Ghostdriver).
+	-	It is a subclass of pyChrome.py. It handles position, size, zooming and scrolling functionality of the window. It is required component when browsing using Chrome Driver. However, it does not have any effect when using PhantomJS driver.
 
 -	**src/capture.py**
-	-	It is a subclass of pyChrome.py. It handles capturing screen in PNG format, dumping Web page or Web element source code in HTML format.
+	-	It is a subclass of Browser. It handles screen capturing in PNG format, dumping Web page or Web element source code in HTML format. It also handle record functionality. It can manually or programmatically record selected element to playback in sequence. It has other functions including for storing and loading captured elements to and from JSON file.
 
 -	**src/combo.py**
-	-	It is a subclass of pyChrome.py. It contains set of functons for performing quick task (quick acess) that is used often, such as Login to Facebook, Opening Google Search Engine, Checking Email etc...
+	-	It is a subclass of pyChrome.py. It contains set of functons for performing quick task (quick acess) that is used oftenly, such as Login to Facebook, Opening Google Search Engine, Checking Email etc...
 
 -	**src/navigation.py**
 	-	It is a subclass of browser.py. It manages navigating through pages using back() and forward() command.
@@ -124,7 +135,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	-	It is a sublcass of browser.py. It manages interacting with the page Web Element. These are such as clicking on element, sending text to element, or sending action keys to element.
 
 -	**src/element.py**
-	-	It is a subclass of browser.py. It contains and manages searching and locating Web Element via its id, name, classname, tag, partial text, link text, css selector, and xpath. It also has other functions that uses special algorithms to better locate an element or a list of elements. 
+	-	Currently, it is a subclass of pyChrome.py. It contains and manages searching and locating Web Element by id, name, classname, tag, partial text, link text, css selector, and xpath. It has also other functions that uses special algorithms to better traverse through elements and manipulate  element. 
 
 -	**bin/chromedriver**
 	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout is already bundled with ChromeDriver 2.23 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [Google Chrome Driver][df3] and overwrite it with the one included in this checkecout.
@@ -135,7 +146,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 -	**config.json** (Recommended)
 	- Contains all the configuration settings for how the server and the client should start. When pyChrome.py object gets created, it reads the configuration settings from config.json. If the file is not present, it creates a default settings. Users can also modify these settings via calling pyChrome.py APIs.
 
-- 	demo/demo.py (Optional)
+- 	demo/* (Optional)
 	- Demo to run most of the implemented functions
 
 -	test/test.py (Optional)
@@ -372,13 +383,13 @@ $ git clone https://github.com/siversalih/pyChrome.git
     browser.deleteRecord()
 	```
 	
-	- Clear all the Recorded Element
+	- Clear all the Recorded Elements
 	
 	```sh
     browser.clearRecorder()
 	```
 
-	- Get all the Recorded Element
+	- Get all the Recorded Elements
 	
 	```sh
     recorded_items = browser.getRecordedElements()
@@ -577,7 +588,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	body_element = browser.findBodyElement()
 	```
 
--	** Switch to Active Web Element**
+-	**Switch to Active Web Element**
 
 	```sh
     url = "https://www.yahoo.com/"
@@ -645,7 +656,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	sibling_elements = browser.findSiblingsElements()
 	```
 
--	**Find Previous Element at Current Node**
+-	**Find Previous Element of Current Node**
 
 	```sh
 	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
@@ -655,7 +666,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	element = browser.findPreviousElement(element)
 	```
 
--	**Find Next Element at Current Node**
+-	**Find Next Element of Current Node**
 
 	```sh
 	url = "http://www.seleniumhq.org/docs/03_webdriver.jsp"
@@ -663,6 +674,24 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	locator = "menu_about"
 	element = browser.findElement(id=locator)
 	element = browser.findNextElement(element)
+	```
+-	**Find Interactive Element around Selected Element**
+
+	```sh
+	interactive_element = browser.findInteractiveElement(element=element)
+	```
+-	**Find Option Element in Select Element (Dropdown)**
+
+	```sh
+	link = "http://www.destinylfg.net/"
+	browser.open(link)
+	locator = "collapsed"
+	element = browser.findElement(classname=locator)
+	browser.clickElement(element)
+	locator = "filters-platform-select"
+	value = "ps4"
+	select_element = browser.findElement(id=locator)
+	option_element = browser.findOptionElement(value=value,select= select_element)	
 	```
 
 #####Interaction
@@ -717,12 +746,20 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.clickLink()
 	```
 
--   Select Element (Dropdown Menu)
+-	Select Option Element in Dropdown Menu
 
-    ```sh
-   
+	```sh
+	link = "http://www.destinylfg.net/"
+	browser.open(link)
+	locator = "collapsed"
+	element = browser.findElement(classname=locator)
+	browser.clickElement(element)
+	locator = "filters-platform-select"
+	value = "ps4"
+	select_element = browser.findElement(id=locator)
+	option_element = browser.findOptionElement(value=value,select= select_element)	
+	browser.selectElement(option_element)
 	```
-
 
 #####Tab Control
 -	Open New Tab
@@ -842,4 +879,4 @@ For getting started with PhantomJS, see [PhantomJS][df7]
 [df7]: <http://phantomjs.org/quick-start.html>
 
 [DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>
-[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf>
+[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf>=

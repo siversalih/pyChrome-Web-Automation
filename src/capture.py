@@ -395,6 +395,8 @@ class Capture(Element,Interaction):
                     except ElementNotVisibleException:
                         logging.error("ElementNotVisibleException: Element is not visible to click")
                         return 1
+                    except WebDriverException:
+                        logging.info("WebDriverException")
                 else:
                     self.highlightElement(element)
                     ele_value = self.getElementValue()

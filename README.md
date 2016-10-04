@@ -76,10 +76,11 @@ API functions and structure that have been integrated:
 	-	Find Interactive Element (a,button,input,i,select,option)
 	-	Find Option Element in Select
 	-	Find Xpath of Element
-	-	Find Element Value
-	-	Find Element Value for Attribute
+	-	Get Element Value
+	-	Get Element Value for Attribute
 	-	Switch/Focus to Element
 	-	Highlight Element
+	-	Get Element Coordinates
 - Interaction
 	- Click On Element
 	- Send Text to Element
@@ -692,6 +693,17 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	value = "ps4"
 	select_element = browser.findElement(id=locator)
 	option_element = browser.findOptionElement(value=value,select= select_element)	
+	```
+-	**Get Element Coordinates**
+
+	```sh
+	url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+	browser.open(url)
+	locator = "user_login"
+	element = browser.findElementByID(locator)
+	element_coor = browser.getElementCoordinates(element)
+	x = element_coor[0]
+	y = element_coor[1]
 	```
 
 #####Interaction

@@ -998,3 +998,23 @@ class Element:
             return 0
         logging.warning("Couldn't find any element with the value {} from select".format(value))
         return 0
+
+    def getElementCoordinates(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        location_dic = element.location
+        if location_dic and isinstance(location_dic,dict):
+            x = location_dic.get('x')
+            y = location_dic.get('y')
+        else:
+            logging.error("Element location is not determined")
+            return 0
+        return (x,y)

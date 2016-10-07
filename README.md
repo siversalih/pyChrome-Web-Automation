@@ -803,7 +803,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	locator = "draggable"
 	browser.open(link)
 	element = browser.findElement(classname=locator)
-	browser.clickHoldElement(element)
+	browser.holdElement(element)
 	position = (100,200)
 	browser.moveToPosition(position)
 	```

@@ -1824,6 +1824,57 @@ class findOptionElementTest(unittest.TestCase):
         self.assertFalse(err,0)
         print "Test Ended"
 
+class getElementCoordinatesTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    coor = None
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "https://wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fwordpress.com%2F"
+        self.locator = "user_login"
+        self.coor = None
+        self.element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.coor = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Get Element Coordinates"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        self.element = self.browser.findElementByID(self.locator)
+        if self.element == 0:
+            err = 1
+        else: err = 0 or err
+        self.coor = self.browser.getElementCoordinates(self.element)
+        x = self.coor[0]
+        y = self.coor[1]
+        if not int(x) == 275 and not int(y) == 155:
+            err = 1
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
 ##### Interaction ######
 
 class sendTextToElementTest(unittest.TestCase):
@@ -2082,6 +2133,250 @@ class selectOptionElementTest(unittest.TestCase):
         if self.element == 0 or self.element.tag_name != "option":
             err = 1
         err = err or self.browser.selectElement(self.element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class dragAndDropTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    src_element = None
+    dest_element = None
+    locator = ""
+
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://demos.telerik.com/kendo-ui/dragdrop/index"
+        self.locator = "draggable"
+        self.src_element = None
+        self.dest_element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.src_element = None
+        self.dest_element = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Drag and Drop Test"
+        err = self.browser.open(self.link)
+        self.src_element = self.browser.findElement(id=self.locator)
+        if not self.src_element:
+            err = 1
+        self.locator = "droptarget"
+        self.dest_element = self.browser.findElement(id=self.locator)
+        if not self.dest_element:
+            err = 1
+        err = err or self.browser.dragAndDrop(self.src_element,self.dest_element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class dragAndDropTest_2(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    src_element = None
+    dest_element = None
+    locator = ""
+
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html"
+        self.locator = "box1"
+        self.src_element = None
+        self.dest_element = None
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.src_element = None
+        self.dest_element = None
+        self.locator = None
+
+    def runTest(self):
+        print "\nTest Begin: Drag and Drop Test 2"
+        err = self.browser.open(self.link)
+        for index in range(1,8):
+            self.locator = "box{}".format(index)
+            self.src_element = self.browser.findElement(id=self.locator)
+            self.locator = "box10{}".format(index)
+            self.dest_element = self.browser.findElement(id=self.locator)
+            self.browser.dragAndDrop(self.src_element,self.dest_element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class moveToElement(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    src_element = None
+    dest_element = None
+    elements = []
+    locator = ""
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://marcojakob.github.io/dart-dnd/custom-avatar/web/"
+        self.locator = "/html/body/div/div"
+        self.src_element = None
+        self.dest_element = None
+        self.elements = []
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.src_element = None
+        self.dest_element = None
+        self.locator = None
+        del self.elements[:]
+        del self.elements
+
+    def runTest(self):
+        print "\nTest Begin: Move to Element"
+        err = self.browser.open(self.link)
+        self.dest_element = self.browser.findElement(xpath=self.locator)
+        if not self.dest_element:
+            err = 1
+        self.locator = "document"
+        self.elements = self.browser.findElementsByClass(self.locator)
+        if not self.elements and len(self.elements) != 4:
+            err = 1
+        self.elements = self.browser.findElementsByClass(self.locator)
+        for self.src_element in self.elements:
+            err = err or self.browser.moveToElement(self.src_element)
+            err = err or self.browser.holdElement(self.src_element)
+            err = err or self.browser.moveToElement(self.dest_element)
+            err = err or self.browser.releaseElement(self.dest_element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class moveToPosition(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    link = ""
+    locator = ""
+    element = None
+    position = ()
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.link = "https://marcojakob.github.io/dart-dnd/free-dragging/web/"
+        self.locator = "draggable"
+        self.element = None
+        self.position = ()
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.link = None
+        self.locator = None
+        self.element = None
+        self.position = ()
+
+    def runTest(self):
+        print "\nTest Begin: Move to Position"
+        err = self.browser.open(self.link)
+        self.element = self.browser.findElement(classname=self.locator)
+        err = err or self.browser.holdElement(self.element)
+        position = (100,200)
+        err = err or self.browser.moveByOffset(position)
+        err = err or self.browser.releaseElement(self.element)
+        time.sleep(1)
+        self.assertFalse(err,0)
+        print "Test Ended"
+
+class doubleClickElementTest(unittest.TestCase):
+    browser = None
+    filename = ""
+    directory = ""
+    url = ""
+    locator = ""
+    element = None
+
+    @classmethod
+    def setUpClass(self):
+        self.filename = 'config.json'
+        self.directory = os.getcwd()
+        file_directory = "{}/{}".format(self.directory,self.filename)
+        if(not os.path.exists(file_directory)):
+            print("{} is not in {}".format(self.filename,self.directory))
+            exit(1)
+        self.browser = PyChrome(self.filename)
+        self.url = "http://www.the-art-of-web.com/javascript/doublesubmit/"
+        self.locator = "//*[@id='content']/form[1]/fieldset/input[1]"
+
+    @classmethod
+    def tearDownClass(self):
+        self.browser.quit()
+        self.browser = None
+        self.filename = None
+        self.directory = None
+        self.url = None
+        self.locator = None
+        self.element = None
+
+    def runTest(self):
+        print "\nTest Begin: Click on Element"
+        err = self.browser.open(self.url)
+        time.sleep(1)
+        self.element = self.browser.findElement(xpath=self.locator)
+        if self.element == 0:
+            err = 1
+        err = err or self.browser.doubleClickElement(self.element)
         time.sleep(1)
         self.assertFalse(err,0)
         print "Test Ended"

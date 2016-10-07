@@ -82,9 +82,15 @@ API functions and structure that have been integrated:
 	-	Highlight Element
 	-	Get Element Coordinates
 - Interaction
-	- Click On Element
+	- Click Element
 	- Send Text to Element
-	- Select Option Element (from dropdown menu)
+	- Select Option Element (in dropdown menu)
+	- Double Click Element
+	- Click and Hold Element
+	- Release Element
+	- Move Element by Offset
+	- Move to Element
+	- Drag & Drop Element
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python
@@ -294,7 +300,6 @@ $ git clone https://github.com/siversalih/pyChrome.git
     ```sh
 	browser.refresh()
 	```
-
 
 #####Capture
 -	**Screenshot**
@@ -773,6 +778,56 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.selectElement(option_element)
 	```
 
+- Double Click Element
+
+	```sh
+	browser.doubleClickElement(element)
+	```
+- Click and Hold Element
+
+	```sh
+	browser.clickHoldElement(element)
+	```
+- Release Element
+
+	```sh
+	browser.releaseElement(element)
+	```
+- Move to Position (by offset)
+
+	```sh
+	link = "https://marcojakob.github.io/dart-dnd/free-dragging/web/"
+	locator = "draggable"
+	browser.open(link)
+	element = browser.findElement(classname=locator)
+	browser.clickHoldElement(element)
+	position = (100,200)
+	browser.moveToPosition(position)
+	```
+- Move to Element
+
+	Move the mouse cursor to center of an element
+
+	```sh
+	link = "https://marcojakob.github.io/dart-dnd/custom-avatar/web/"
+	browser.open(link)
+	locator = "document"
+	elements = browser.findElementsByClass(locator)
+	element = elements[0]
+	browser.moveToElement(element)
+	```
+- Drag & Drop Element
+
+	```sh
+	link = "http://demos.telerik.com/kendo-ui/dragdrop/index"
+	locator = "draggable"
+	browser.open(link)
+	src_element = browser.findElement(id=locator)
+	locator = "droptarget"
+	dest_element = browser.findElement(id=locator)
+	browser.dragAndDrop(src_element,dest_element)
+	```
+
 #####Tab Control
 -	Open New Tab
 
@@ -805,6 +860,18 @@ The most challenging part of Web Automation is finding the Web Element locator (
     ```sh
 	index = 3
 	browser.closeTab(index)
+	```
+
+-	Get Current Tab Link
+
+    ```sh
+	link = browser.getTabLink()
+	```
+
+-	Get Current Tab Title
+
+    ```sh
+	title = browser.getTabTitle()
 	```
 
 #####Headless Browsing

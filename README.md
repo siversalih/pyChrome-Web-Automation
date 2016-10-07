@@ -783,16 +783,19 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	```sh
 	browser.doubleClickElement(element)
 	```
-- Click and Hold Element
 
-	```sh
-	browser.clickHoldElement(element)
-	```
 - Release Element
 
 	```sh
 	browser.releaseElement(element)
 	```
+
+- Click and Hold Element
+
+	```sh
+	browser.holdElement(element)
+	```
+
 - Move to Position (by offset)
 
 	```sh
@@ -804,6 +807,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	position = (100,200)
 	browser.moveToPosition(position)
 	```
+
 - Move to Element
 
 	Move the mouse cursor to center of an element
@@ -816,6 +820,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	element = elements[0]
 	browser.moveToElement(element)
 	```
+
 - Drag & Drop Element
 
 	```sh

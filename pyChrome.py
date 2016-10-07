@@ -245,6 +245,12 @@ class PyChrome(Element,Interaction,Combo):
             err = 1
         return err
 
+    def getTabTitle(self):
+        return self.browser.getcurrentTabTitle()
+
+    def getTabLink(self):
+        return self.browser.getcurrentTabLink()
+
     def close(self):
         return self.browser.close()
 

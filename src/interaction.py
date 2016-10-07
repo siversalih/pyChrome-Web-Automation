@@ -6,6 +6,7 @@ try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import ElementNotVisibleException
     from selenium.common.exceptions import StaleElementReferenceException
+    from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import TimeoutException
     from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.common.keys import Keys
@@ -71,35 +72,6 @@ class Interaction:
                 self.switchElement(input_element)
         err = self.sendTextToElement(text)
         return err
-
-    def clickElement(self, element=None):
-        if element:
-            if isinstance(element,WebElement):
-                err = self.switchElement(element)
-                if err:
-                    return 1
-            else:
-                logging.error("Passed in element is not Web Element type {}".format(element))
-                return 1
-        if not isinstance(self.selectedElement,WebElement):
-            logging.error("Current selected element is not Web Element type {}".format(self.selectedElement))
-            return 1
-        try:
-            self.selectedElement.click()
-            err = self.browser.cur_tab.update()
-            if err:
-                return err
-            logging.info("Page Title: {}".format(self.browser.cur_tab.title))
-        except ElementNotVisibleException:
-            logging.error("ElementNotVisibleException: Couldn't Click on this element.")
-            return 1
-        except WebDriverException:
-            logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
-            return 1
-        time.sleep(1)
-        if self.ghost == False:
-            self.scrol((0,0))
-        return 0
 
     def clickLink(self,element=None):
         if element:
@@ -193,4 +165,198 @@ class Interaction:
         else:
             logging.error("Element with tag {} can't be selected".format(tag))
             return 1
+        return 0
+
+    def clickElement(self, element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        try:
+            self.selectedElement.click()
+            err = self.browser.cur_tab.update()
+            if err:
+                logging.error("Failed to update the tab")
+                return err
+            logging.info("Page Title: {}".format(self.browser.getcurrentTabTitle()))
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Couldn't Click on this element.")
+            return 1
+        except WebDriverException:
+            logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
+            return 1
+        time.sleep(1)
+        if self.ghost == False:
+            self.scrol((0,0))
+        return 0
+
+    def doubleClickElement(self, element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        if self.selectedElement.tag_name == 'a':
+            logging.error("Element is link type and can not be double clicked")
+            return 1
+
+        try:
+            self.selectedElement.click()
+            self.selectedElement.click()
+            err = self.browser.cur_tab.update()
+            if err:
+                logging.error("Failed to update the tab")
+                return err
+            logging.info("Page Title: {}".format(self.browser.getcurrentTabTitle()))
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Couldn't Click on this element.")
+            return 1
+        except AttributeError:
+            logging.error("AttributeError: Element does not have double click attribute")
+            return 1
+        except WebDriverException:
+            logging.error("WebDriverException: Element is not Clickable at point {}".format(self.selectedElement.location))
+            return 1
+        time.sleep(1)
+        if self.ghost == False:
+            self.scrol((0,0))
+        return 0
+
+    def holdElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        try:
+            action_chains = ActionChains(self.driver)
+            action_chains.click_and_hold(element).perform()
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Element is not visible")
+            return 1
+        except Exception:
+            logging.error("Element in Source is not draggable")
+            return 1
+        logging.info("Clicked and Holding element: {}".format(element))
+        time.sleep(0.1)
+        return 0
+
+    def releaseElement(self,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        element = self.selectedElement
+        try:
+            action_chains = ActionChains(self.driver)
+            action_chains.release(element).perform()
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Element is not visible")
+            return 1
+        except Exception:
+            logging.error("Element in Source is not draggable")
+            return 1
+        logging.info("Released Element: {}".format(element))
+        time.sleep(0.1)
+        return 0
+
+    def moveByOffset(self,position):
+        if not isinstance(position,tuple):
+            logging.error("position is not instance of tuple")
+            return 1
+        try:
+            dest_x = int(position[0])
+            dest_y = int(position[1])
+        except ValueError:
+            logging.error("ValueError: Value are not integer type")
+            return 1
+        try:
+            action_chains = ActionChains(self.driver)
+            action_chains.move_by_offset(xoffset=dest_x,yoffset=dest_y).perform()
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Element is not visible")
+            return 1
+        except Exception:
+            logging.error("Element in Source is not draggable")
+            return 1
+        time.sleep(0.1)
+        return 0
+
+    def moveToElement(self,element):
+        try:
+            action_chains = ActionChains(self.driver)
+            action_chains.move_to_element(element).perform()
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Element is not visible")
+            return 1
+        except Exception:
+            logging.error("Element in Source is not draggable")
+            return 1
+        time.sleep(0.2)
+        self.switchElement(element)
+        return 0
+
+    def dragAndDrop(self,source,destination):
+        if not isinstance(source,WebElement):
+            logging.error("Source is not instance of Web Element")
+            return 1
+        if not isinstance(destination,WebElement):
+            logging.error("Destination is not instance of Web Element")
+            return 1
+        try:
+            action_chains = ActionChains(self.driver)
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        try:
+            self.holdElement(source)
+            #action_chains.click_and_hold(source).perform()
+            time.sleep(0.2)
+            self.moveToElement(destination)
+            #action_chains.drag_and_drop(source,destination)
+            time.sleep(0.2)
+            self.releaseElement(destination)
+            #action_chains.release(destination).perform()
+        except WebDriverException:
+            logging.error("WebDriverException: Driver is not available to perform action")
+            return 1
+        except ElementNotVisibleException:
+            logging.error("ElementNotVisibleException: Element is not visible")
+            return 1
+        except Exception:
+            logging.error("Element in Source is not draggable")
+            return 1
+        time.sleep(0.5)
+        self.switchElement(destination)
         return 0

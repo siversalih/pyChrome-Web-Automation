@@ -159,6 +159,11 @@ class Tab:
         self.cur_tab.update()
         return str(self.cur_tab.link)
 
+    def getcurrentTabTitle(self):
+        self.cur_tab.update()
+        return str(self.cur_tab.title)
+
+
 class TabObject:
     driver = None
     link = ""

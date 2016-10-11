@@ -75,8 +75,6 @@ while select_link != '8':
         else:
             continue
 
-    #os.system('clear')
-
     print "\nSelected Link: {}\n".format(link)
     browser.open(link)
 

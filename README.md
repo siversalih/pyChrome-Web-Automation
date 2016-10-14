@@ -25,8 +25,6 @@ pyChrome is a scripted Web Automation Platform using Selenium with Python. Curre
 
 Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
 
-*Note: pyChrome is not a Web application, rather its a toolkit to create a Web Automation application.*
-
 ## Milestones
 
 API functions and structure that have been integrated:
@@ -86,11 +84,12 @@ API functions and structure that have been integrated:
 	- Send Text to Element
 	- Select Option Element (in dropdown menu)
 	- Double Click Element
-	- Click and Hold Element
+	- Click & Hold Element
 	- Release Element
 	- Move Element by Offset
-	- Move to Element
+	- Move Cursor to Element
 	- Drag & Drop Element
+	- Send Keys
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python
@@ -796,7 +795,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.holdElement(element)
 	```
 
-- Move to Position (by offset)
+- Move Element by Offset
 
 	```sh
 	link = "https://marcojakob.github.io/dart-dnd/free-dragging/web/"
@@ -804,8 +803,8 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.open(link)
 	element = browser.findElement(classname=locator)
 	browser.holdElement(element)
-	position = (100,200)
-	browser.moveToPosition(position)
+	offset = (100,200)
+	browser.moveByOffset(offset)
 	```
 
 - Move to Element
@@ -831,6 +830,19 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	locator = "droptarget"
 	dest_element = browser.findElement(id=locator)
 	browser.dragAndDrop(src_element,dest_element)
+	```
+
+- Send Keys to Element
+
+	This function sends a key or list of keys to an element. However, it requires using Keys class, and then specify which key to send.
+
+	```sh
+	import Keys
+	key = Keys.TAB
+	browser.sendKeysToElement(key,element)
+	# or send list of keys
+	keys = [Keys.TAB, Keys.CONTROL]
+	browser.sendKeysToElement(keys,element)
 	```
 
 #####Tab Control

@@ -341,13 +341,10 @@ class Interaction:
             return 1
         try:
             self.holdElement(source)
-            #action_chains.click_and_hold(source).perform()
             time.sleep(0.2)
             self.moveToElement(destination)
-            #action_chains.drag_and_drop(source,destination)
             time.sleep(0.2)
             self.releaseElement(destination)
-            #action_chains.release(destination).perform()
         except WebDriverException:
             logging.error("WebDriverException: Driver is not available to perform action")
             return 1
@@ -359,4 +356,33 @@ class Interaction:
             return 1
         time.sleep(0.5)
         self.switchElement(destination)
+        return 0
+
+    def sendKeysToElement(self,keys,element=None):
+        if element:
+            if isinstance(element,WebElement):
+                self.switchElement(element)
+            else:
+                logging.error("Element is not Web Element instance")
+                return None
+        if not isinstance(self.selectedElement,WebElement):
+            logging.error("Element is not Web Element instance")
+            return None
+        actions = ActionChains(self.driver)
+        if isinstance(keys,unicode):
+            logging.info("Sending single key to active element")
+            actions = actions.send_keys(keys)
+        elif isinstance(keys,list):
+            logging.info("Sending list of keys to active element")
+            for key in keys:
+                if isinstance(keys,unicode):
+                    actions = actions.send_keys(key)
+                else:
+                    logging.warning("One of the key from the list is not type of unicode")
+        else:
+            logging.error("keys is not instance of Keys or List")
+            return 1
+        time.sleep(0.1)
+        actions.perform()
+        time.sleep(0.2)
         return 0

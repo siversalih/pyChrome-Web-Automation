@@ -4,6 +4,7 @@ try:
     from selenium.common.exceptions import WebDriverException
     from selenium.common.exceptions import NoSuchElementException
     from selenium.common.exceptions import ElementNotVisibleException
+    from selenium.common.exceptions import NoSuchAttributeException
     from selenium.common.exceptions import TimeoutException
     from selenium.common.exceptions import StaleElementReferenceException
     from selenium.webdriver.remote.webelement import WebElement
@@ -440,7 +441,6 @@ class Element:
             return 0
         return elements
 
-
     ##### Wrapper Functions #####
     def validateLocator(self, locator):
         if not locator:
@@ -760,6 +760,9 @@ class Element:
         except NoSuchElementException:
             logging.error("NoSuchElementException: No element to get the value")
             return None
+        except NoSuchAttributeException:
+            logging.error("NoSuchAttributeException: Element does not have attribute value")
+            return None
         if val == 'None' or val == None:
             return None
         return str(val)
@@ -774,7 +777,10 @@ class Element:
         try:
             val = self.selectedElement.get_attribute('{}'.format(attribute))
         except NoSuchElementException:
-            logging.error("NoSuchElementException: No element to get the value")
+            logging.error("NoSuchElementException: No element to get specified attribute value")
+            return None
+        except NoSuchAttributeException:
+            logging.error("NoSuchAttributeException: Element does not have attribute {}".format(attribute))
             return None
         if val == 'None' or val == None:
             return None

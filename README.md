@@ -89,7 +89,7 @@ API functions and structure that have been integrated:
 	- Move Element by Offset
 	- Move Cursor to Element
 	- Drag & Drop Element
-	- Send Keys
+	- Send Keys to Element
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python

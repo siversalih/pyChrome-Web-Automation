@@ -244,13 +244,5 @@ class TabObject:
             link = "http://{}".format(link)
         if link == "http://www.google.com" or link == "www.google.com":
             return link
-        #try:
-        #    urllib2.urlopen(link)
-        #except urllib2.HTTPError, e:
-        #    logging.error("{}: {} not reachable".format(e.code,link))
-        #    return 0
-        #except urllib2.URLError, e:
-        #    logging.error("{}: {} not reachable".format(e.args,link))
-        #    return 0
         self.link = link
         return link

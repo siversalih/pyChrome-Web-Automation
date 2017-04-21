@@ -927,7 +927,7 @@ class findElementsByLinkTextTest(unittest.TestCase):
         else:
             err = 0 or err
             print "Found {} elements by Link Text {}".format(len(elements),self.locator)
-        if not len(elements) == 2:
+        if not len(elements) == 3:
             err = 1
         else: err = err or 0
         time.sleep(1)
@@ -3476,7 +3476,7 @@ class fbloginGhostModeTest(unittest.TestCase):
     def runTest(self):
         print "Test Begin: Facebook Login in Ghostmode"
         time.sleep(1)
-        err = self.browser.loginFacebook(self.username,self.password)
+        err = self.browser.loginFacebook(self.username,self.password,ghostmode=True)
         self.assertFalse(err,0)
         print "Test Ended"
 

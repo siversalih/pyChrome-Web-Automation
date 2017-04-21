@@ -1,16 +1,23 @@
 import logging
-
+import time
 ##### Combo #####
 
 class Combo:
 
-    def loginFacebook(self,username,password):
+    def loginFacebook(self,username,password,ghostmode=0):
         if(self.driver):
             username = username
             password = password
-            usernameID = "email"
-            passwordID = "pass"
-            loginID = "loginbutton"
+
+            if ghostmode:
+                usernameID = "email"
+                passwordID = "pass"
+                loginID = "login"
+            else:
+                usernameID = "email"
+                passwordID = "pass"
+                loginID = "u_0_q"
+
             loginURL = "http://www.facebook.com"
             current_url = self.browser.cur_tab.link
             if not current_url is loginURL:
@@ -18,18 +25,37 @@ class Combo:
                 if err: return 1
             logging.debug("Using ID {} and Password {} to Login".format(username,password))
             logging.info("\nLog into {}".format(loginURL))
-            element = self.findElementByID(usernameID)
-            if element:
-                self.sendTextToElement(username, element)
-            else: return 1
-            element = self.findElementByID(passwordID)
-            if element:
-                self.sendTextToElement(password, element)
-            else: return 1
-            element = self.findElementByID(loginID)
-            if element:
-                self.clickElement(element)
-            else: return 1
+
+            if ghostmode:
+                element = self.findElementByName(usernameID)
+                if element:
+                    self.sendTextToElement(username, element)
+                else:
+                    return 1
+                element = self.findElementByName(passwordID)
+                if element:
+                    self.sendTextToElement(password, element)
+                else:
+                    return 1
+                element = self.findElementByName(loginID)
+                if element:
+                    self.clickElement(element)
+                else:
+                    return 1
+            else:
+                element = self.findElementByID(usernameID)
+                if element:
+                    self.sendTextToElement(username, element)
+                else: return 1
+                element = self.findElementByID(passwordID)
+                if element:
+                    self.sendTextToElement(password, element)
+                else: return 1
+                element = self.findElementByID(loginID)
+                if element:
+                    self.clickElement(element)
+                else:
+                    return 1
             return 0
         else:
             logging.error("WebDriver is not present")

@@ -21,7 +21,9 @@ More documentation on PhantomJS Webdriver can be found at [PhantomJS][web3]
 ## pyChrome
 ![alt tag][DSNIMG]
 
-pyChrome is a scripted Web Automation Platform using Selenium with Python. Currently, the supported WebDriver are ChromeDriver and PhantomJS to run on macOS and Windows-based platform. As the project progress, it may include other Python libraries to control, scrap, analyze, and interact with the browser and its content. pyChrome can be imported to any Python project as a module for creating an application and use case scenarios such as for bot, web automation, data mining, headless browsing, and testing web application. Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
+pyChrome is a scripted Web Automation Platform using Selenium with Python. Currently, the supported WebDriver are ChromeDriver and PhantomJS to run on macOS and Windows-based platform. As the project progress, it may include other Python libraries to control, scrap, analyze, and interact with the browser and its content. pyChrome can be imported to any Python project as a module for creating an application and use case scenarios such as for bot, web automation, data mining, headless browsing, and testing web application. 
+
+Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
 
 ## Milestones
 
@@ -107,9 +109,9 @@ API functions and structure that have been integrated:
 	-	[Selenium 3.4][req2]
 	-   Install selenium-3.4.0.tar.gz via python
 
-	```sh
-		$ sudo python setup.py install
-	```
+```sh
+	$ sudo python setup.py install
+```
 
 - Client
 	-	[Chrome Browser][req4]
@@ -121,7 +123,7 @@ API functions and structure that have been integrated:
 ```sh
 $ git clone https://github.com/siversalih/pyChrome.git
 ```
-###The Files
+### The Files
 -	**pyChrome.py**
 	-	It is the main class object. pyChrome.py extends and simplify the APIs beyond just Selenium Webdriver APIs. It inherits most functionality from Selenium Webdriver APIs, but it also uses other modules such as urllib2, scipy, numpy, json, and javascript for creating a Web Automation Platform. 
 
@@ -172,7 +174,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
 
 ## Usage
-#####Initials
+##### Initials
 1.	Import pyChrome
 
     ```sh
@@ -200,7 +202,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 		browser.switchDriverMode(ghostmode=True)
 		```
 
-#####Basics
+##### Basics
 -   Open a page
 
     ```sh
@@ -217,7 +219,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	browser.quit()
 	```
 
-#####Window Control
+##### Window Control
 *Note: In headless browsing (ghost mode), controlling the window will not have any affect such as to size, position, zoom, and scroll.*
 
 -   Position
@@ -295,7 +297,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	browser.scrollBottom(animated=True)
 	```
 
-#####Navigation Control
+##### Navigation Control
 -   Back
 
     ```sh
@@ -312,7 +314,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	browser.refresh()
 	```
 
-#####Capture
+##### Capture
 -	**Screenshot**
 
     ```sh
@@ -353,20 +355,20 @@ $ git clone https://github.com/siversalih/pyChrome.git
     # Or Programmatically Locate a Web Element, then send the element to record it with the command:
     element = browser.findBodyElement()
     browser.record(element=element)
-   
 	```
 
 	- Playback
 
 	In order to playback the recorded element, atleast one element must be recorded.
 
-    ```sh
-   url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
-    browser.open(url)
-   # Manually from the Browser, click a Textfield and Enter a text, then run the command: 
+	```sh    
+	url = "https://accounts.google.com/SignUp?service=mail&continue=https://mail.google.com/mail/?pc=topnav-about-en"
+	browser.open(url)
+	# Manually from the Browser, click a Textfield and Enter a text, then run the command: 
 	browser.record()
-   # To playback, run the command:
-   browser.playback()
+	# To playback, run the command:
+	browser.playback()
+
 	```
 
 	- Store Recorder
@@ -412,7 +414,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
     recorded_items = browser.getRecordedElements()
 	```
 	
-#####Locate Web Element
+##### Locate Web Element
 The most challenging part of Web Automation is finding the Web Element locator (or xpath). And it's done manually by the Automator prior of locating it's Web Element. Once the Web Element location determined, the Web Element itself can be obtained by id, name, tag, class, partial text, link text, css selector and xpath. Depending of which attribute is available and the Automator approach, finding the Web element is easy as follows:
 
 -	**Locating Web Element**
@@ -722,7 +724,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	y = element_coor[1]
 	```
 
-#####Interaction
+##### Interaction
 -   Send Text to Element
 
     ```sh
@@ -755,8 +757,8 @@ The most challenging part of Web Automation is finding the Web Element locator (
 
 -   Click on Button (Generic Function)
 
-    ```sh
-   url = "https://www.google.com"
+	```sh
+	url = "https://www.google.com"
 	browser.open(url)
 	text = "Selenium Webdriver"
 	browser.sendText(text)
@@ -766,8 +768,8 @@ The most challenging part of Web Automation is finding the Web Element locator (
 
 -   Click on Link (Generic Function)
 
-    ```sh
-   url = "http://www.seleniumhq.org/projects/webdriver/"
+	```sh
+	url = "http://www.seleniumhq.org/projects/webdriver/"
 	browser.open(url)
 	locator = "menu_documentation"
 	browser.findElement(id=locator)
@@ -857,7 +859,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.sendKeysToElement(keys,element)
 	```
 
-#####Tab Control
+##### Tab Control
 -	Open New Tab
 
     ```sh
@@ -903,7 +905,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	title = browser.getTabTitle()
 	```
 
-#####Headless Browsing
+##### Headless Browsing
 -   Init with GhostDriver
 
     ```sh
@@ -915,7 +917,7 @@ The most challenging part of Web Automation is finding the Web Element locator (
 	browser.switchDriverMode(ghostmode=True)
 	```
 
-#####Combo
+##### Combo
 -   Search
 
     ```sh
@@ -961,7 +963,7 @@ python test.py
 
 -	Not Tested
 
-##Resources
+## Resources
 
 For full documentation of using Selenium Webdriver, see [Selenium Documentation][res1]. 
 

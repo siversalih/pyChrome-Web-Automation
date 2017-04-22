@@ -2,6 +2,7 @@ import time
 import os
 import sys
 import logging
+from sys import platform
 
 curr_dir = os.getcwd()
 logging.info("Current Work directory: {}".format(curr_dir))
@@ -95,6 +96,23 @@ class PyChrome(Element,Interaction,Combo):
         self.__start(ghostmode=self.ghost)
         return
 
+    def __selectPlatform(self,ghostmode=0):
+        if ghostmode:
+            self.drivername = "phantomjs"
+        else:
+            self.drivername = "chromedriver"
+        if platform == "linux" or platform == "linux2":
+            logging.critical("pyChrome does not support to run on linux at this point".format())
+            exit(1)
+        elif platform == "darwin":
+            logging.info("pyChrome is running on Mac OS")
+        elif platform == "win32":
+            logging.info("pyChrome is running on Windows")
+            self.drivername = self.drivername + ".exe"
+        else:
+            logging.critical("pyChrome can not detect the platform you running.".format())
+            exit(1)
+
     def __readJSONFile(self, config_filename=None, ghostmode=0):
         if config_filename:
             self.config_filename = config_filename
@@ -102,6 +120,20 @@ class PyChrome(Element,Interaction,Combo):
         with open(self.config_filename) as jsonFile:
             config = json.load(jsonFile)
         self.drivername = config.get('driver')
+        if self.drivername == "chromedriver" and ghostmode:
+            self.drivername = "phantomjs"
+        elif self.drivername == "phantomjs" and ghostmode == False:
+            self.drivername = "chromedriver"
+        if platform == "linux" or platform == "linux2":
+            logging.critical("pyChrome does not support to run on linux at this point".format())
+            exit(1)
+        elif platform == "darwin":
+            logging.info("pyChrome is running on Mac OS")
+        elif platform == "win32":
+            self.drivername = self.drivername + ".exe"
+        else:
+            logging.critical("pyChrome can not detect the platform you running.".format())
+            exit(1)
         directory = config.get('directory')
         file_directory = "{}/{}".format(directory,self.drivername)
         if directory and len(directory):
@@ -133,8 +165,9 @@ class PyChrome(Element,Interaction,Combo):
     def __start(self, ghostmode = 0):
         if ghostmode and self.validateGhostmode(ghostmode):
             self.ghost = ghostmode
+        if not self.drivername:
+            self.__selectPlatform(ghostmode)
         if self.ghost:
-            self.drivername = "phantomjs"
             logging.info("Using WebDrver {}".format(self.drivername))
             logging.info("Starting Ghost Browser")
             file_directory = "{}/{}".format(self.bin_dir,self.drivername)
@@ -146,7 +179,6 @@ class PyChrome(Element,Interaction,Combo):
                 logging.critical("GhostDriver (PhantomJS) is not present!")
                 exit(1)
         else:
-            self.drivername = "chromedriver"
             logging.info("Using WebDrver {}".format(self.drivername))
             logging.info("Starting Chrome Browser")
             file_directory = "{}/{}".format(self.bin_dir,self.drivername)
@@ -160,7 +192,7 @@ class PyChrome(Element,Interaction,Combo):
                 self.window = Window(self.driver, config_filename=self.config_filename)
                 self.browser = self.window.browser
             else:
-                logging.critical("ChromeDriver is not present!")
+                logging.critical("WebDriver is not present!")
                 exit(1)
         logging.info("Driver Location: {}".format(self.bin_dir))
         logging.info("Driver Name: {}\n".format(self.drivername))

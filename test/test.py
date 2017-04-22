@@ -1869,7 +1869,7 @@ class getElementCoordinatesTest(unittest.TestCase):
         self.coor = self.browser.getElementCoordinates(self.element)
         x = self.coor[0]
         y = self.coor[1]
-        if not int(x) == 275 and not int(y) == 155:
+        if int(x) < 100 and int(y) < 100:
             err = 1
         time.sleep(1)
         self.assertFalse(err,0)
@@ -3591,4 +3591,4 @@ class fbloginTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+	unittest.main()

@@ -7,23 +7,21 @@ Selenium is a browser automation library. Most often used for testing web-applic
 ## WebDriver
 WebDriver is designed to provide a simpler, more concise programming interface in addition to addressing some limitations in the Selenium-RC API. Selenium-WebDriver was developed to better support dynamic web pages where elements of a page may change without the page itself being reloaded. WebDriver’s goal is to supply a well-designed object-oriented API that provides improved support for modern advanced web-app testing problems. 
 
-For full documentation of using Selenium Webdriver APIs, see [Selenium with Python][df0]. 
+For full documentation of using Selenium Webdriver APIs, see [Selenium with Python][web1]. 
 
 **ChromeDriver** - Webdriver for Chromium. pyChrome uses ChromeDriver 	as a standalone server that implements WebDriver's wire protocol for Chrome browser. ChromeDriver is available for Chrome on Android and Chrome on Desktop (Mac, Linux, Windows and ChromeOS). 
 
-More documentation on Chrome Webdriver can be found at [ChromeDriver][df2]
+More documentation on Chrome Webdriver can be found at [ChromeDriver][web2]
 
 **PhantomJS** - Headless WebKit, pyChrome uses PhantomJS to process any web application in background (GhostDriver). Which means it does not require any browser or client (i.e Chrome) to display the Web Content. Therefore, it's a bit faster to process the information. PhantomJS is available for Mac, Linux, and Windows.
 
-More documentation on PhantomJS Webdriver can be found at [PhantomJS][df6]
+More documentation on PhantomJS Webdriver can be found at [PhantomJS][web3]
 
 
 ## pyChrome
 ![alt tag][DSNIMG]
 
-pyChrome is a scripted Web Automation Platform using Selenium with Python. Currently, the supported WebDriver are ChromeDriver and PhantomJS. As the project progress, it may includes other Python libraries to control, scrap, analyze, and interact with the browser and its content. pyChrome can be imported to any Python project as a module for creating an application and use case scenarios such as bot, web automation, data mining, headless browsing, and testing web application. 
-
-Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
+pyChrome is a scripted Web Automation Platform using Selenium with Python. Currently, the supported WebDriver are ChromeDriver and PhantomJS to run on macOS and Windows-based platform. As the project progress, it may include other Python libraries to control, scrap, analyze, and interact with the browser and its content. pyChrome can be imported to any Python project as a module for creating an application and use case scenarios such as for bot, web automation, data mining, headless browsing, and testing web application. Currently, it's in development phase and is ongoing project. Be sure to check back for more updates.
 
 ## Milestones
 
@@ -90,6 +88,9 @@ API functions and structure that have been integrated:
 	- Move Cursor to Element
 	- Drag & Drop Element
 	- Send Keys to Element
+- OS Compatibility
+	- Windows
+	- macOS
 
 ## Objectives
 1. Create a Web Automation Toolkit using Selenium WebDriver with Python
@@ -101,15 +102,20 @@ API functions and structure that have been integrated:
 ## Requirements
 
 -	Python
-	-	[Python 2.7 or Python 3.5][tm1]
+	-	[Python 2.7.x][req1]
 -	Selenium
-	-	[Selenium 3.0.0.b2][tm3]
-	-	[Installation Guide][df1]
+	-	[Selenium 3.4][req2]
+	-   Install selenium-3.4.0.tar.gz via python
+
+	```sh
+		$ sudo python setup.py install
+	```
+
 - Client
-	-	[Chrome][r3]
+	-	[Chrome Browser][req4]
 - Server
-	-	[Google Chrome Driver 2.23][r4]
-	-	[PhantomJS 2.1.1][r5]
+	-	[ChromeDriver 2.29][req5]
+	-	[PhantomJS 2.1.1][req6]
 
 ## Checkout pyChrome
 ```sh
@@ -144,10 +150,16 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	-	Currently, it is a subclass of pyChrome.py. It contains and manages searching and locating Web Element by id, name, classname, tag, partial text, link text, css selector, and xpath. It has also other functions that uses special algorithms to better traverse through elements and manipulate  element. 
 
 -	**bin/chromedriver**
-	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout is already bundled with ChromeDriver 2.23 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [Google Chrome Driver][df3] and overwrite it with the one included in this checkecout.
+	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout includes ChromeDriver 2.29 for macOS.
 
 -	**bin/phantomjs**
-	-	It's a Webdriver that Selenium Webdriver requires specifically for headless browsing. pyChrome.py uses PhantomJS as a Ghostdriver to browse, automate, and mine unnoticeably. This checkout is already bundled with PhantomJS 2.1.1 for Mac OSX. Although, if you are on different OS, you will need to download the correct version for your OS from [PhantomJS][r5] and overwrite it with the one included in this checkecout.
+	-	It's a Webdriver that Selenium Webdriver requires specifically for headless browsing. pyChrome.py uses PhantomJS as a Ghostdriver to browse, automate, and mine unnoticeably. This checkout includes PhantomJS 2.1.1 for macOS. 
+
+-	**bin/chromedriver.exe**
+	-	It's a Webdriver that Selenium Webdriver requires specifically for accessing Chrome client. pyChrome.py uses ChromeDriver APIs to access Chrome browser functionality such as opening a page, and finding a Web element on the page. This checkout includes ChromeDriver 2.29 for Windows.
+
+-	**bin/phantomjs.exe**
+	-	It's a Webdriver that Selenium Webdriver requires specifically for headless browsing. pyChrome.py uses PhantomJS as a Ghostdriver to browse, automate, and mine unnoticeably. This checkout includes PhantomJS 2.1.1 for Windows. 
 
 -	**config.json** (Recommended)
 	- Contains all the configuration settings for how the server and the client should start. When pyChrome.py object gets created, it reads the configuration settings from config.json. If the file is not present, it creates a default settings. Users can also modify these settings via calling pyChrome.py APIs.
@@ -206,7 +218,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	```
 
 #####Window Control
-*Note: Headless browsing (ghost mode) will not have any affect on controlling the Window.*
+*Note: In headless browsing (ghost mode), controlling the window will not have any affect such as to size, position, zoom, and scroll.*
 
 -   Position
 
@@ -924,55 +936,66 @@ The most challenging part of Web Automation is finding the Web Element locator (
 python test.py
 ```
 
-####[Test Results][TSTPDF]
+### Test Results
+[Windows][test1]
+
+[macOS][test2]
+
 
 **Mac**
 
--	[Python 2.7 or Python 3.5][tm1]
--	[chromedriver_mac64.zip][tm2]
-- 	[phantomjs-2.1.1-macosx.zip][r5]
--	[Selenium 3.0.0.b2][tm3]
+-	[Python 2.7.x][totest1]
+-	[chromedriver_mac64.zip][totest2]
+- 	[phantomjs-2.1.1-macosx.zip][totest3]
+-	[selenium-3.4.0.tar.gz][totest4]
 
 **Windows**
 
--	Not Tested
--  Should run with the Windows version of ChromeDriver and PhantomJS
+-	[Python 2.7.x][totest5]
+-	[chromedriver_win32.zip][totest6]
+- 	[phantomjs-2.1.1-windows.zip][totest7]
+-	[selenium-3.4.0.tar.gz][totest8]
 
 **Linux**
 
 -	Not Tested
--  Should run with the Linux version of ChromeDriver and PhantomJS
 
 ##Resources
 
-For full documentation of using Selenium Webdriver, see [Selenium Documentation][df4]. 
+For full documentation of using Selenium Webdriver, see [Selenium Documentation][res1]. 
 
-For full documentation of using Selenium with Python, see [Selenium with Python][df0]. 
+For full documentation of using Selenium with Python, see [Selenium with Python][res2]. 
 
-For getting started with Chrome WebDriver, see [Chrome Web Driver][df5]
+For getting started with Chrome WebDriver, see [Chrome Web Driver][res3]
 
-For getting started with PhantomJS, see [PhantomJS][df7]
+For getting started with PhantomJS, see [PhantomJS][res4]
 
+[web1]: <https://selenium-python.readthedocs.io/>
+[web2]: <https://sites.google.com/a/chromium.org/chromedriver/home>
+[web3]: <http://phantomjs.org/quick-start.html>
 
+[req1]: <https://www.python.org/downloads/>
+[req2]: <https://pypi.python.org/pypi/selenium>
+[req3]: <https://selenium-python.readthedocs.io/installation.html>
+[req4]: <https://www.google.com/chrome/browser/desktop/>
+[req5]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
+[req6]: <http://phantomjs.org/download.html>
 
-[tm1]: <https://www.python.org/downloads/>
-[tm2]: <http://chromedriver.storage.googleapis.com/index.html?path=2.23/>
-[tm3]: <https://pypi.python.org/pypi/selenium>
+[test1]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf
+[test2]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf
 
-[r1]: <https://www.python.org/downloads/>
-[r2]: <http://www.seleniumhq.org/download/>
-[r3]: <https://www.google.com/chrome/browser/desktop/>
-[r4]: <http://chromedriver.storage.googleapis.com/index.html?path=2.23/>
-[r5]: <http://phantomjs.org/download.html>
+[totest1]: <https://www.python.org/downloads/>
+[totest2]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
+[totest3]: <http://phantomjs.org/download.html>
+[totest4]: <https://pypi.python.org/pypi/selenium#downloads>
+[totest5]: <https://www.python.org/downloads/>
+[totest6]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
+[totest7]: <http://phantomjs.org/download.html>
+[totest8]: <https://pypi.python.org/pypi/selenium#downloads>
 
-[df0]: <http://selenium-python.readthedocs.io/>
-[df1]: <http://selenium-python.readthedocs.io/installation.html>
-[df2]: <https://sites.google.com/a/chromium.org/chromedriver/home>
-[df3]: <https://sites.google.com/a/chromium.org/chromedriver/downloads>
-[df4]: <http://www.seleniumhq.org/docs/>
-[df5]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started>
-[df6]: <http://phantomjs.org/documentation/>
-[df7]: <http://phantomjs.org/quick-start.html>
+[res1]: <http://www.seleniumhq.org/docs/>
+[res2]: <https://selenium-python.readthedocs.io/>
+[res3]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started>
+[res4]: <http://phantomjs.org/quick-start.html>
 
 [DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>
-[TSTPDF]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf

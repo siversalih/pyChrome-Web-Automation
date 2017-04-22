@@ -937,6 +937,7 @@ python test.py
 ```
 
 ### Test Results
+
 [Windows][test1]
 
 [macOS][test2]
@@ -971,31 +972,32 @@ For getting started with Chrome WebDriver, see [Chrome Web Driver][res3]
 For getting started with PhantomJS, see [PhantomJS][res4]
 
 [web1]: <https://selenium-python.readthedocs.io/>
-[web2]: <https://sites.google.com/a/chromium.org/chromedriver/home>
-[web3]: <http://phantomjs.org/quick-start.html>
+[web2]: <https://sites.google.com/a/chromium.org/chromedriver/home/>
+[web3]: <http://phantomjs.org/quick-start.html/>
 
 [req1]: <https://www.python.org/downloads/>
-[req2]: <https://pypi.python.org/pypi/selenium>
+[req2]: <https://pypi.python.org/pypi/selenium/>
 [req3]: <https://selenium-python.readthedocs.io/installation.html>
 [req4]: <https://www.google.com/chrome/browser/desktop/>
 [req5]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
-[req6]: <http://phantomjs.org/download.html>
+[req6]: <http://phantomjs.org/download.html/>
 
-[test1]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf
-[test2]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results.pdf
+[test1]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results_win32.pdf/>
+[test2]: <https://github.com/siversalih/pyChrome/blob/master/test/Test_Results_macOS.pdf/>
+
 
 [totest1]: <https://www.python.org/downloads/>
 [totest2]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
-[totest3]: <http://phantomjs.org/download.html>
-[totest4]: <https://pypi.python.org/pypi/selenium#downloads>
+[totest3]: <http://phantomjs.org/download.html/>
+[totest4]: <https://pypi.python.org/pypi/selenium#downloads/>
 [totest5]: <https://www.python.org/downloads/>
 [totest6]: <https://chromedriver.storage.googleapis.com/index.html?path=2.9/>
-[totest7]: <http://phantomjs.org/download.html>
-[totest8]: <https://pypi.python.org/pypi/selenium#downloads>
+[totest7]: <http://phantomjs.org/download.html/>
+[totest8]: <https://pypi.python.org/pypi/selenium#downloads/>
 
 [res1]: <http://www.seleniumhq.org/docs/>
 [res2]: <https://selenium-python.readthedocs.io/>
-[res3]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started>
-[res4]: <http://phantomjs.org/quick-start.html>
+[res3]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started/>
+[res4]: <http://phantomjs.org/quick-start.html/>
 
-[DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png>
+[DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png/>

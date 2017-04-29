@@ -69,13 +69,15 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
 ## Documentation
 
-For full documentation of using Selenium Webdriver, see [Selenium Documentation][res1]. 
+For documentation on Selenium, see [Selenium Documentation][res1]. 
 
-For full documentation of using Selenium with Python, see [Selenium with Python][res2]. 
+For documentation on using Selenium with Python, see [Selenium Python][res2]. 
 
-For getting started with Chrome WebDriver, see [Chrome Web Driver][res3]
+For getting started with using WebDriver for Chrome, see [Chrome WebDriver][res3].
 
-For getting started with PhantomJS, see [PhantomJS][res4]
+For getting started with using GhostDriver, see [PhantomJS][res4].
+
+For documentation on how pyChrome works, see [pyChrome][pychrome]
 
 [web1]: <https://selenium-python.readthedocs.io/>
 [web2]: <https://sites.google.com/a/chromium.org/chromedriver/home/>
@@ -112,4 +114,5 @@ For getting started with PhantomJS, see [PhantomJS][res4]
 [videos]: <https://www.youtube.com/playlist?list=PL8R5Fi8yjw7mNAgRZpQWxJ_ndcL4Tcn0C>
 [macos]: <https://youtu.be/kizSRWlnPvE/>
 [windows]: <https://youtu.be/3rguo2u3NqM/>
+[pychrome]: <https://pychrome.wordpress.com/about//>
 

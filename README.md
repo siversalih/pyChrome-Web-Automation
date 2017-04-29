@@ -67,17 +67,6 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	- Test Suite to run all the implemented functions
 
 
-## Documentation
-
-For documentation on Selenium, see [Selenium Documentation][res1]. 
-
-For documentation on using Selenium with Python, see [Selenium Python][res2]. 
-
-For getting started with using WebDriver for Chrome, see [Chrome WebDriver][res3].
-
-For getting started with using GhostDriver, see [PhantomJS][res4].
-
-For documentation on how pyChrome works, see [pyChrome][pychrome]
 
 [web1]: <https://selenium-python.readthedocs.io/>
 [web2]: <https://sites.google.com/a/chromium.org/chromedriver/home/>

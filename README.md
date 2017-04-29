@@ -67,7 +67,7 @@ $ git clone https://github.com/siversalih/pyChrome.git
 	- Test Suite to run all the implemented functions
 
 
-## Resources
+## Documentation
 
 For full documentation of using Selenium Webdriver, see [Selenium Documentation][res1]. 
 

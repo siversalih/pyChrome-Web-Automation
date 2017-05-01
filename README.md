@@ -1,17 +1,20 @@
-# pyChrome
+# PyChrome
 
 
-PyChrome is a Web Automation module to create Web Automation application using Selenium with Python. It is integrated with WebDriver using ChromeDriver to access and control Chromium browser. It can also emulate headless browser using PhantomJS (Ghost Driver) to browse unnoticeable. PyChrome is open-source and it is written in Python 2. It’s run via command-line rather than as GUI editor application. Thus, it is more flexible to be modified per user application, and it can be easily imported as a module to any project for creating Web Automation application in Python programming language. The application of using pyChrome (Selenium Python) is tremendous for Web applications. It can be used for Web automation, creating Web bots, data mining, scraping the web, browse unnoticeably using Headless browser, and testing web application.
+PyChrome is a Web Automation module to create Web Automation application using Selenium with Python. It is integrated with WebDriver using ChromeDriver to access and control Chromium browser. It can also emulate headless browser using PhantomJS (Ghost Driver) to browse unnoticeable. PyChrome is open-source and it is written in Python 2. It’s run via command-line rather than as GUI editor application. Thus, it is more flexible to be modified at user's discretion, and it can be easily imported as a module to any project for creating Web Automation application in Python programming language. The application of using PyChrome (Selenium Python) is tremendous for Web applications. It can be used for Web automation, creating Web bots, data mining, scraping the web, browse unnoticeably using Headless browser, and testing web application.
 
 
-For more info and latest update, check [pychrome.wordpress.com][website].
+
+Currently, the project is in development phase. Be sure to check the website  at [pychrome.wordpress.com][website] for the latest update.
+
 
 To setup Selenium Python environment, check installation tutorial for [macOS][macos] or [Windows][windows].
 
-For tutorial on how to use this module, see these [videos][videos].
+For tutorial on how to use PyChrome module in your project, see these [videos][videos].
 
 
-## Checkout pyChrome
+
+## Checkout PyChrome
 ```sh
 $ git clone https://github.com/siversalih/pyChrome.git
 ```
@@ -69,15 +72,15 @@ $ git clone https://github.com/siversalih/pyChrome.git
 
 ## Documentation
 
-For documentation on Selenium, see [Selenium Documentation][res1]. 
+For documentation on Selenium, see [Selenium Documentation][res1] webpage. 
 
-For documentation on using Selenium with Python, see [Selenium Python][res2]. 
+For documentation on using Selenium with Python, check [Selenium Python][res2] website. 
 
-For getting started with using WebDriver for Chrome, see [Chrome WebDriver][res3].
+For getting started with using WebDriver for Chrome, see [Chrome WebDriver][res3] document.
 
-For getting started with using GhostDriver, see [PhantomJS][res4].
+For getting started with using GhostDriver, see [PhantomJS][res4] document.
 
-For documentation on how pyChrome works, see [pyChrome][pychrome].
+For documentation on how PyChrome works, see [PyChrome][PyChrome] webpage.
 
 [web1]: <https://selenium-python.readthedocs.io/>
 [web2]: <https://sites.google.com/a/chromium.org/chromedriver/home/>

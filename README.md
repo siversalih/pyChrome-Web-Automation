@@ -109,7 +109,7 @@ For documentation on how PyChrome works, see [PyChrome][PyChrome] webpage.
 [res1]: <http://www.seleniumhq.org/docs/>
 [res2]: <https://selenium-python.readthedocs.io/>
 [res3]: <https://sites.google.com/a/chromium.org/chromedriver/getting-started/>
-[res4]: <http://phantomjs.org/quick-start.html/>
+[res4]: <http://phantomjs.org/quick-start.html>
 
 [DSNIMG]: <https://github.com/siversalih/pyChrome/blob/master/design/Design_Chart.png/>
 
@@ -117,5 +117,5 @@ For documentation on how PyChrome works, see [PyChrome][PyChrome] webpage.
 [videos]: <https://www.youtube.com/playlist?list=PL8R5Fi8yjw7mNAgRZpQWxJ_ndcL4Tcn0C>
 [macos]: <https://youtu.be/kizSRWlnPvE/>
 [windows]: <https://youtu.be/3rguo2u3NqM/>
-[pychrome]: <https://pychrome.wordpress.com/about//>
+[pychrome]: <https://pychrome.wordpress.com/about/>
 

@@ -184,7 +184,7 @@ class TabObject:
             logging.error("WebDriverException: Can't Switch to New Tab")
         self.link = "http://www.google.com"
         if link:
-            link = self.validateURL(link)
+            self.link = self.validateURL(link)
         self.openPage(self.link)
 
     def update(self):
@@ -244,5 +244,4 @@ class TabObject:
             link = "http://{}".format(link)
         if link == "http://www.google.com" or link == "www.google.com":
             return link
-        self.link = link
         return link
